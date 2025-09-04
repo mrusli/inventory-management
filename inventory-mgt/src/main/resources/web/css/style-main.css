@@ -1,0 +1,44 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap");
+[class*="z-"]:not([class*="z-icon-"]) {
+	font-family: Roboto;
+}
+/*-------------------------ZK Window-------------------------*/
+.mainWindow {
+	margin: 0px;
+	padding: 0px;
+	border-radius: 0px;
+	background: inherit;
+}
+.z-window-content {
+	padding: 0;
+	background: inherit;
+	color: inherit;
+}
+/*-----------------------Component Button-------------------*/
+.compButton {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+/*-------------------------ZK Window-------------------------*/
+.z-timebox-input {
+	color: var(--bs-primary);
+}
+
+.red-text.z-listitem .z-listcell .z-listcell-content {
+	color: var(--bs-red);
+}
+.light-blue-background.z-listitem .z-listcell {
+	background: rgb(199, 254, 253);
+}
+.light-yellow-background.z-listitem .z-listcell {
+	background: rgb(244, 245, 214);
+}
+
+.nav-link.nav-adjust {
+	padding-top: 0.5rem;
+	font-size: 20px;
+}
+.navbar-brand.nav-adjust {
+	margin-right: 0px;
+}

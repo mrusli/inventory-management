@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.5.5</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.pyramix</groupId>
+	<artifactId>inventory-mgt</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>inventory-mgt</name>
+	<description>Inventory management - Incoming to Process to Outgoing</description>
+	<url/>
+	<licenses>
+		<license/>
+	</licenses>
+	<developers>
+		<developer/>
+	</developers>
+	<scm>
+		<connection/>
+		<developerConnection/>
+		<tag/>
+		<url/>
+	</scm>
+	<properties>
+		<java.version>21</java.version>
+	</properties>
+	<repositories>
+		<repository>
+			<id>ZK CE</id>
+			<name>ZK CE Repository</name>
+			<url>https://mavensync.zkoss.org/maven2</url>
+		</repository>
+	</repositories>	
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-logging</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-log4j -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-log4j</artifactId>
+		    <version>1.3.8.RELEASE</version>
+		</dependency>
+						
+		<!-- domain -->
+				
+		<!-- https://mvnrepository.com/artifact/org.hibernate.common/hibernate-commons-annotations -->
+		<dependency>
+		    <groupId>org.hibernate.common</groupId>
+		    <artifactId>hibernate-commons-annotations</artifactId>
+		    <version>6.0.5.Final</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-core <version>6.1.6.Final</version> -->
+		<dependency>
+		    <groupId>org.hibernate.orm</groupId>
+		    <artifactId>hibernate-core</artifactId>	    
+			<exclusions>
+		    	<exclusion>
+		    		<groupId>org.hibernate.common</groupId>
+		    		<artifactId>hibernate-commons-annotations</artifactId>
+		    	</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<scope>provided</scope>
+		</dependency>		
+
+		<!-- persistency -->
+		
+		<dependency>
+			<groupId>com.mysql</groupId>
+			<artifactId>mysql-connector-j</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.hibernate.orm/hibernate-c3p0 <version>6.1.6.Final</version>-->
+		<dependency>
+		    <groupId>org.hibernate.orm</groupId>
+		    <artifactId>hibernate-c3p0</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+		</dependency>
+
+		<!-- inventory web using ZK -->
+		
+		<dependency>
+			<groupId>org.zkoss.zkspringboot</groupId>
+			<artifactId>zkspringboot-starter</artifactId>
+			<type>pom</type>
+			<version>3.2.7.1</version>
+		</dependency>	
+		<dependency>
+			<groupId>org.zkoss.zk</groupId>
+			<artifactId>zkplus</artifactId>
+			<version>10.0.0-jakarta</version>
+		</dependency>	
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

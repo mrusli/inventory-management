@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        
+	<import resource="CommonContext-Dao.xml"/>
+
+	<bean id="basisController" class="com.pyramix.web.common.GFCBaseController" abstract="true" scope="prototype">
+	
+	</bean>        
+
+	<bean id="settingsUtility" class="com.pyramix.web.common.SettingsUtil">
+	
+	</bean>
+	
+    <bean id="mainController" class="com.pyramix.web.main.MainController" scope="prototype" parent="basisController">
+    
+    </bean>
+    
+    <bean id="infoPenerimaanCoilController" class="com.pyramix.web.penerimaan.PenerimaanCoilController" scope="prototype" parent="basisController">
+    
+    </bean>
+    
+    <bean id="infoProcessCoilController" class="com.pyramix.web.process.ProcessCoilController" scope="prototype" parent="basisController">
+    
+    </bean>
+    
+    <bean id="infoProductController" class="com.pyramix.web.product.ProductController" scope="prototype" parent="basisController">
+    
+    </bean>    
+
+    <bean id="infoSuratJalanController" class="com.pyramix.web.suratjalan.SuratJalanController" scope="prototype" parent="basisController">
+    
+    </bean>
+    
+    <bean id="infoInvoiceController" class="com.pyramix.web.invoice.InvoiceController" scope="prototype" parent="basisController">
+    
+    </bean>
+    
+    <bean id="infoCustomerController" class="com.pyramix.web.customer.CustomerController" scope="prototype" parent="basisController">
+    
+    </bean>        
+
+    
+</beans>
