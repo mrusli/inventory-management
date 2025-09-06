@@ -40,7 +40,7 @@
     </bean>
     
     <bean id="infoCustomerController" class="com.pyramix.web.customer.CustomerController" scope="prototype" parent="basisController">
-    
+    	<property name="customerDao" ref="customerDao"></property>
     </bean>        
 
 	<bean id="inventoryTypeController" class="com.pyramix.web.inventory.InventoryTypeController" scope="prototype" parent="basisController">

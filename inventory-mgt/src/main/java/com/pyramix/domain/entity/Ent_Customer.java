@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -59,6 +60,9 @@ public class Ent_Customer extends IdBasedObject {
 	@Column(name = "co_actv")
 	@Convert(converter = TrueFalseConverter.class)
 	private boolean active = true;
+	
+	@Transient
+	private boolean addInProgress = false;	
 
 	public Ent_Customer(Enm_CompanyType companyType, String companyLegalName, String companyDisplayName) {
 		super();

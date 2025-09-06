@@ -4,20 +4,67 @@
 		<n:h3>Customer</n:h3>	
 	</n:div>
 	<div sclass="row mt-3">
-		<n:div sclass="col-12">
-			<n:div sclass="mt-3">
-				Customer:
-				<combobox id="customerCombobox" width="180px" visible="true"></combobox>
-				<button id="customerFilterButton" label="Filter" visible="true" iconSclass="z-icon-search" sclass="compButton"></button>
+		<n:div sclass="col-6">
+			<n:div sclass="mt-1">
+				<textbox id="customerSearchTextbox" width="280px" visible="true"></textbox>
+				<button id="customerSearchButton" label="Cari" visible="true" iconSclass="z-icon-search" sclass="compButton"></button>
+				<button id="customerAddButton" label="Tambah" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>
 			</n:div>
-			<listbox sclass="mt-3" id="customerCoilListbox" mold="paging" height="400px" pageSize="16">
+			<listbox sclass="mt-3" id="customerListbox" mold="paging" height="400px" pageSize="16">
 				<listhead>
-		 			<listheader label="Nama Customer" width="140px"></listheader>
-		 			<listheader label="Contact" width="160px"></listheader>
-		 			<listheader label="Alamat Pengiriman" width="140px"></listheader>
-					<listheader></listheader>
+		 			<listheader label="Nama Customer" width="360px"/>
+		 			<listheader label="Contact"/>
 				</listhead>
 			</listbox>												
+		</n:div>
+		<n:div sclass="col-6">
+			<label id="customerNameLabel" sclass="h5 text-primary"></label>
+			<combobox id="companyTypeCombobox" width="120px" visible="false"></combobox>
+			<textbox id="customerNameTextbox" width="480px" visible="false"></textbox>
+			<grid style="border:none;">
+				<rows>
+					<row>
+						<cell width="15%">Contact:</cell>
+						<cell width="35%" sclass="text-primary">
+							<label id="contactNameLabel"></label>
+							<textbox id="contactNameTextbox" visible="false" width="180px"></textbox>
+						</cell>
+						<cell width="15%">No-Telp:</cell>
+						<cell sclass="text-primary">
+							<label id="contactNumberLabel"></label>
+							<textbox id="contactNumberTextbox" visible="false" width="180px"></textbox>
+						</cell>
+					</row>
+					<row>
+						<cell>Email:</cell>
+						<cell sclass="text-primary" colspan="3">
+							<label id="emailLabel"></label>
+							<textbox id="emailTextbox" visible="false" width="500px"></textbox>
+						</cell>
+					</row>
+				</rows>
+			</grid>
+			<n:h5>Alamat Pengiriman:</n:h5>
+			<grid style="border:none;">
+				<rows>
+					<row>
+						<cell sclass="text-primary">
+							<label id="address01Label"></label>
+							<textbox id="address01Textbox" visible="false" width="600px"></textbox>
+						</cell>
+					</row>
+					<row>
+						<cell sclass="text-primary">
+							<label id="address02Label"></label>
+							<textbox id="address02Textbox" visible="false" width="600px"></textbox>
+						</cell>
+					</row>					
+				</rows>
+			</grid>
+			<n:div sclass="mt-3">
+				<button id="customerEditButton" label="Ubah" visible="true" iconSclass="z-icon-pencil" sclass="compButton" style="background-color: var(--bs-warning)"></button>
+				<button id="customerSaveButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-o" sclass="compButton" style="background-color: var(--bs-primary)"></button>
+			</n:div>
 		</n:div>
 	</div>	
 </div>

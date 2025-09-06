@@ -8,6 +8,8 @@
 		<mapping class="com.pyramix.domain.entity.Ent_InventoryType"/>
 
 		<mapping class="com.pyramix.domain.entity.Ent_InventoryCode"/>
+		
+		<mapping class="com.pyramix.domain.entity.Ent_Customer"/>
 
 	</session-factory>
 </hibernate-configuration>

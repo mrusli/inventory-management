@@ -176,8 +176,8 @@ public class InventoryTypeController extends GFCBaseController {
 
 	public void onClick$addInventoryTypeButton(Event event) throws Exception {
 		log.info("addInventoryTypeButton click");
-		// add tot he last pos
-		Ent_InventoryType inventoryType = addInventoryTypeInLastPost();
+		// add to the last pos
+		Ent_InventoryType inventoryType = addInventoryTypeInLastPos();
 		
 		// will cause the listbox to immediately render all listitems 
 		// based on the current model and renderer (template or 
@@ -205,7 +205,7 @@ public class InventoryTypeController extends GFCBaseController {
 		inventoryType.setEditInProgress(true);
 	}
 
-	private Ent_InventoryType addInventoryTypeInLastPost() {
+	private Ent_InventoryType addInventoryTypeInLastPos() {
 		Ent_InventoryType inventoryType = new Ent_InventoryType();
 		
 		int posToAdd =
