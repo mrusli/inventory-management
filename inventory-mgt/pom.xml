@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.pyramix</groupId>
 	<artifactId>inventory-mgt</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>inventory-mgt</name>
 	<description>Inventory management - Incoming to Process to Outgoing</description>
 	<url/>
@@ -28,6 +28,13 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+		<build.version>${project.version}</build.version>
+		<build.timestamp>${maven.build.timestamp}</build.timestamp>
+		<build.name>${project.name}</build.name>
+		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+		<project.build.sourceEncoding>
+			UTF-8
+		</project.build.sourceEncoding>		
 	</properties>
 	<repositories>
 		<repository>
@@ -131,11 +138,33 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>	
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.2.1</version> <!-- Use the latest version -->
+                <executions>
+                    <execution>
+                        <phase>initialize</phase> <!-- or another appropriate phase -->
+                        <goals>
+                            <goal>write-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <outputFile>/pyramix/maven-inventory-properties.properties</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>			
 		</plugins>
 	</build>
 

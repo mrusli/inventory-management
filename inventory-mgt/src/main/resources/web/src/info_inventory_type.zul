@@ -1,0 +1,48 @@
+<div xmlns:n="native" id="inventoryTypePanel" apply="${inventoryTypeController}">
+	<n:div sclass="mt-3">
+		<n:h3>Tipe dan Kode Inventory</n:h3>	
+	</n:div>
+	<div sclass="row mt-3">
+		<n:div sclass="col-7">
+			<n:div sclass="mt-3">
+				<button id="addInventoryTypeButton" label="Tambah Tipe" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>				
+			</n:div>
+			<listbox sclass="mt-3" id="inventoryTypeListbox" mold="paging" height="560px" pageSize="8">
+				<listhead>
+					<listheader label="Tipe" width="160px"></listheader>
+					<listheader label="Berat-Jns" width="120px"></listheader>
+					<listheader label="Keterangan" width="280px"></listheader>
+					<listheader width="100px"/>
+				</listhead>
+			</listbox>			
+		</n:div>
+		<n:div sclass="col-5">
+			<n:div sclass="mt-3">
+				<n:h5>Tipe</n:h5>
+				<grid style="border:none;">
+					<rows>
+						<row>
+							<cell width="15%">Tipe:</cell>
+							<cell width="35%" sclass="text-primary"><label id="tipeLabel"></label></cell>
+							<cell width="20%">Berat-Jns:</cell>
+							<cell sclass="text-primary"><label id="brtJnsLabel"></label></cell>
+						</row>
+						<row>
+							<cell>Ket:</cell>
+							<cell sclass="text-primary" colspan="3"><label id="keteranganLabel"></label></cell>
+						</row>
+					</rows>
+				</grid>
+				<button id="addInventoryCodeButton" label="Tambah Kode" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>
+				<listbox sclass="mt-3" id="inventoryCodeListbox" mold="paging" height="430px" pageSize="6">
+					<listhead>
+						<listheader label="Kode" width="160px"/>
+						<listheader label="Keterangan" width="220px"/>
+						<listheader width="100px"/>
+						<listheader />
+					</listhead>
+				</listbox>								
+			</n:div>		
+		</n:div>
+	</div>
+</div>

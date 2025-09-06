@@ -6,5 +6,23 @@
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<import resource="CommonContext-Config.xml"></import>
-
+	
+	<!-- common -->
+	
+	<bean id="dao" class="com.pyramix.persistence.common.dao.hibernate.DaoHibernate">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<!-- inventoryType -->
+	
+	<bean id="inventoryTypeDao" class="com.pyramix.persistence.inventorytype.dao.hibernate.InventoryTypeHibernate">
+		<property name="sessionFactory" ref="sessionFactory"></property>	
+	</bean> 
+	
+	<!-- inventoryCode -->
+	
+	<bean id="inventoryCodeDao" class="com.pyramix.persistence.inventorycode.dao.hibernate.InventoryCodeHibernate">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
 </beans>

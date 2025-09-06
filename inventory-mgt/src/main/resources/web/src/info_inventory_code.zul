@@ -1,0 +1,12 @@
+<div xmlns:n="native" id="inventoryCodePanel" apply="${inventoryCodeController}">
+	<n:div sclass="mt-3">
+		<n:h3>Kode Inventory</n:h3>	
+	</n:div>
+	<div sclass="row mt-3">
+		<n:div sclass="col-12">
+			<n:div sclass="mt-3">
+
+			</n:div>
+		</n:div>
+	</div>
+</div>

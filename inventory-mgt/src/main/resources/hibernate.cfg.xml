@@ -4,6 +4,10 @@
 "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
-	
+
+		<mapping class="com.pyramix.domain.entity.Ent_InventoryType"/>
+
+		<mapping class="com.pyramix.domain.entity.Ent_InventoryCode"/>
+
 	</session-factory>
 </hibernate-configuration>

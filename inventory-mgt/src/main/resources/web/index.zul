@@ -1,6 +1,7 @@
 <?link rel="stylesheet" type="text/css" href="/zkau/web/css/style-main.css"?>
 <?link rel="stylesheet" type="text/css" href="/zkau/web/css/bootstrap.min.css"?>
-<?page title="Config" contentType="text/html;charset=UTF-8"?>
+<?script type="text/javascript" src="/zkau/web/js/bootstrap.bundle.min.js"?>
+<?page title="Inventory" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk>
 <window xmlns:n="native" id="mainWindow" border="none" sclass="mainWindow" apply="${mainController}">
@@ -21,13 +22,15 @@
 			 			<n:ul class="navbar-nav">
 			 				<n:li class="nav-item">
 			 					<n:a class="nav-link nav-adjust"
-			 						aria-current="page" href="#" onClick="penerimaanCoilMenuClick();">
+			 						aria-current="page" href="#"
+			 						onClick="penerimaanCoilMenuClick();">
 			 						Penerimaan
 			 					</n:a>
 			 				</n:li>
 			 				<n:li class="nav-item">
 			 					<n:a class="nav-link nav-adjust"
-			 						aria-current="page" href="#" onClick="prosesCoilMenuClick();">
+			 						aria-current="page" href="#"
+			 						onClick="prosesCoilMenuClick();">
 			 						Proses
 			 					</n:a>
 			 				</n:li>
@@ -39,7 +42,8 @@
 			 				</n:li>
 			 				<n:li class="nav-item">
 			 					<n:a class="nav-link nav-adjust"
-			 						aria-current="page" href="#" onClick="suratjalanMenuClick();">
+			 						aria-current="page" href="#"
+			 						onClick="suratjalanMenuClick();">
 			 						SuratJalan
 			 					</n:a>
 			 				</n:li>
@@ -54,6 +58,38 @@
 			 						aria-current="page" href="#" onClick="customerMenuClick();">
 			 						Customer
 			 					</n:a>
+			 				</n:li>
+			 				<n:li class="nav-item dropdown">
+			 					<n:a class="nav-link nav-adjust dropdown-toggle"
+			 						href="#" role="button" data-bs-toggle="dropdown"
+			 						aria-expanded="false">
+			 						Inventory
+			 					</n:a>
+			 					<n:ul class="dropdown-menu">
+			 						<n:li>
+			 							<n:a class="dropdown-item"
+			 								href="#" onClick="inventoryTypeMenuClick();">
+			 								Tipe dan Kode
+			 							</n:a>
+			 						</n:li>
+			 						<n:li>
+			 							<n:a class="dropdown-item"
+			 								href="#" onClick="inventoryCodeMenuClick();">
+			 								Tabel
+			 							</n:a>
+			 						</n:li>
+<!-- 			 					
+									<n:li>
+			 							<n:hr class="dropdown-divider"></n:hr>
+			 						</n:li> 			 						
+ 									<n:li>
+			 							<n:a class="dropdown-item"
+			 								href="#">
+			 								Something else here
+			 							</n:a>
+			 						</n:li> 
+-->
+			 					</n:ul>
 			 				</n:li>
 			 			</n:ul>
 			 		</n:ul>

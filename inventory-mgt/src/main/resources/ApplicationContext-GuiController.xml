@@ -16,7 +16,7 @@
 	</bean>
 	
     <bean id="mainController" class="com.pyramix.web.main.MainController" scope="prototype" parent="basisController">
-    
+    	<property name="settingsUtility" ref="settingsUtility"></property>
     </bean>
     
     <bean id="infoPenerimaanCoilController" class="com.pyramix.web.penerimaan.PenerimaanCoilController" scope="prototype" parent="basisController">
@@ -43,5 +43,11 @@
     
     </bean>        
 
-    
+	<bean id="inventoryTypeController" class="com.pyramix.web.inventory.InventoryTypeController" scope="prototype" parent="basisController">
+		<property name="inventoryTypeDao" ref="inventoryTypeDao"></property>
+	</bean>
+
+	<bean id="inventoryCodeController" class="com.pyramix.web.inventory.InventoryCodeController" scope="prototype" parent="basisController">
+	
+	</bean>    
 </beans>

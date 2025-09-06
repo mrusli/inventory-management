@@ -24,3 +24,11 @@ function tagihanMenuClick() {
 function customerMenuClick() {
 	zAu.send(new zk.Event(zk.Widget.$(this), 'onCustomerCoilMenuClick', 'Admin...'));
 }
+
+function inventoryTypeMenuClick() {
+	zAu.send(new zk.Event(zk.Widget.$(this), 'onClickInventoryTypeMenu', 'Admin...'));
+}
+
+function inventoryCodeMenuClick() {
+	zAu.send(new zk.Event(zk.Widget.$(this), 'onClickInventoryCodeMenu', 'Admin...'));
+}

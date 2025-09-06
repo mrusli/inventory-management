@@ -6,13 +6,20 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Properties;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class SettingsUtil {
 
-	private final String extFile = "/pyramix/settings_attendance_config.properties";
+	@Value("${settings.file}")
+	private String extFile;
+		// = "/pyramix/settings_inventory_config.properties";
 
+	@Value("${versions.file}")
+	private String versionsFile;	
+	
 	private Properties props = new Properties();
 	
 	public SettingsUtil() {
@@ -43,5 +50,16 @@ public class SettingsUtil {
 		return "Error: Non Existing Key";
 	}
 	
-	
+	public String getWebAppProperties(String key) {
+		try (FileInputStream inputStream = new FileInputStream(versionsFile)) {
+		
+			props.load(inputStream);
+			return props.getProperty(key);
+		
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return "Error: Non Existing Key";
+	}	
 }
