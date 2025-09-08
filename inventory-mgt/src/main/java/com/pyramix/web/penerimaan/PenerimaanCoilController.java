@@ -1,9 +1,9 @@
 package com.pyramix.web.penerimaan;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -172,12 +172,37 @@ public class PenerimaanCoilController extends GFCBaseController {
 		log.info("coilAddButton click");
 
 		// temporary remove inventory from db
-		inventoryModelList = 
-				new ListModelList<Ent_Inventory>(new ArrayList<Ent_Inventory>());
+		inventoryModelList = null; 
+				// new ListModelList<Ent_Inventory>(new ArrayList<Ent_Inventory>());
+		receiveCoilListbox.setModel(inventoryModelList);
+		
+		Listitem activeItem = new Listitem();
+		
+		Listcell lc;
+		// TglTerima
+		lc = new Listcell();
+		lc.setParent(activeItem);
+		// JenisCoil
+		lc = new Listcell();
+		lc.setParent(activeItem);
+
+		receiveCoilListbox.appendChild(activeItem);
+		receiveCoilListbox.renderAll();
+		
+		Ent_Inventory inventory = new Ent_Inventory();
+		// set to prevent error
+		inventory.setReceiveDate(getLocalDate(getZoneId()));
+		inventory.setInventoryCode(getDefaultInventoryCode());
+
+		activeItem.setValue(inventory);
+		
+		setupTglTerimaDatebox(activeItem, inventory.getReceiveDate());
+		setupJenisCoilCombobox(activeItem, inventory.getInventoryCode());
+		
 		// display
-		displayInventoryList();
+		// displayInventoryList();
 		// add 1st row
-		coilAddRow();
+		// coilAddRow();
 	}
 
 	private Ent_Inventory addInventoryInLastPos() throws Exception {
@@ -262,7 +287,11 @@ public class PenerimaanCoilController extends GFCBaseController {
 	
 	public void onClick$saveButton(Event event) throws Exception {
 		log.info("saveButton click");
-		
+	
+		doSave(event.getTarget());		
+	}
+	
+	public void doSave(Component target) throws Exception {
 		Listcell lc;
 		Ent_Inventory inventory;
 		for (Listitem item : receiveCoilListbox.getItems()) {
@@ -272,6 +301,9 @@ public class PenerimaanCoilController extends GFCBaseController {
 			
 			// tglTerima
 			lc = (Listcell) item.getChildren().get(0);
+			if (lc.getChildren().isEmpty()) {
+				continue;
+			}
 			Datebox datebox = (Datebox) lc.getFirstChild();
 			inventory.setReceiveDate(datebox.getValueInLocalDate());
 			log.info(datebox.getValueInLocalDate().toString());
@@ -286,26 +318,17 @@ public class PenerimaanCoilController extends GFCBaseController {
 			lc.getChildren().clear();
 			lc.setLabel(invtCode.getProductCode());
 			
-			// button
-			lc = (Listcell) item.getChildren().get(4);
-			lc.getChildren().clear();
-			
 			// update inventory
 			// getInventoryDao().update(inventory);
 			
-			receiveCoilListbox.renderItem(item);
-
-			Thread.sleep(2000);
+			Events.echoEvent("onEchoSave", target, null);
 			
+			break;
 		}
-		
-		// temporary remove inventory from db
-//		inventoryModelList = 
-//				new ListModelList<Ent_Inventory>(getInventoryDao());
-		// display
-//		displayInventoryList();
-		
-		
+	}
+	
+	public void onEchoSave(Event event) throws Exception {	
+		doSave(event.getTarget());
 	}
 	
 	public InventoryDao getInventoryDao() {
