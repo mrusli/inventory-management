@@ -30,4 +30,10 @@
 	<bean id="customerDao" class="com.pyramix.persistence.customer.dao.hibernate.CustomerHibernate">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
+	
+	<!-- inventory -->
+	
+	<bean id="inventoryDao" class="com.pyramix.persistence.inventory.dao.hibernate.InventoryHibernate">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
 </beans>

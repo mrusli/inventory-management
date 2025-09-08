@@ -8,6 +8,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -60,7 +61,24 @@ public class Ent_Inventory extends IdBasedObject {
 	@Column(name = "inv_note")
 	private String note;
 	
+	@Transient
+	private boolean addInProgress = false;
+	
 	public Ent_Inventory() {
 		super();
 	}
+
+	public Ent_Inventory(double thickness, double width, double length, int sheetQuantity, double weightQuantity,
+			String marking, LocalDate receiveDate) {
+		super();
+		this.thickness = thickness;
+		this.width = width;
+		this.length = length;
+		this.sheetQuantity = sheetQuantity;
+		this.weightQuantity = weightQuantity;
+		this.marking = marking;
+		this.receiveDate = receiveDate;
+	}
+	
+	
 }
