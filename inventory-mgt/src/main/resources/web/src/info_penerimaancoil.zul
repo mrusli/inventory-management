@@ -16,15 +16,21 @@
 			</n:div>
 			<listbox sclass="mt-3" id="receiveCoilListbox" mold="paging" height="400px" pageSize="6">
 				<listhead>
-		 			<listheader label="Tgl.Terima" width="160px"></listheader>
-		 			<listheader label="Jenis-Coil" width="140px"></listheader>
-		 			<listheader label="Customer" width="140px"></listheader>
-					<listheader label="No.Coil" width="220px"></listheader>
-					<listheader></listheader>
+		 			<listheader label="Tgl.Terima" width="120px"></listheader>
+		 			<listheader label="Jenis-Coil" width="120px"></listheader>
+		 			<listheader label="Customer" width="200px"></listheader>
+		 			<listheader label="Spek" width="220px"></listheader>
+		 			<listheader label="Packing" width="120px"></listheader>
+		 			<listheader label="Jmlh/Kg" width="120px"></listheader>
+					<listheader label="No.Coil" width="120px"></listheader>
+					<listheader width="80px"/>
+					<listheader/>
 				</listhead>
 			</listbox>												
 			<n:div sclass="mt-3">
-				<button id="saveButton" label="Simpan" visible="true" iconSclass="z-icon-check" sclass="compButton" style="background-color: var(--bs-primary)" autodisable="self"></button>				
+				<button id="saveButton" label="Simpan" visible="false" iconSclass="z-icon-check" sclass="compButton" style="background-color: var(--bs-primary)" autodisable="self"></button>
+				<button id="refreshButton" label="Refresh" visible="true" iconSclass="z-icon-refresh" sclass="compButton" style="background-color: var(--bs-success)"></button>
+								
 			</n:div>
 		</n:div>
 	</div>	
