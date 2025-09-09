@@ -175,7 +175,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 		inventoryModelList = null; 
 				// new ListModelList<Ent_Inventory>(new ArrayList<Ent_Inventory>());
 		receiveCoilListbox.setModel(inventoryModelList);
-		
+				
 		Listitem activeItem = new Listitem();
 		
 		Listcell lc;
@@ -199,6 +199,10 @@ public class PenerimaanCoilController extends GFCBaseController {
 		setupTglTerimaDatebox(activeItem, inventory.getReceiveDate());
 		setupJenisCoilCombobox(activeItem, inventory.getInventoryCode());
 		
+		int lastPage =
+				receiveCoilListbox.getPageCount();
+		receiveCoilListbox.setActivePage(lastPage-1);
+
 		// display
 		// displayInventoryList();
 		// add 1st row
@@ -285,9 +289,16 @@ public class PenerimaanCoilController extends GFCBaseController {
 		}
 	}	
 	
+	int pgSize = 0;
+	int idx = 0;
+	int pgCount = 0;
+	int actPg = 0;
 	public void onClick$saveButton(Event event) throws Exception {
 		log.info("saveButton click");
 	
+		pgSize = receiveCoilListbox.getPageSize();
+		pgCount = receiveCoilListbox.getPageCount();
+		
 		doSave(event.getTarget());		
 	}
 	
@@ -295,8 +306,13 @@ public class PenerimaanCoilController extends GFCBaseController {
 		Listcell lc;
 		Ent_Inventory inventory;
 		for (Listitem item : receiveCoilListbox.getItems()) {
-			log.info("---index---: "+item.getIndex());
+			idx = item.getIndex();
+			log.info("---index---: "+idx);
 
+			log.info("--->"+String.valueOf(idx / pgSize));
+			actPg = idx/pgSize;
+			receiveCoilListbox.setActivePage(actPg);
+			
 			inventory = item.getValue();
 			
 			// tglTerima
@@ -320,7 +336,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 			
 			// update inventory
 			// getInventoryDao().update(inventory);
-			
+			Thread.sleep(1000);
 			Events.echoEvent("onEchoSave", target, null);
 			
 			break;

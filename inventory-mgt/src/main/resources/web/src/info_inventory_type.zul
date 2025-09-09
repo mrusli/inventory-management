@@ -9,9 +9,9 @@
 			</n:div>
 			<listbox sclass="mt-3" id="inventoryTypeListbox" mold="paging" height="560px" pageSize="8">
 				<listhead>
-					<listheader label="Tipe" width="160px"></listheader>
-					<listheader label="Berat-Jns" width="120px"></listheader>
-					<listheader label="Keterangan" width="280px"></listheader>
+					<listheader label="Tipe" width="160px" id="tipeListheader" sort="auto(productType)"/>
+					<listheader label="Berat-Jns" width="120px"/>
+					<listheader label="Keterangan" width="280px"/>
 					<listheader width="100px"/>
 				</listhead>
 			</listbox>			

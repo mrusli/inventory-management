@@ -6,6 +6,7 @@ import java.util.List;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.event.SortEvent;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Doublebox;
 import org.zkoss.zul.Label;
@@ -39,7 +40,6 @@ public class InventoryTypeController extends GFCBaseController {
 	private ListModelList<Ent_InventoryType> inventoryTypeModelList = null;
 	private ListModelList<Ent_InventoryCode> inventoryCodeModelList = null;
 	private Ent_InventoryType selInvtType = null;
-	private int refIndex = 0;
 	
 	public void onCreate$inventoryTypePanel(Event event) throws Exception {
 		log.info("inventoryTypePanel created");
@@ -51,13 +51,7 @@ public class InventoryTypeController extends GFCBaseController {
 		displayInventoryTypeList();
 		
 		// select
-		if (!inventoryTypeModelList.isEmpty()) {
-			selInvtType = 
-					inventoryTypeModelList.get(0);
-			// log.info(selInvtType.toString());
-			displayInventoryCode(selInvtType);
-		}
-		
+		selectInventoryType();
 	}
 
 	private void loadInventoryTypeList() throws Exception {
@@ -157,6 +151,24 @@ public class InventoryTypeController extends GFCBaseController {
 		};
 	}
 	
+	private void selectInventoryType() throws Exception {
+//		inventoryTypeListbox.renderAll();
+//		if (!inventoryTypeListbox.getItems().isEmpty()) {
+//			Listitem item = 
+//					inventoryTypeListbox.getItemAtIndex(0);
+//			selInvtType = item.getValue();
+//			log.info(selInvtType.toString());
+//			displayInventoryCode(selInvtType);
+//		}
+		
+		if (!inventoryTypeModelList.isEmpty()) {
+			selInvtType = 
+					inventoryTypeModelList.get(0);
+			log.info(selInvtType.toString());
+			displayInventoryCode(selInvtType);
+		}
+	}	
+	
 	public void onSelect$inventoryTypeListbox(Event event) throws Exception {
 		selInvtType = inventoryTypeListbox.getSelectedItem().getValue();
 		if (selInvtType != null) {
@@ -165,6 +177,7 @@ public class InventoryTypeController extends GFCBaseController {
 	}
 
 	private void displayInventoryCode(Ent_InventoryType selInvtType) throws Exception {
+		log.info("displayInventoryCode...");
 		tipeLabel.setValue(selInvtType.getProductType()); 
 		brtJnsLabel.setValue(toDecimalFormat(
 						BigDecimal.valueOf(selInvtType.getDensity()), getLocale(), getDecimalFormat()));
@@ -496,7 +509,15 @@ public class InventoryTypeController extends GFCBaseController {
 		return activeInvtCode;
 	}
 	
-
+	public void onSort$tipeListheader(SortEvent sortEvent) throws Exception {
+		log.info("tipeListheader click");
+		
+		// loadInventoryTypeList();
+		
+		// displayInventoryTypeList();
+		
+		selectInventoryType();
+	}
 
 	public InventoryTypeDao getInventoryTypeDao() {
 		return inventoryTypeDao;

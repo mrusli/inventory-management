@@ -14,7 +14,7 @@
 				<button id="recvFilterButton" label="Filter" visible="true" iconSclass="z-icon-search" sclass="compButton"></button>
 				<button id="coilAddButton" label="Tambah" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>				
 			</n:div>
-			<listbox sclass="mt-3" id="receiveCoilListbox" mold="paging" height="400px" pageSize="5">
+			<listbox sclass="mt-3" id="receiveCoilListbox" mold="paging" height="400px" pageSize="6">
 				<listhead>
 		 			<listheader label="Tgl.Terima" width="160px"></listheader>
 		 			<listheader label="Jenis-Coil" width="140px"></listheader>
@@ -24,7 +24,7 @@
 				</listhead>
 			</listbox>												
 			<n:div sclass="mt-3">
-				<button id="saveButton" label="Simpan" visible="true" iconSclass="z-icon-check" sclass="compButton" style="background-color: var(--bs-primary)"></button>				
+				<button id="saveButton" label="Simpan" visible="true" iconSclass="z-icon-check" sclass="compButton" style="background-color: var(--bs-primary)" autodisable="self"></button>				
 			</n:div>
 		</n:div>
 	</div>	
