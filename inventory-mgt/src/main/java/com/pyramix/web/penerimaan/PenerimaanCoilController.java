@@ -454,6 +454,11 @@ public class PenerimaanCoilController extends GFCBaseController {
 				lc.setLabel("Tersimpan");
 				lc.setStyle("color: --var(--bs-success");
 			
+				// remove delete button
+				lc = (Listcell) item.getChildren().get(8);
+				lc.getChildren().clear();
+				lc.setLabel("");
+				
 				log.info("save--->"+inventory.toString());				
 
 				// update inventory
