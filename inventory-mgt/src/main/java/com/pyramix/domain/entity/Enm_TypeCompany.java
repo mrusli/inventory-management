@@ -1,11 +1,11 @@
 package com.pyramix.domain.entity;
 
-public enum Enm_CompanyType {
+public enum Enm_TypeCompany {
 	PT(0), PD(1), CV(2), TOKO(3), BANK(4), PRV(5);
 	
 	private int value;
 
-	private Enm_CompanyType(int value) {
+	private Enm_TypeCompany(int value) {
 		this.setValue(value);
 	}
 	
@@ -22,14 +22,14 @@ public enum Enm_CompanyType {
 		}
 	}
 
-	public Enm_CompanyType toCompanyType(int value) {
+	public Enm_TypeCompany toCompanyType(int value) {
 		switch (value) {
-			case 0: return Enm_CompanyType.PT;
-			case 1: return Enm_CompanyType.PD;
-			case 2: return Enm_CompanyType.CV;
-			case 3: return Enm_CompanyType.TOKO;
-			case 4: return Enm_CompanyType.BANK;
-			case 5: return Enm_CompanyType.PRV;
+			case 0: return Enm_TypeCompany.PT;
+			case 1: return Enm_TypeCompany.PD;
+			case 2: return Enm_TypeCompany.CV;
+			case 3: return Enm_TypeCompany.TOKO;
+			case 4: return Enm_TypeCompany.BANK;
+			case 5: return Enm_TypeCompany.PRV;
 			default:
 				return null;
 		}

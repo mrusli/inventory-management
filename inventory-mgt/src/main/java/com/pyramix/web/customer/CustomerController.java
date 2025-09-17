@@ -14,7 +14,7 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Textbox;
 
-import com.pyramix.domain.entity.Enm_CompanyType;
+import com.pyramix.domain.entity.Enm_TypeCompany;
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.persistence.customer.dao.CustomerDao;
 import com.pyramix.web.common.GFCBaseController;
@@ -66,7 +66,7 @@ public class CustomerController extends GFCBaseController {
 	private void loadCompanyTypes() {
 		Comboitem comboitem;
 		
-		for (Enm_CompanyType compType : Enm_CompanyType.values()) {
+		for (Enm_TypeCompany compType : Enm_TypeCompany.values()) {
 			comboitem = new Comboitem();
 			comboitem.setLabel(compType.toString());
 			comboitem.setValue(compType);
@@ -148,7 +148,7 @@ public class CustomerController extends GFCBaseController {
 		if (selCustomer.isAddInProgress()) {
 			companyTypeCombobox.setSelectedIndex(0);
 		} else for (Comboitem comboitem : companyTypeCombobox.getItems()) {
-			Enm_CompanyType compType = comboitem.getValue();
+			Enm_TypeCompany compType = comboitem.getValue();
 			if (compType.equals(selCustomer.getCompanyType())) {
 				companyTypeCombobox.setSelectedItem(comboitem);
 				break;

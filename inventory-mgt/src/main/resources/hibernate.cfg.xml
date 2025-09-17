@@ -4,6 +4,8 @@
 "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
 	<session-factory>
+	
+		<mapping class="com.pyramix.domain.entity.Ent_Company"/>
 
 		<mapping class="com.pyramix.domain.entity.Ent_InventoryType"/>
 
@@ -12,6 +14,14 @@
 		<mapping class="com.pyramix.domain.entity.Ent_Customer"/>
 		
 		<mapping class="com.pyramix.domain.entity.Ent_Inventory"/>
+
+		<mapping class="com.pyramix.domain.entity.Ent_Serial"/>
+
+		<mapping class="com.pyramix.domain.entity.Ent_InventoryProcess"/>
+
+		<mapping class="com.pyramix.domain.entity.Ent_InventoryProcessMaterial"/>
+
+		<mapping class="com.pyramix.domain.entity.Ent_InventoryProcessProduct"/>
 
 	</session-factory>
 </hibernate-configuration>

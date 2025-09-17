@@ -8,7 +8,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -17,61 +16,46 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Data
 @Entity
-@Table(name = "customer")
-public class Ent_Customer extends IdBasedObject {
+@Table(name = "organization")
+public class Ent_Company extends IdBasedObject {
 
-	@Column(name = "co_type")
+	@Column(name = "type")
 	@Enumerated(EnumType.ORDINAL)
 	private Enm_TypeCompany companyType;
 	
-	@Column(name = "co_legalname")
+	@Column(name = "legal_name")
 	private String companyLegalName;
 	
-	@Column(name = "co_displname")
+	@Column(name = "display_name")
 	private String companyDisplayName;
 	
-	@Column(name = "contact")
-	private String contactPerson;
-	
-	@Column(name = "addrs01")
+	@Column(name = "address_01")
 	private String address01;
 	
-	@Column(name = "addrs02")
+	@Column(name = "address_02")
 	private String address02;
 	
 	@Column(name = "city")
 	private String city;
 	
-	@Column(name = "p_code")
+	@Column(name = "postal_code")
 	private String postalCode;
 	
 	@Column(name = "phone")
 	private String phone;
 	
-	@Column(name = "phone_ext")
-	private String extension;
-	
 	@Column(name = "email")
 	private String email;
 	
-	@Column(name = "note")
-	private String note;
+	@Column(name = "fax")
+	private String fax;
 	
-	@Column(name = "co_actv")
+	@Column(name = "hoq")
 	@Convert(converter = TrueFalseConverter.class)
-	private boolean active = true;
+	private boolean hoq;
 	
-	@Transient
-	private boolean addInProgress = false;	
-
-	public Ent_Customer(Enm_TypeCompany companyType, String companyLegalName, String companyDisplayName) {
-		super();
-		this.companyType = companyType;
-		this.companyLegalName = companyLegalName;
-		this.companyDisplayName = companyDisplayName;
-	}
-
-	public Ent_Customer() {
-		super();
-	}
+	@Column(name = "proc")
+	@Convert(converter = TrueFalseConverter.class)
+	private boolean proc;
+	
 }
