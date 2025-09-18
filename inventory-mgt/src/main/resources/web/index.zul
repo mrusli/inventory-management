@@ -78,19 +78,35 @@
 			 								Tabel
 			 							</n:a>
 			 						</n:li>
-<!-- 			 					
-									<n:li>
+			 						
+<!--
+ 									<n:li>
 			 							<n:hr class="dropdown-divider"></n:hr>
 			 						</n:li> 			 						
  									<n:li>
 			 							<n:a class="dropdown-item"
-			 								href="#">
-			 								Something else here
+			 								href="#" onClick="companyMenuClick();">
+			 								Company
 			 							</n:a>
 			 						</n:li> 
--->
+ -->
 			 					</n:ul>
 			 				</n:li>
+			 				<n:li class="nav-item dropdown">
+			 					<n:a class="nav-link nav-adjust dropdown-toggle"
+			 						href="#" role="button" data-bs-toggle="dropdown"
+			 						aria-expanded="false">
+			 						Profile
+			 					</n:a>
+			 					<n:ul class="dropdown-menu">
+			 						<n:li>
+			 							<n:a class="dropdown-item"
+			 								href="#" onClick="companyMenuClick();">
+			 								Company
+			 							</n:a>
+			 						</n:li>
+								</n:ul>
+							</n:li>			 				
 			 			</n:ul>
 			 		</n:ul>
 			 	</n:div>

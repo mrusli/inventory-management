@@ -51,5 +51,9 @@
 
 	<bean id="inventoryCodeController" class="com.pyramix.web.inventory.InventoryCodeController" scope="prototype" parent="basisController">
 	
+	</bean>
+	
+	<bean id="infoCompanyController" class="com.pyramix.web.company.CompanyController" scope="prototype" parent="basisController">
+	
 	</bean>    
 </beans>

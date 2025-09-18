@@ -32,3 +32,7 @@ function inventoryTypeMenuClick() {
 function inventoryCodeMenuClick() {
 	zAu.send(new zk.Event(zk.Widget.$(this), 'onClickInventoryCodeMenu', 'Admin...'));
 }
+
+function companyMenuClick() {
+	zAu.send(new zk.Event(zk.Widget.$(this), 'onClickCompanyMenu', 'Admin...'));	
+}
