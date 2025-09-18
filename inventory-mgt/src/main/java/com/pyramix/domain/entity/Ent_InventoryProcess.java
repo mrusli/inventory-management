@@ -19,7 +19,7 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "inventory_process")
-public class Ent_InventoryProcess {
+public class Ent_InventoryProcess extends IdBasedObject {
 
 	@Column(name = "order_date")
 	private LocalDate orderDate;
