@@ -205,7 +205,7 @@ public class CompanyController extends GFCBaseController {
 		renderCompanyList();
 		
 		// locate
-		locateCompanyData();
+		locateCompanyData(activeComp);
 		
 		selCompany = activeComp;
 		selCompany.setAddInProgress(false);
@@ -255,8 +255,15 @@ public class CompanyController extends GFCBaseController {
 		return selCompany;
 	}
 
-	private void locateCompanyData() {
-		// TODO Auto-generated method stub
+	private void locateCompanyData(Ent_Company activeComp) {
+		companyListbox.renderAll();
+		for (Listitem item : companyListbox.getItems()) {
+			Ent_Company comp = item.getValue();
+			if (activeComp.equals(comp)) {
+				companyListbox.setSelectedItem(item);
+				break;
+			}
+		}
 		
 	}	
 	
