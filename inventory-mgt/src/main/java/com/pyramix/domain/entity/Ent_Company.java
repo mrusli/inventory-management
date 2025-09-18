@@ -8,6 +8,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -57,5 +58,8 @@ public class Ent_Company extends IdBasedObject {
 	@Column(name = "proc")
 	@Convert(converter = TrueFalseConverter.class)
 	private boolean proc;
+	
+	@Transient
+	private boolean addInProgress = false;
 	
 }

@@ -4,6 +4,72 @@
 		<n:h3>Company</n:h3>	
 	</n:div>
 	<div sclass="row mt-3">
-
+		<n:div sclass="col-6">
+			<n:div>
+				<button id="addCompanyButton" label="Tambah" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>
+			</n:div>
+			<listbox sclass="mt-3" id="companyListbox" mold="paging" height="300px" pageSize="8">
+				<listhead>
+					<listheader label="Nama Perusahaan" width="360px"/>
+					<listheader label="Alamat"/>
+				</listhead>
+			</listbox>
+		</n:div>
+		<n:div sclass="col-6">
+			<label id="companyNameLabel" sclass="h5 text-primary"></label>
+			<combobox id="companyTypeCombobox" width="120px" visible="false"></combobox>
+			<textbox id="companyNameTextbox" width="480px" visible="false"></textbox>
+			<grid style="border:none;">
+				<rows>
+					<row>
+						<cell width="15%">Singkat:</cell>
+						<cell width="35%" sclass="text-primary">
+							<label id="displayNameLabel"></label>
+							<textbox id="displayNameTextbox" visible="false" width="180px"></textbox>
+						</cell>
+						<cell width="15%">No-Telp:</cell>
+						<cell sclass="text-primary">
+							<label id="contactNumberLabel"></label>
+							<textbox id="contactNumberTextbox" visible="false" width="180px"></textbox>
+						</cell>
+					</row>
+					<row>
+						<cell>Email:</cell>
+						<cell sclass="text-primary" colspan="3">
+							<label id="emailLabel"></label>
+							<textbox id="emailTextbox" visible="false" width="500px"></textbox>
+						</cell>
+					</row>
+					<row>
+						<cell></cell>
+						<cell><checkbox id="hoqCheckbox" label="Pusat"></checkbox></cell>
+						<cell></cell>
+						<cell><checkbox id="prcCheckbox" label="Coil-Center"></checkbox></cell>
+					</row>
+				</rows>
+			</grid>
+			<n:h5>Alamat Lengkap:</n:h5>
+			<grid style="border:none;">
+				<rows>
+					<row>
+						<cell sclass="text-primary">
+							<label id="address01Label"></label>
+							<textbox id="address01Textbox" visible="false" width="600px"></textbox>
+						</cell>
+					</row>
+					<row>
+						<cell sclass="text-primary">
+							<label id="address02Label"></label>
+							<textbox id="address02Textbox" visible="false" width="600px"></textbox>
+						</cell>
+					</row>					
+				</rows>
+			</grid>
+			<n:div sclass="mt-3">
+				<button id="companyEditButton" label="Ubah" visible="true" iconSclass="z-icon-pencil" sclass="compButton" style="background-color: var(--bs-warning)"></button>
+				<button id="companySaveButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-o" sclass="compButton" style="background-color: var(--bs-primary)"></button>
+			</n:div>
+			
+		</n:div>
 	</div>
 </div>

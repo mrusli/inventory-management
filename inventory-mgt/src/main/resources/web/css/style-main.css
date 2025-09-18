@@ -42,3 +42,6 @@
 .navbar-brand.nav-adjust {
 	margin-right: 0px;
 }
+.inputTextUpperCase {
+	text-transform: uppercase;
+}

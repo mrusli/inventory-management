@@ -54,6 +54,6 @@
 	</bean>
 	
 	<bean id="infoCompanyController" class="com.pyramix.web.company.CompanyController" scope="prototype" parent="basisController">
-	
+		<property name="companyDao" ref="companyDao"></property>
 	</bean>    
 </beans>
