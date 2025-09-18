@@ -10,4 +10,10 @@ public interface CompanyDao {
 	
 	public List<Ent_Company> findAllCompany() throws Exception;
 	
+	public Ent_Company update(Ent_Company company) throws Exception;
+	
+	public void save(Ent_Company company) throws Exception;
+	
+	public void delete(Ent_Company company) throws Exception;
+	
 }
