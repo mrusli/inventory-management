@@ -72,7 +72,6 @@ public class CustomerController extends GFCBaseController {
 			comboitem.setValue(compType);
 			comboitem.setParent(companyTypeCombobox);
 		}
-		
 	}
 
 	private void loadCustomerList() throws Exception {

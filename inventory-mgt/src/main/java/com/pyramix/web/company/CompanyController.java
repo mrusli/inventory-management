@@ -59,6 +59,7 @@ public class CompanyController extends GFCBaseController {
 		
 		// select 1s company
 		if (!companyModelList.isEmpty()) {
+			log.info("here....!!!!");
 			selCompany =
 					companyModelList.get(0);
 			// display
@@ -264,8 +265,14 @@ public class CompanyController extends GFCBaseController {
 				break;
 			}
 		}
-		
 	}	
+	
+	public void onClick$companyEditButton(Event event) {
+		log.info("companyEditButton click");
+		
+		// allow user to edit info
+		setToAllowEditInfo();
+	}
 	
 	public CompanyDao getCompanyDao() {
 		return companyDao;
