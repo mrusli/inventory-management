@@ -23,6 +23,7 @@ public class Ent_InventoryCode extends IdBasedObject {
 	private String codeDescription;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_InventoryType inventoryType;
 
 	@Transient

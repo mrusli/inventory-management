@@ -21,10 +21,14 @@ public class Ent_Serial extends IdBasedObject {
 	private Enm_TypeDocument documentType;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_Company company;
 	
 	@Column(name = "ser_date")
 	private LocalDate serialDate;
+	
+	@Column(name = "ser_num")
+	private int serialNumber;
 	
 	@Column(name = "ser_comp")
 	private String serialComp;

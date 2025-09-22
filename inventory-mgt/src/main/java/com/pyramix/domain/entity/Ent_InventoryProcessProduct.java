@@ -50,10 +50,8 @@ public class Ent_InventoryProcessProduct extends IdBasedObject {
 	private Enm_InventoryPacking inventoryPacking = Enm_InventoryPacking.petian;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_Company processedByCo;
-
-	@ManyToOne
-	private Ent_Customer customer;
 	
 	@ManyToOne
 	private Ent_InventoryProcessMaterial processMaterial;

@@ -3,6 +3,7 @@ package com.pyramix.domain.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -34,19 +36,27 @@ public class Ent_InventoryProcess extends IdBasedObject {
 	@Column(name = "process_note")
 	private String note;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Ent_Serial processNumber;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_Company processedByCo;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_Company processedForCo;
 	
-	@OneToMany
-	private List<Ent_InventoryProcessMaterial> processMaterials;
-	
 	@ManyToOne
-	private Ent_Inventory inventoryCoil;
+	private Ent_Customer customer;	
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@ToString.Exclude
+	private List<Ent_InventoryProcessMaterial> processMaterials;	
+	
+	@Column(name = "process_type")
+	private Enm_TypeProcess processType;
 
+	@Transient
+	private boolean addInProgress = false;
 }

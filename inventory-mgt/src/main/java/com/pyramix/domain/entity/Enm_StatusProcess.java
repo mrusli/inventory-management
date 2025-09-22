@@ -1,7 +1,7 @@
 package com.pyramix.domain.entity;
 
 public enum Enm_StatusProcess {
-	permohonan(0), proses(1), selesai(2), batal(3);
+	Permohonan(0), Proses(1), Selesai(2), Batal(3);
 
 	private int value;
 	

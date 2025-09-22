@@ -536,10 +536,10 @@ public class GFCBaseController extends GenericForwardComposer<Component> impleme
 	 * @param serialNum
 	 * @return
 	 */
-	public String formatSerialComp(String code, Date currentDate, int serialNum) {
+	public String formatSerialComp(String code, LocalDate currentDate, int serialNum) {
 		
-		String year 	= getLocalDateYear(asLocalDate(currentDate), "yy", getLocale());
-		String month	= getLocalDateMonth(asLocalDate(currentDate), "MM", getLocale());		
+		String year 	= getLocalDateYear(currentDate, "yy", getLocale());
+		String month	= getLocalDateMonth(currentDate, "MM", getLocale());		
 		
 		return code+"."+
 			formatTo2DigitWithLeadingZeo(Integer.valueOf(year))+"."+

@@ -1,7 +1,7 @@
 package com.pyramix.domain.entity;
 
 public enum Enm_TypeProcess {
-	shearing(0), slitting(1), forming(2);
+	Shearing(0), Slitting(1), Forming(2);
 	
 	private int value;
 

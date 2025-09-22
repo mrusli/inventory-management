@@ -2,6 +2,7 @@ package com.pyramix.domain.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -43,19 +44,19 @@ public class Ent_InventoryProcessMaterial extends IdBasedObject {
 	private Ent_InventoryCode inventoryCode;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_InventoryProcess inventoryProcess;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private List<Ent_InventoryProcessProduct> processProducts;
+
+	@ManyToOne
+	private Ent_Inventory inventoryCoil;
 	
 	@Column(name = "cntrct")
 	private String contractNumber;
 	
 	@Column(name = "lc")
 	private String lcNumber;
-	
-	@Column(name = "process_type")
-	private Enm_TypeProcess processType;
-
-	
 }

@@ -59,7 +59,6 @@ public class CompanyController extends GFCBaseController {
 		
 		// select 1s company
 		if (!companyModelList.isEmpty()) {
-			log.info("here....!!!!");
 			selCompany =
 					companyModelList.get(0);
 			// display

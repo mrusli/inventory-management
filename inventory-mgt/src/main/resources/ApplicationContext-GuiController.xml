@@ -15,6 +15,10 @@
 	
 	</bean>
 	
+	<bean id="serialNumberGenerator" class="com.pyramix.web.common.SerialNumberGenerator" scope="prototype" parent="basisController">
+    	<property name="serialDao" ref="serialDao"></property>	
+	</bean>
+	
     <bean id="mainController" class="com.pyramix.web.main.MainController" scope="prototype" parent="basisController">
     	<property name="settingsUtility" ref="settingsUtility"></property>
     </bean>
@@ -26,7 +30,11 @@
     </bean>
     
     <bean id="infoProcessCoilController" class="com.pyramix.web.process.ProcessCoilController" scope="prototype" parent="basisController">
-    
+    	<property name="inventoryProcessDao" ref="inventoryProcessDao"></property>
+    	<property name="customerDao" ref="customerDao"></property>
+    	<property name="serialNumberGenerator" ref="serialNumberGenerator"></property>
+    	<property name="companyDao" ref="companyDao"></property>
+    	<property name="inventoryDao" ref="inventoryDao"></property>
     </bean>
     
     <bean id="infoProductController" class="com.pyramix.web.product.ProductController" scope="prototype" parent="basisController">

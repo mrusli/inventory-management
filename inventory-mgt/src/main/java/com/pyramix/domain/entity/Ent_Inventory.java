@@ -3,6 +3,7 @@ package com.pyramix.domain.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,6 +15,7 @@ import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.ToString.Exclude;
 
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)
@@ -63,7 +65,8 @@ public class Ent_Inventory extends IdBasedObject {
 	@Column(name = "inv_note")
 	private String note;
 	
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private List<Ent_InventoryProcess> inventoryProcesses;
 	
 	@Transient

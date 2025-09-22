@@ -4,25 +4,120 @@
 		<n:h3>Proses Coil</n:h3>	
 	</n:div>
 	<div sclass="row mt-3">
-		<n:div sclass="col-12">
+		<n:div sclass="col-4">
 			<n:div sclass="mt-3">
-				Dari:
-				<datebox id="processFromDatebox" width="190px"></datebox>
-				<label value=" s/d "></label>
-				<datebox id="processToDatebox" width="190px"></datebox>
-				Customer:
-				<combobox id="customerCombobox" width="180px" visible="true"></combobox>
-				<button id="processFilterButton" label="Filter" visible="true" iconSclass="z-icon-search" sclass="compButton"></button>
+<!--
+ 				<n:div sclass="flex ">
+					Dari:
+					<datebox id="processFromDatebox" width="190px"></datebox>
+					<label value=" s/d "></label>
+					<datebox id="processToDatebox" width="190px"></datebox>				
+				</n:div>
+				<div>
+					Customer:
+					<combobox id="customerCombobox" width="180px" visible="true"></combobox>
+					<button id="processFilterButton" label="Filter" visible="false" iconSclass="z-icon-search" sclass="compButton"></button>
+				</div>
+ -->
+ 				<div>
+					<button id="addProcessButton" label="Tambah" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>
+				</div>
 			</n:div>
-			<listbox sclass="mt-3" id="processCoilListbox" mold="paging" height="400px" pageSize="16">
+			<listbox sclass="mt-3" id="processListbox" height="390px">
 				<listhead>
-		 			<listheader label="Tgl.Proses" width="160px"></listheader>
-		 			<listheader label="Jenis-Coil" width="140px"></listheader>
-		 			<listheader label="Customer" width="140px"></listheader>
-					<listheader label="No.Coil" width="220px"></listheader>
-					<listheader></listheader>
+		 			<listheader label="Tgl.Proses" width="120px"/>
+		 			<listheader label="No.Proses" width="120px"/>
+		 			<listheader label="Customer"/>
 				</listhead>
 			</listbox>												
 		</n:div>
+		<n:div sclass="col-8">
+			<label id="customerNameLabel" value="PT.KINMASARU RANGGUN MANDIRI" sclass="h5 text-primary"></label>
+			<combobox id="customerNameCombobox" width="480px" visible="false"></combobox>
+			<n:div>
+				<grid style="border:none;">
+					<rows>
+						<row>
+							<cell width="15%">Tgl.Proses:</cell>
+							<cell width="35%" sclass="text-primary">
+								<label id="processDateLabel" value="19/09/2025"></label>
+								<datebox id="processDatebox" visible="false" width="180px"></datebox>
+							</cell>
+							<cell width="15%">No.Proses:</cell>
+							<cell sclass="text-primary">
+								<label id="processNumberLabel"></label>
+								<!-- <textbox id="processNumberTextbox" disabled="true" visible="false" width="180px"></textbox> -->
+							</cell>
+						</row>
+						<row>
+							<cell>Status:</cell>
+							<cell sclass="text-primary">
+								<label id="statusLabel" value="Proses"></label>
+							</cell>
+							<cell></cell>
+							<cell></cell>
+						</row>
+					</rows>
+				</grid>			
+			</n:div>
+			<n:div>
+				<n:h5>Material</n:h5>
+				<grid style="border:none;">
+					<rows>
+						<row>
+							<cell width="15%">Proses:</cell>
+							<cell width="35%" sclass="text-primary">
+								<label id="processTypeLabel" value="Slitting"></label>
+								<combobox id="processTypeCombobox" visible="false" width="180px"></combobox>
+							</cell>
+							<cell width="15%"></cell>
+							<cell align="right">
+								<button id="addMaterialButton" label="Tambah" visible="false" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>							
+							</cell>
+						</row>
+					</rows>
+				</grid>				
+				<listbox id="materialListbox" height="250px">
+					<listhead>
+						<listheader label="Jenis-Coil" width="120px"/>
+						<listheader label="Spek" width="180px"/>
+						<listheader label="Qty(Kg)" width="120px"/>
+						<listheader label="Marking" width="120px"/>
+						<listheader/>
+					</listhead>
+				</listbox>
+			</n:div>
+			<n:div sclass="mt-3">
+				<n:h5>Produk</n:h5>
+				<grid style="border:none;">
+					<rows>
+						<row>
+							<cell width="15%">Material:</cell>
+							<cell width="35%" sclass="text-primary">
+								<label id="materialToProductLabel" value="MR020 Maroon 2.038Kg"></label>
+							</cell>
+							<cell width="15%"></cell>
+							<cell align="right">
+								<button id="addProductButton" label="Tambah" visible="false" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>							
+							</cell>
+						</row>
+					</rows>
+				</grid>
+				<listbox id="productListbox" height="250px">
+					<listhead>
+						<listheader label="Marking" width="120px"/>
+						<listheader label="Spek" width="260px"/>
+						<listheader label="Qty(Kg)" width="120px"/>
+						<listheader label="Qty(Lbr)" width="120px"/>
+						<listheader/>
+					</listhead>
+				</listbox>				
+			</n:div>
+			<n:div sclass="mt-3">
+				<button id="processEditButton" label="Ubah" visible="true" iconSclass="z-icon-pencil" sclass="compButton" style="background-color: var(--bs-warning)"></button>
+				<button id="processSaveButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-o" sclass="compButton" style="background-color: var(--bs-primary)"></button>
+				<button id="printReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton"></button>
+			</n:div>	
+		</n:div>	
 	</div>	
 </div>
