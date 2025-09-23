@@ -21,6 +21,7 @@
  -->
  				<div>
 					<button id="addProcessButton" label="Tambah" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>
+					<button id="testEqButton" label="Test-Eq"></button>
 				</div>
 			</n:div>
 			<listbox sclass="mt-3" id="processListbox" height="390px">
