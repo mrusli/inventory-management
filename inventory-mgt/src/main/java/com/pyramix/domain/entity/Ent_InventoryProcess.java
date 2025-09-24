@@ -58,5 +58,5 @@ public class Ent_InventoryProcess extends IdBasedObject {
 	private Enm_TypeProcess processType;
 
 	@Transient
-	private boolean addInProgress = false;
+	private boolean editInProgress = false;
 }

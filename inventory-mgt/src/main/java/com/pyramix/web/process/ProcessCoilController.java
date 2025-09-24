@@ -24,7 +24,6 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Textbox;
 
-import com.pyramix.domain.entity.Enm_StatusInventory;
 import com.pyramix.domain.entity.Enm_StatusProcess;
 import com.pyramix.domain.entity.Enm_TypeDocument;
 import com.pyramix.domain.entity.Enm_TypeProcess;
@@ -314,6 +313,19 @@ public class ProcessCoilController extends GFCBaseController {
 				lc = new Listcell(material.getMarking());
 				lc.setParent(item);
 				
+				if (material.isEditInProgress()) {
+					lc = new Listcell();
+					lc.setParent(item);
+					
+					Button button = new Button();
+					button.setIconSclass("z-icon-pencil");
+					button.setSclass("compButton");
+					button.setStyle("background-color:var(--bs-warning);");
+					button.setParent(lc);
+					button.addEventListener(Events.ON_CLICK, onMaterialEditButtonClick());
+				}
+				
+				
 				item.setValue(material);
 			}
 		};
@@ -357,7 +369,6 @@ public class ProcessCoilController extends GFCBaseController {
 		// get the selected customer
 		Ent_Customer selCustomer =
 				customerNameCombobox.getSelectedItem().getValue();
-//		log.info("selected customer: "+selCustomer.getCompanyLegalName());
 		
 		// find inventory with selected customer
 		List<Ent_Inventory> inventoryList = 
@@ -369,7 +380,6 @@ public class ProcessCoilController extends GFCBaseController {
 				inventoryCodeSet.add(invt.getInventoryCode());
 			}
 		}
-//		inventoryCodeSet.forEach(c -> log.info(c.toString()));
 		
 		return inventoryCodeSet;
 	}
@@ -409,14 +419,6 @@ public class ProcessCoilController extends GFCBaseController {
 	private Ent_InventoryProcessMaterial addMaterialInLastPos() {
 		Ent_InventoryProcessMaterial processMaterial =
 				new Ent_InventoryProcessMaterial();
-		// set to prevent error
-//		processMaterial.setThickness(0.0);
-//		processMaterial.setWidth(0.0);
-//		processMaterial.setLength(0.0);
-//		processMaterial.setWeightQuantity(0.0);
-		
-		// add to materialList
-		// materialList.add(processMaterial);
 		
 		int posToAdd =
 				materialModelList.size();
@@ -671,7 +673,12 @@ public class ProcessCoilController extends GFCBaseController {
 		if (listitem != null) {
 			Ent_InventoryProcessMaterial editedProcessMaterial =
 					getEditedProcessMaterial(listitem);
-			selInventoryProcess.getProcessMaterials().add(editedProcessMaterial);
+			if (selInventoryProcess.isEditInProgress()) {
+				
+			} else {
+				selInventoryProcess.getProcessMaterials().add(editedProcessMaterial);
+				selInventoryProcess.setEditInProgress(false);
+			}
 		}
 		// get the process data before saving
 		selInventoryProcess = getEditedInventoryProcessData();
@@ -683,7 +690,6 @@ public class ProcessCoilController extends GFCBaseController {
 		}
 		// update
 		selInventoryProcess = getInventoryProcessDao().update(selInventoryProcess);
-
 		// load
 		loadInventoryProcessList();
 		// render
@@ -692,7 +698,6 @@ public class ProcessCoilController extends GFCBaseController {
 		locateInventoryProcessData();
 		// display
 		displayDetailInventoryProcessInfo();
-		
 		// hide product button
 		addProductButton.setVisible(false);
 		// hide material button
@@ -826,6 +831,61 @@ public class ProcessCoilController extends GFCBaseController {
 		}
 	}
 	
+	public void onClick$processEditButton(Event event) throws Exception {
+		log.info("processEditButton click");
+		
+		setToAllowEditInfo();
+
+		selInventoryProcess.setEditInProgress(true);
+		Ent_InventoryProcess invtProc = getInventoryProcessDao()
+				.findInventoryProcessMaterialsByProxy(selInventoryProcess.getId());
+		invtProc.getProcessMaterials().forEach(m -> m.setEditInProgress(true));
+		
+		renderInventoryProcessMaterial(invtProc.getProcessMaterials());
+		
+		// show the save button
+		processSaveButton.setVisible(true);
+		// allow user to edit and print
+		processEditButton.setVisible(false); 
+		printReportButton.setVisible(false);		
+	}
+
+	protected EventListener<Event> onMaterialEditButtonClick() {
+
+		return new EventListener<Event>() {
+			
+			@Override
+			public void onEvent(Event event) throws Exception {
+				log.info(event.getTarget().toString()+" click...");
+				Listitem item = (Listitem) event.getTarget().getParent().getParent();
+				Button button = (Button) event.getTarget();
+				Ent_InventoryProcessMaterial material = item.getValue();
+				
+				if (material.isEditInProgress()) {
+					// allow to edit item values
+					
+					editToSave(button);
+					material.setEditInProgress(false);
+				} else {
+					// allow to update/save
+					
+					saveToEdit(button);
+					material.setEditInProgress(true);
+				}
+			}
+		};
+	}	
+	
+	protected void editToSave(Button button) {
+		button.setIconSclass("z-icon-floppy-o");
+		button.setStyle("background-color:var(--bs-primary);");		
+	}
+
+	protected void saveToEdit(Button button) {
+		button.setIconSclass("z-icon-pencil");
+		button.setStyle("background-color:var(--bs-warning);");		
+	}
+
 	public InventoryProcessDao getInventoryProcessDao() {
 		return inventoryProcessDao;
 	}

@@ -83,6 +83,7 @@
 						<listheader label="Spek" width="180px"/>
 						<listheader label="Qty(Kg)" width="120px"/>
 						<listheader label="Marking" width="120px"/>
+						<listheader width="80px"/>
 						<listheader/>
 					</listhead>
 				</listbox>
