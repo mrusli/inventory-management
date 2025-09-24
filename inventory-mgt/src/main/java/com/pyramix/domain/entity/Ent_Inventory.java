@@ -15,7 +15,6 @@ import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import lombok.ToString.Exclude;
 
 @EqualsAndHashCode(callSuper = false)
 @ToString(callSuper = true)

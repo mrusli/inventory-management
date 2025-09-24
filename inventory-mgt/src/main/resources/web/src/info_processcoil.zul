@@ -21,10 +21,9 @@
  -->
  				<div>
 					<button id="addProcessButton" label="Tambah" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>
-					<button id="testEqButton" label="Test-Eq"></button>
 				</div>
 			</n:div>
-			<listbox sclass="mt-3" id="processListbox" height="390px">
+			<listbox sclass="mt-3" id="processListbox" height="735px">
 				<listhead>
 		 			<listheader label="Tgl.Proses" width="120px"/>
 		 			<listheader label="No.Proses" width="120px"/>
@@ -33,15 +32,15 @@
 			</listbox>												
 		</n:div>
 		<n:div sclass="col-8">
-			<label id="customerNameLabel" value="PT.KINMASARU RANGGUN MANDIRI" sclass="h5 text-primary"></label>
-			<combobox id="customerNameCombobox" width="480px" visible="false"></combobox>
+			<label id="customerNameLabel" sclass="h5 text-primary"></label>
+			<combobox id="customerNameCombobox" width="430px" visible="false"></combobox>
 			<n:div>
 				<grid style="border:none;">
 					<rows>
 						<row>
 							<cell width="15%">Tgl.Proses:</cell>
 							<cell width="35%" sclass="text-primary">
-								<label id="processDateLabel" value="19/09/2025"></label>
+								<label id="processDateLabel"></label>
 								<datebox id="processDatebox" visible="false" width="180px"></datebox>
 							</cell>
 							<cell width="15%">No.Proses:</cell>
@@ -68,7 +67,7 @@
 						<row>
 							<cell width="15%">Proses:</cell>
 							<cell width="35%" sclass="text-primary">
-								<label id="processTypeLabel" value="Slitting"></label>
+								<label id="processTypeLabel"></label>
 								<combobox id="processTypeCombobox" visible="false" width="180px"></combobox>
 							</cell>
 							<cell width="15%"></cell>
@@ -118,6 +117,9 @@
 				<button id="processEditButton" label="Ubah" visible="true" iconSclass="z-icon-pencil" sclass="compButton" style="background-color: var(--bs-warning)"></button>
 				<button id="processSaveButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-o" sclass="compButton" style="background-color: var(--bs-primary)"></button>
 				<button id="printReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton"></button>
+			</n:div>
+			<n:div sclass="mt-3">
+			
 			</n:div>	
 		</n:div>	
 	</div>	

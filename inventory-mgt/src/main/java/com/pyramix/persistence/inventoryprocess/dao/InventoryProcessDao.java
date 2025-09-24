@@ -3,6 +3,7 @@ package com.pyramix.persistence.inventoryprocess.dao;
 import java.util.List;
 
 import com.pyramix.domain.entity.Ent_InventoryProcess;
+import com.pyramix.domain.entity.Ent_InventoryProcessMaterial;
 
 public interface InventoryProcessDao {
 
@@ -15,5 +16,9 @@ public interface InventoryProcessDao {
 	public void save(Ent_InventoryProcess inventoryProcess) throws Exception;
 	
 	public void delete(Ent_InventoryProcess inventoryProcess) throws Exception;
+
+	public Ent_InventoryProcess findInventoryProcessMaterialsByProxy(long id) throws Exception;
+
+	public Ent_InventoryProcessMaterial findInventoryProcessProductsByProxy(long id) throws Exception;
 	
 }
