@@ -63,10 +63,9 @@ public class ProcessCoilController extends GFCBaseController {
 		processTypeLabel, materialToProductLabel;
 	private Combobox customerNameCombobox, processTypeCombobox;
 	private Datebox processDatebox;
-	private Button addMaterialButton, addProductButton, processEditButton, processSaveButton,
+	private Button addMaterialButton, addProductButton, processSaveButton,
 		printReportButton;
 	
-	// private List<Ent_InventoryProcessMaterial> materialList = null;
 	private List<Ent_Customer> customerList = null;
 	private ListModelList<Ent_InventoryProcess> processModelList = null;
 	private ListModelList<Ent_InventoryProcessMaterial> materialModelList = null;
@@ -234,7 +233,6 @@ public class ProcessCoilController extends GFCBaseController {
 		// allow to add material
 		addMaterialButton.setVisible(true);
 		// hide the edit and print button
-		processEditButton.setVisible(false); 
 		printReportButton.setVisible(false);
 	}
 	
@@ -313,19 +311,18 @@ public class ProcessCoilController extends GFCBaseController {
 				lc = new Listcell(material.getMarking());
 				lc.setParent(item);
 				
-				if (material.isEditInProgress()) {
-					lc = new Listcell();
-					lc.setParent(item);
-					
-					Button button = new Button();
-					button.setIconSclass("z-icon-pencil");
-					button.setSclass("compButton");
-					button.setStyle("background-color:var(--bs-warning);");
-					button.setParent(lc);
-					button.addEventListener(Events.ON_CLICK, onMaterialEditButtonClick());
-				}
-				
-				
+//				if (material.isEditInProgress()) {
+//					lc = new Listcell();
+//					lc.setParent(item);
+//					
+//					Button button = new Button();
+//					button.setIconSclass("z-icon-pencil");
+//					button.setSclass("compButton");
+//					button.setStyle("background-color:var(--bs-warning);");
+//					button.setParent(lc);
+//					button.addEventListener(Events.ON_CLICK, onMaterialEditButtonClick());
+//				}
+								
 				item.setValue(material);
 			}
 		};
@@ -673,12 +670,7 @@ public class ProcessCoilController extends GFCBaseController {
 		if (listitem != null) {
 			Ent_InventoryProcessMaterial editedProcessMaterial =
 					getEditedProcessMaterial(listitem);
-			if (selInventoryProcess.isEditInProgress()) {
-				
-			} else {
-				selInventoryProcess.getProcessMaterials().add(editedProcessMaterial);
-				selInventoryProcess.setEditInProgress(false);
-			}
+			selInventoryProcess.getProcessMaterials().add(editedProcessMaterial);
 		}
 		// get the process data before saving
 		selInventoryProcess = getEditedInventoryProcessData();
@@ -704,8 +696,7 @@ public class ProcessCoilController extends GFCBaseController {
 		addMaterialButton.setVisible(false);
 		// hide save button
 		processSaveButton.setVisible(false);
-		// allow user to edit and print
-		processEditButton.setVisible(true); 
+		// allow user to print
 		printReportButton.setVisible(true);		
 		
 		// Ent_InventoryProcess activeProcess = getEditedInventoryProcessData();
@@ -831,60 +822,59 @@ public class ProcessCoilController extends GFCBaseController {
 		}
 	}
 	
-	public void onClick$processEditButton(Event event) throws Exception {
-		log.info("processEditButton click");
-		
-		setToAllowEditInfo();
+//	public void onClick$processEditButton(Event event) throws Exception {
+//		log.info("processEditButton click");
+//		
+//		setToAllowEditInfo();
+//
+//		selInventoryProcess.setEditInProgress(true);
+//		Ent_InventoryProcess invtProc = getInventoryProcessDao()
+//				.findInventoryProcessMaterialsByProxy(selInventoryProcess.getId());
+//		invtProc.getProcessMaterials().forEach(m -> m.setEditInProgress(true));
+//		
+//		renderInventoryProcessMaterial(invtProc.getProcessMaterials());
+//		
+//		// show the save button
+//		processSaveButton.setVisible(true);
+//		// allow user to edit and print
+//		printReportButton.setVisible(false);		
+//	}
 
-		selInventoryProcess.setEditInProgress(true);
-		Ent_InventoryProcess invtProc = getInventoryProcessDao()
-				.findInventoryProcessMaterialsByProxy(selInventoryProcess.getId());
-		invtProc.getProcessMaterials().forEach(m -> m.setEditInProgress(true));
-		
-		renderInventoryProcessMaterial(invtProc.getProcessMaterials());
-		
-		// show the save button
-		processSaveButton.setVisible(true);
-		// allow user to edit and print
-		processEditButton.setVisible(false); 
-		printReportButton.setVisible(false);		
-	}
-
-	protected EventListener<Event> onMaterialEditButtonClick() {
-
-		return new EventListener<Event>() {
-			
-			@Override
-			public void onEvent(Event event) throws Exception {
-				log.info(event.getTarget().toString()+" click...");
-				Listitem item = (Listitem) event.getTarget().getParent().getParent();
-				Button button = (Button) event.getTarget();
-				Ent_InventoryProcessMaterial material = item.getValue();
-				
-				if (material.isEditInProgress()) {
-					// allow to edit item values
-					
-					editToSave(button);
-					material.setEditInProgress(false);
-				} else {
-					// allow to update/save
-					
-					saveToEdit(button);
-					material.setEditInProgress(true);
-				}
-			}
-		};
-	}	
-	
-	protected void editToSave(Button button) {
-		button.setIconSclass("z-icon-floppy-o");
-		button.setStyle("background-color:var(--bs-primary);");		
-	}
-
-	protected void saveToEdit(Button button) {
-		button.setIconSclass("z-icon-pencil");
-		button.setStyle("background-color:var(--bs-warning);");		
-	}
+//	protected EventListener<Event> onMaterialEditButtonClick() {
+//
+//		return new EventListener<Event>() {
+//			
+//			@Override
+//			public void onEvent(Event event) throws Exception {
+//				log.info(event.getTarget().toString()+" click...");
+//				Listitem item = (Listitem) event.getTarget().getParent().getParent();
+//				Button button = (Button) event.getTarget();
+//				Ent_InventoryProcessMaterial material = item.getValue();
+//				
+//				if (material.isEditInProgress()) {
+//					// allow to edit item values
+//					
+//					editToSave(button);
+//					material.setEditInProgress(false);
+//				} else {
+//					// allow to update/save
+//					
+//					saveToEdit(button);
+//					material.setEditInProgress(true);
+//				}
+//			}
+//		};
+//	}	
+//	
+//	protected void editToSave(Button button) {
+//		button.setIconSclass("z-icon-floppy-o");
+//		button.setStyle("background-color:var(--bs-primary);");		
+//	}
+//
+//	protected void saveToEdit(Button button) {
+//		button.setIconSclass("z-icon-pencil");
+//		button.setStyle("background-color:var(--bs-warning);");		
+//	}
 
 	public InventoryProcessDao getInventoryProcessDao() {
 		return inventoryProcessDao;

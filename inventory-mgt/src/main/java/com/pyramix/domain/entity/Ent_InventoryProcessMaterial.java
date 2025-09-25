@@ -60,7 +60,4 @@ public class Ent_InventoryProcessMaterial extends IdBasedObject {
 	
 	@Column(name = "lc")
 	private String lcNumber;
-	
-	@Transient
-	private boolean editInProgress = false;
 }

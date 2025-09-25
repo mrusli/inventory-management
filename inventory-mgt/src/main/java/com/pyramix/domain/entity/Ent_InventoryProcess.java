@@ -56,7 +56,4 @@ public class Ent_InventoryProcess extends IdBasedObject {
 	
 	@Column(name = "process_type")
 	private Enm_TypeProcess processType;
-
-	@Transient
-	private boolean editInProgress = false;
 }
