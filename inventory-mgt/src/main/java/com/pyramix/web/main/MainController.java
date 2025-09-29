@@ -27,9 +27,14 @@ public class MainController extends GFCBaseController {
 		log.info("Build No: "+getSettingsUtility().getWebAppProperties("build.timestamp"));
 		log.info("Name: "+getSettingsUtility().getWebAppProperties("build.name"));
 		
-		mainInclude.setSrc("~./src/info_processcoil.zul");
+		log.info("Locale: "+getLocale().toString());
+		log.info("Language: "+getLocale().getLanguage());
+		log.info("Region(Country): "+getLocale().getCountry());
+		log.info("Display Name: "+getLocale().getDisplayName());
+		
+		// mainInclude.setSrc("~./src/info_processcoil.zul");
 		// mainInclude.setSrc("~./src/info_company.zul");
-		// mainInclude.setSrc("~./src/info_penerimaancoil.zul");
+		mainInclude.setSrc("~./src/info_penerimaancoil.zul");
 		// mainInclude.setSrc("~./src/info_customer.zul");
 		// mainInclude.setSrc("~./src/info_inventory_type.zul");
 		// mainInclude.setSrc("~./src/info_penerimaancoil.zul");

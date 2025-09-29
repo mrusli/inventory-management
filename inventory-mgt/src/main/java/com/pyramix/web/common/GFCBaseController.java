@@ -48,7 +48,7 @@ public class GFCBaseController extends GenericForwardComposer<Component> impleme
 	
 	// Locale
 	private final Locale locale				= new Locale.Builder()
-												.setLanguage("in")
+												.setLanguage("id")
 												.setRegion("ID")
 												.build();
 	

@@ -19,7 +19,7 @@
 		 			<listheader label="Tgl.Terima" width="120px"></listheader>
 		 			<listheader label="Jenis-Coil" width="120px"></listheader>
 		 			<listheader label="Customer" width="200px"></listheader>
-		 			<listheader label="Spek" width="220px"></listheader>
+		 			<listheader label="Spek" width="260px"></listheader>
 		 			<listheader label="Packing" width="120px"></listheader>
 		 			<listheader label="Jmlh/Kg" width="120px"></listheader>
 					<listheader label="No.Coil" width="120px"></listheader>

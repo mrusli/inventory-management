@@ -1,5 +1,6 @@
 package com.pyramix.web.penerimaan;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,12 +12,16 @@ import org.zkoss.zul.Button;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Datebox;
+import org.zkoss.zul.Doublebox;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
+import org.zkoss.zul.Textbox;
 
+import com.pyramix.domain.entity.Enm_InventoryPacking;
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_Inventory;
 import com.pyramix.domain.entity.Ent_InventoryCode;
@@ -44,13 +49,17 @@ public class PenerimaanCoilController extends GFCBaseController {
 	
 	private ListModelList<Ent_Inventory> inventoryModelList = null;
 	private List<Ent_InventoryCode> inventoryCodeList = null;
+	private List<Ent_Customer> customerList = null;
 	private Ent_Inventory invtToFind = null;
+	
+	private final String THICKNESS_FORMAT = "#0,00";
 	
 	public void onCreate$infoPenerimaanCoilPanel(Event event) throws Exception {
 		log.info("infoPenerimaanCoilPanel created");
 		
-		// list of inventoryCodes
+		// list
 		inventoryCodeList = getInventoryCodeDao().findAllInventoryCode();
+		customerList = getCustomerDao().findAllCustomer();
 		
 		// load inventory
 		loadInventoryList();
@@ -99,23 +108,28 @@ public class PenerimaanCoilController extends GFCBaseController {
 				lc.setParent(item);
 				
 				// Spek
-				lc = new Listcell();
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(inventory.getThickness()), getLocale(), THICKNESS_FORMAT)+" x "+
+						toDecimalFormat(new BigDecimal(inventory.getWidth()), getLocale(), "###.###")+" x "+
+						toDecimalFormat(new BigDecimal(inventory.getLength()), getLocale(), "###.###")								
+						);
 				lc.setParent(item);
 				
 				// Packing
-				lc = new Listcell();
+				lc = new Listcell(inventory.getInventoryPacking().toString());
 				lc.setParent(item);
 				
 				// Jmlh/Kg
-				lc = new Listcell();
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(inventory.getWeightQuantity()), getLocale(), "###.###")
+						);
 				lc.setParent(item);
 				
 				// No.Coil
-				lc = new Listcell();
-						// inventory.getMarking());
+				lc = new Listcell(inventory.getMarking());
 				lc.setParent(item);
 				
-				// Notif
+				// Notif 
 				lc = new Listcell();
 				lc.setParent(item);
 
@@ -206,6 +220,12 @@ public class PenerimaanCoilController extends GFCBaseController {
 		inventory.setReceiveDate(getLocalDate(getZoneId()));
 		inventory.setInventoryCode(getDefaultInventoryCode());
 		inventory.setCustomer(getDefaultCustomer());
+		inventory.setThickness(0);
+		inventory.setWidth(0);
+		inventory.setLength(0);
+		inventory.setInventoryPacking(Enm_InventoryPacking.coil);
+		inventory.setWeightQuantity(0);
+		inventory.setMarking("");
 		// set to the item
 		activeItem.setValue(inventory);
 		
@@ -217,6 +237,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 		
 		LocalDate recvDate = null;
 		Ent_InventoryCode invtCode = null;
+		Ent_Customer customer = null;
 		Listitem prevItem;
 		Listcell lc;
 		if (lastItem>1) {
@@ -228,7 +249,30 @@ public class PenerimaanCoilController extends GFCBaseController {
 			// prev JnsCoil
 			lc = (Listcell) prevItem.getChildren().get(1);
 			invtCode =  (Ent_InventoryCode) lc.getAttribute("jenisCoil");
-			
+			// prev Customer
+			lc = (Listcell) prevItem.getChildren().get(2);
+			customer = (Ent_Customer) lc.getAttribute("customer");
+			// prev spek
+			lc = (Listcell) prevItem.getChildren().get(3);
+			double spek[] = { 0.0, 0.0, 0.0 };
+			// prev thickness
+			spek[0] = (double) lc.getAttribute("spekThck");
+			inventory.setThickness(spek[0]);
+			// prev width
+			spek[1] = (double) lc.getAttribute("spekWdth");
+			inventory.setWidth(spek[1]);
+			// prev length
+			spek[2] = (double) lc.getAttribute("spekLgth");
+			inventory.setLength(spek[2]);
+			// prev Packing
+			lc = (Listcell) prevItem.getChildren().get(4);
+			inventory.setInventoryPacking((Enm_InventoryPacking) lc.getAttribute("packing"));
+			// prev Jmlh/Kg
+			lc = (Listcell) prevItem.getChildren().get(5);
+			inventory.setWeightQuantity((double) lc.getAttribute("wgthQty"));
+			// prev No.Coil
+			lc = (Listcell) prevItem.getChildren().get(6);
+			inventory.setMarking((String) lc.getAttribute("marking"));
 		}
 		// TglTerima		
 		if (recvDate != null) {
@@ -242,6 +286,21 @@ public class PenerimaanCoilController extends GFCBaseController {
 		} else {
 			setupJenisCoilCombobox(activeItem, inventory.getInventoryCode());
 		}
+		// Customer
+		if (customer != null) {
+			setupCustomerCombobox(activeItem, customer);
+		} else {
+			setupCustomerCombobox(activeItem, inventory.getCustomer());
+		}
+		// Spek
+		setupSpek(activeItem, inventory.getThickness(), inventory.getWidth(), 
+				inventory.getLength());
+		// Packing
+		setupPacking(activeItem, inventory.getInventoryPacking());
+		// Jmlh/Kg
+		setupWeightQuantity(activeItem, inventory.getWeightQuantity());
+		// No.Coil
+		setupMarking(activeItem, inventory.getMarking());
 		
 		setupRemoveButton(activeItem);
 	}
@@ -295,11 +354,19 @@ public class PenerimaanCoilController extends GFCBaseController {
 //	}
 
 	private Ent_InventoryCode getDefaultInventoryCode() throws Exception {
+		// temporary assign an inventoryCode
 		Long invtCodeId = 1L;
 		
 		return getInventoryCodeDao().findInventoryCodeById(invtCodeId);
 	}
 
+	private Ent_Customer getDefaultCustomer() throws Exception {
+		// temporary assign a customer
+		long custId = 1L;
+		
+		return getCustomerDao().findCustomerById(custId);
+	}	
+	
 	private void setupTglTerimaDatebox(Listitem activeItem, LocalDate receiveDate) {
 		Listcell lc = (Listcell) activeItem.getChildren().get(0);
 		lc.setLabel("");
@@ -319,14 +386,6 @@ public class PenerimaanCoilController extends GFCBaseController {
 		// just to make sure the date value is saved even user not making any changes
 		lc.setAttribute("tglTerima", datebox.getValueInLocalDate());
 	}	
-
-	private Ent_Customer getDefaultCustomer() throws Exception {
-		// temporary assign a customer
-		long custId = 1L;
-		
-		return getCustomerDao().findCustomerById(custId);
-	}
-	
 	
 	private void setupJenisCoilCombobox(Listitem activeItem, Ent_InventoryCode inventoryCode) {
 		Listcell lc = (Listcell) activeItem.getChildren().get(1);
@@ -368,6 +427,190 @@ public class PenerimaanCoilController extends GFCBaseController {
 		}
 	}	
 
+	private void setupCustomerCombobox(Listitem activeItem, Ent_Customer customer) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		lc.setLabel("");
+		Combobox combobox = new Combobox();
+		// setup the combobox with customer items
+		setupCustomerCombobox(combobox);
+		if (customer != null) {
+			for (Comboitem comboitem : combobox.getItems()) {
+				Ent_Customer cust = comboitem.getValue();
+				if (customer.getId()==cust.getId()) {
+					combobox.setSelectedItem(comboitem);
+					break;
+				}
+			}
+		} else {
+			combobox.setSelectedIndex(0);
+		}
+		combobox.setWidth("180px");
+		combobox.setParent(lc);		
+		combobox.addEventListener(Events.ON_SELECT, new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				lc.setAttribute("customer", combobox.getSelectedItem().getValue());
+			}
+		});
+		// just to make sure
+		lc.setAttribute("customer", combobox.getSelectedItem().getValue());
+	}	
+	
+	private void setupCustomerCombobox(Combobox combobox) {
+		Comboitem comboitem;
+		for (Ent_Customer cust : customerList) {
+			comboitem = new Comboitem();
+			comboitem.setLabel(cust.getCompanyType()+"."+
+					cust.getCompanyLegalName());
+			comboitem.setValue(cust);
+			comboitem.setParent(combobox);
+		}
+	}
+
+	private void setupSpek(Listitem activeItem, double thickness, double width, double length) {
+		double spek[] = { 0.0, 0.0, 0.0 };
+
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		lc.setLabel("");
+		// thickness
+		Doublebox doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(thickness);
+		doublebox.setParent(lc);
+		doublebox.addEventListener(Events.ON_CHANGE, onSpekChange(0));
+		spek[0] = doublebox.getValue();
+		lc.setAttribute("spekThck", spek[0]);
+		
+		Label label = new Label(" x ");
+		label.setParent(lc);
+		
+		doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(width);
+		doublebox.setParent(lc);
+		doublebox.addEventListener(Events.ON_CHANGE, onSpekChange(1));
+		spek[1] = doublebox.getValue();
+		lc.setAttribute("spekWdth", spek[1]);
+		
+		label = new Label(" x ");
+		label.setParent(lc);
+		
+		doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(length);
+		doublebox.setParent(lc);
+		doublebox.addEventListener(Events.ON_CHANGE, onSpekChange(2));
+		spek[2] = doublebox.getValue();
+		lc.setAttribute("spekLgth", spek[2]);
+		
+
+	}	
+	
+	private EventListener<Event> onSpekChange(int i) {
+
+		return new EventListener<Event>() {
+			
+			double spek[] = { 0.0, 0.0, 0.0 };
+			@Override
+			public void onEvent(Event event) throws Exception {
+				Doublebox doublebox = (Doublebox) event.getTarget();
+				spek[i] = doublebox.getValue();
+				Listcell lc = (Listcell) doublebox.getParent();
+				switch (i) {
+				case 0: lc.setAttribute("spekThck", spek[0]);
+				case 1: lc.setAttribute("spekWdth", spek[1]);
+				case 2: lc.setAttribute("spekLgth", spek[2]);
+				default:
+					break;
+				}
+				
+			}
+		};
+	}
+
+	private void setupPacking(Listitem activeItem, Enm_InventoryPacking inventoryPacking) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		lc.setLabel("");
+		Combobox combobox = new Combobox();
+		// setup the combobox with packing items
+		setupPackingCombobox(combobox);
+		if (inventoryPacking != null) {
+			for (Comboitem comboitem : combobox.getItems()) {
+				Enm_InventoryPacking invtPack = comboitem.getValue();
+				if (inventoryPacking.equals(invtPack)) {
+					combobox.setSelectedItem(comboitem);
+					break;
+				}
+			}
+		} else {
+			combobox.setSelectedIndex(0);
+		}
+		combobox.setWidth("100px");
+		combobox.setParent(lc);		
+		combobox.addEventListener(Events.ON_SELECT, new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				lc.setAttribute("packing", combobox.getSelectedItem().getValue());
+			}
+		});
+		// just to make sure
+		lc.setAttribute("packing", combobox.getSelectedItem().getValue());
+		
+	}	
+	
+	private void setupPackingCombobox(Combobox combobox) {
+		Comboitem comboitem;
+		for(Enm_InventoryPacking invtPack : Enm_InventoryPacking.values()) {
+			comboitem = new Comboitem();
+			comboitem.setLabel(invtPack.toString());
+			comboitem.setValue(invtPack);
+			comboitem.setParent(combobox);
+		}
+		
+	}
+
+	private void setupWeightQuantity(Listitem activeItem, double weightQuantity) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(5);
+		lc.setLabel("");
+		Doublebox doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("100px");
+		doublebox.setValue(weightQuantity);
+		doublebox.setParent(lc);
+		doublebox.addEventListener(Events.ON_CHANGE, new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				lc.setAttribute("wgthQty", doublebox.getValue());
+			}
+		});
+		// just to make sure
+		lc.setAttribute("wgthQty", doublebox.getValue());		
+	}	
+
+	private void setupMarking(Listitem activeItem, String marking) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(6);
+		lc.setLabel("");
+		Textbox textbox = new Textbox();
+		textbox.setWidth("100px");
+		textbox.setValue(marking);
+		textbox.setParent(lc);
+		textbox.addEventListener(Events.ON_CHANGE, new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				lc.setAttribute("marking", textbox.getValue());			
+			}
+		});
+		// just to make sure
+		lc.setAttribute("marking", textbox.getValue());
+	}
+	
 	private void setupRemoveButton(Listitem activeItem) {
 		Listcell lc = (Listcell) activeItem.getChildren().get(8);
 		lc.setLabel("");
@@ -448,7 +691,38 @@ public class PenerimaanCoilController extends GFCBaseController {
 				log.info(invtCode.toString());
 				lc.getChildren().clear();
 				lc.setLabel(invtCode.getProductCode());
-			
+				// customer
+				lc = (Listcell) item.getChildren().get(2);
+				combobox = (Combobox) lc.getFirstChild();
+				Ent_Customer cust = combobox.getSelectedItem().getValue();
+				log.info(cust.toString());
+				inventory.setCustomer(cust);
+				lc.getChildren().clear();
+				lc.setLabel(cust.getCompanyType()+"."+cust.getCompanyLegalName());
+				// spek
+				lc = (Listcell) item.getChildren().get(3);
+				// thickness
+				Doublebox doublebox = (Doublebox) lc.getChildren().get(0);
+				inventory.setThickness(doublebox.getValue());
+				// width
+				doublebox = (Doublebox) lc.getChildren().get(2);
+				inventory.setWidth(doublebox.getValue());
+				// length
+				doublebox = (Doublebox) lc.getChildren().get(4);
+				inventory.setLength(doublebox.getValue());
+				// Packing
+				lc = (Listcell) item.getChildren().get(4);
+				combobox = (Combobox) lc.getFirstChild();
+				inventory.setInventoryPacking(combobox.getSelectedItem().getValue());
+				// WeightQty
+				lc = (Listcell) item.getChildren().get(5);
+				doublebox = (Doublebox) lc.getFirstChild();
+				inventory.setWeightQuantity(doublebox.getValue());
+				// No.Coil
+				lc = (Listcell) item.getChildren().get(6);
+				Textbox textbox = (Textbox) lc.getFirstChild();
+				inventory.setMarking(textbox.getValue());
+				
 				// notif
 				lc = (Listcell) item.getChildren().get(7);
 				lc.setLabel("Tersimpan");
