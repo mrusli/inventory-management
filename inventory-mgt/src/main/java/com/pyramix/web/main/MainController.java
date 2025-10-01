@@ -32,9 +32,10 @@ public class MainController extends GFCBaseController {
 		log.info("Region(Country): "+getLocale().getCountry());
 		log.info("Display Name: "+getLocale().getDisplayName());
 		
+		mainInclude.setSrc("~./src/info_produk.zul");
 		// mainInclude.setSrc("~./src/info_processcoil.zul");
 		// mainInclude.setSrc("~./src/info_company.zul");
-		mainInclude.setSrc("~./src/info_penerimaancoil.zul");
+		// mainInclude.setSrc("~./src/info_penerimaancoil.zul");
 		// mainInclude.setSrc("~./src/info_customer.zul");
 		// mainInclude.setSrc("~./src/info_inventory_type.zul");
 		// mainInclude.setSrc("~./src/info_penerimaancoil.zul");

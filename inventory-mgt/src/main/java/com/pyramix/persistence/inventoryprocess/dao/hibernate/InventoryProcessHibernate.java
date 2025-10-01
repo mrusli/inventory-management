@@ -6,11 +6,16 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.pyramix.domain.entity.Enm_StatusProcess;
+import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_InventoryProcess;
 import com.pyramix.domain.entity.Ent_InventoryProcessMaterial;
 import com.pyramix.persistence.common.dao.hibernate.DaoHibernate;
 import com.pyramix.persistence.inventoryprocess.dao.InventoryProcessDao;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 
 public class InventoryProcessHibernate extends DaoHibernate implements InventoryProcessDao {
@@ -87,6 +92,54 @@ public class InventoryProcessHibernate extends DaoHibernate implements Inventory
 		}
 		
 		return invtProcMaterial;
+	}
+
+	@Override
+	public List<Ent_InventoryProcess> findInventoryProcessByCustomer(Ent_Customer customer) throws Exception {
+		Session session = super.getSessionFactory().openSession();
+		
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<Ent_InventoryProcess> criteriaQuery = criteriaBuilder.createQuery(Ent_InventoryProcess.class);
+		Root<Ent_InventoryProcess> root = criteriaQuery.from(Ent_InventoryProcess.class);
+		criteriaQuery.select(root).where(
+				criteriaBuilder.equal(root.get("customer"), customer));
+		criteriaQuery.orderBy(
+				criteriaBuilder.desc(root.get("orderDate")));
+		
+		try {
+			
+			return session.createQuery(criteriaQuery).getResultList();
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			session.close();
+		}
+	}
+
+	@Override
+	public List<Ent_InventoryProcess> findInventoryByCustomerByStatus(Ent_Customer customer,
+			Enm_StatusProcess statusProses) throws Exception {
+		
+		Session session = super.getSessionFactory().openSession();
+		
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<Ent_InventoryProcess> criteriaQuery = criteriaBuilder.createQuery(Ent_InventoryProcess.class);
+		Root<Ent_InventoryProcess> root = criteriaQuery.from(Ent_InventoryProcess.class);
+		criteriaQuery.select(root).where(
+				criteriaBuilder.equal(root.get("customer"), customer),
+				criteriaBuilder.equal(root.get("processStatus"), statusProses));
+		
+		try {
+			
+			return session.createQuery(criteriaQuery).getResultList();
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			session.close();
+		}
+
 	}
 
 }

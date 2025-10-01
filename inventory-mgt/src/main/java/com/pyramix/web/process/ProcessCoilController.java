@@ -22,6 +22,7 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 
 import com.pyramix.domain.entity.Enm_StatusProcess;
@@ -61,10 +62,10 @@ public class ProcessCoilController extends GFCBaseController {
 	private Listbox processListbox, materialListbox, productListbox;
 	private Label customerNameLabel, processDateLabel, processNumberLabel, statusLabel,
 		processTypeLabel, materialToProductLabel;
-	private Combobox customerNameCombobox, processTypeCombobox;
+	private Combobox customerNameCombobox, processTypeCombobox, customerProcessCombobox;
 	private Datebox processDatebox;
 	private Button addMaterialButton, addProductButton, processSaveButton,
-		printReportButton;
+		printReportButton, cancelProcessButton, cancelAddProcessButton;
 	
 	private List<Ent_Customer> customerList = null;
 	private ListModelList<Ent_InventoryProcess> processModelList = null;
@@ -81,8 +82,10 @@ public class ProcessCoilController extends GFCBaseController {
 		// set default company
 		defaultCompany = getCompanyDao().findCompanyById(DEF_COMPANY_IDX);
 		
-		// load customer list and prepare the combobox
-		customerListCombobox();
+		// load customer list and prepare the comboboxes (process and edit)
+		customerListComboboxes();
+		// select 1st process customer
+		customerProcessCombobox.setSelectedIndex(0);
 		// load process type and prepare the combobox
 		processTypeCombobox();
 		
@@ -98,10 +101,21 @@ public class ProcessCoilController extends GFCBaseController {
 			
 			// display
 			displayDetailInventoryProcessInfo();	
+		} else {
+			// cleanup
+			resetDetailInventoryProcessInfo();
 		}
+		
+//		if (!processListbox.getItems().isEmpty()) {
+//			Listitem item = processListbox.getItemAtIndex(0);
+//			selInventoryProcess = item.getValue();
+//					
+//			// display
+//			displayDetailInventoryProcessInfo();
+//		}		
 	}
 
-	private void customerListCombobox() throws Exception {
+	private void customerListComboboxes() throws Exception {
 		customerList = customerDao.findAllCustomer();
 		Comboitem comboitem;
 		for (Ent_Customer cust : customerList) {
@@ -110,9 +124,34 @@ public class ProcessCoilController extends GFCBaseController {
 					cust.getCompanyLegalName());
 			comboitem.setValue(cust);
 			comboitem.setParent(customerNameCombobox);
+
+			comboitem = new Comboitem();
+			comboitem.setLabel(cust.getCompanyType()+"."+
+					cust.getCompanyLegalName());
+			comboitem.setValue(cust);
+			comboitem.setParent(customerProcessCombobox);
 		}
 	}
 
+	public void onSelect$customerProcessCombobox(Event event) throws Exception {
+		// load inventoryProcess list
+		loadInventoryProcessList();
+		// render inventoryProcess list
+		renderInventoryProcessList();
+		
+		// select to display details
+		if (!processModelList.isEmpty()) {
+			selInventoryProcess =
+					processModelList.get(0);
+			
+			// display
+			displayDetailInventoryProcessInfo();	
+		} else {
+			// cleanup
+			resetDetailInventoryProcessInfo();			
+		}
+	}
+	
 	private void processTypeCombobox() {
 		Comboitem comboitem;
 		for (Enm_TypeProcess proc : Enm_TypeProcess.values()) {
@@ -124,8 +163,12 @@ public class ProcessCoilController extends GFCBaseController {
 	}	
 	
 	private void loadInventoryProcessList() throws Exception {
+		// get the selected customerProcessCombobox
+		Ent_Customer custProc = 
+				customerProcessCombobox.getSelectedItem().getValue();
+		
 		List<Ent_InventoryProcess> inventoryProcessList =
-				getInventoryProcessDao().findAllInventoryProcess();
+				getInventoryProcessDao().findInventoryProcessByCustomer(custProc);
 		
 		processModelList = 
 				new ListModelList<Ent_InventoryProcess>(inventoryProcessList);
@@ -153,11 +196,13 @@ public class ProcessCoilController extends GFCBaseController {
 				lc = new Listcell(process.getProcessNumber().getSerialComp());
 				lc.setParent(item);
 				
-				// customer
-				lc = new Listcell(process.getCustomer().getCompanyType()+"."+
-						process.getCustomer().getCompanyLegalName());
-				lc.setStyle("white-space:nowrap;");
+				// status
+				lc = new Listcell();
 				lc.setParent(item);
+				
+				Label label = new Label(process.getProcessStatus().toString());
+				label.setSclass("badge bg-info");
+				label.setParent(lc);
 				
 				item.setValue(process);
 			}
@@ -183,7 +228,7 @@ public class ProcessCoilController extends GFCBaseController {
 		processTypeCombobox.setVisible(false);
 		processTypeLabel.setVisible(true);
 		processTypeLabel.setValue(selInventoryProcess.getProcessType().toString());
-
+		
 		Ent_InventoryProcess invtProc = 
 				getInventoryProcessDao().findInventoryProcessMaterialsByProxy(selInventoryProcess.getId());
 		renderInventoryProcessMaterial(invtProc.getProcessMaterials());
@@ -191,26 +236,86 @@ public class ProcessCoilController extends GFCBaseController {
 		Ent_InventoryProcessMaterial selMaterial = invtProc.getProcessMaterials().get(0);
 		materialToProductLabel.setValue(selMaterial.getMarking()+" "+
 				selMaterial.getInventoryCode().getProductCode()+" "+
-				toDecimalFormat(new BigDecimal(selMaterial.getWeightQuantity()), getLocale(), getDecimalFormat()));
+				toDecimalFormat(new BigDecimal(selMaterial.getWeightQuantity()), getLocale(), getDecimalFormat())+" Kg.");
 		Ent_InventoryProcessMaterial invtProcMaterial =
 				getInventoryProcessDao().findInventoryProcessProductsByProxy(selMaterial.getId());
 		renderInventoryProcessProduct(invtProcMaterial.getProcessProducts());	
-				
 	}
 	
+	private void resetDetailInventoryProcessInfo() {
+		customerNameCombobox.setVisible(false);
+		customerNameLabel.setVisible(true);
+		customerNameLabel.setValue("");
+		processDatebox.setVisible(false);
+		processDateLabel.setVisible(true);
+		processDateLabel.setValue("");
+		processNumberLabel.setVisible(true);
+		processNumberLabel.setValue("");
+		statusLabel.setVisible(true);
+		statusLabel.setValue("");
+		processTypeCombobox.setVisible(false);
+		processTypeLabel.setVisible(true);
+		processTypeLabel.setValue("");
+
+		// Ent_InventoryProcess invtProc = 
+		//		getInventoryProcessDao().findInventoryProcessMaterialsByProxy(selInventoryProcess.getId());
+		renderInventoryProcessMaterial(new ArrayList<Ent_InventoryProcessMaterial>());
+		// select the 1st material
+		// Ent_InventoryProcessMaterial selMaterial = invtProc.getProcessMaterials().get(0);
+		materialToProductLabel.setValue("");
+		// Ent_InventoryProcessMaterial invtProcMaterial =
+		//		getInventoryProcessDao().findInventoryProcessProductsByProxy(selMaterial.getId());
+		renderInventoryProcessProduct(new ArrayList<Ent_InventoryProcessProduct>());	
+		
+	}	
+	
 	public void onSelect$processListbox(Event event) throws Exception {
-		Listitem item = processListbox.getSelectedItem();
+		if (selInventoryProcess.isAddInProgress()) {
+			// ask confirmation to cancel
+			Messagebox.show("Batalkan penambahan proses?",
+				    "Confirmation", 
+				    Messagebox.OK | Messagebox.CANCEL,  
+				    Messagebox.QUESTION, new EventListener<Event>() {
+						
+						@Override
+						public void onEvent(Event event) throws Exception {
+							log.info(event.getName());
+							if (Messagebox.ON_OK.equals(event.getName())) {
+								log.info("proceed...");
+								
+								Listitem item = processListbox.getSelectedItem();
+								
+								selInventoryProcess = item.getValue();
+								
+								// display
+								displayDetailInventoryProcessInfo();
+								// hide add material button
+								addMaterialButton.setVisible(false);
+								// allow user to cancel
+								cancelProcessButton.setVisible(true);
+								// hide the cancel add process button
+								cancelAddProcessButton.setVisible(false);
+							} else {
+								log.info("cancel add process...");
+							}
+						}
+			});			
+		} else {
+			Listitem item = processListbox.getSelectedItem();
+			
+			selInventoryProcess = item.getValue();
+			
+			// load
+			// loadInventoryProcessList();
+			// render
+			// renderInventoryProcessList();
+			// locate
+			// locateInventoryProcessData();
+			// display
+			displayDetailInventoryProcessInfo();			
+		}
 		
-		selInventoryProcess = item.getValue();
-		
-		// load
-		loadInventoryProcessList();
-		// render
-		renderInventoryProcessList();
-		// locate
-		locateInventoryProcessData();
-		// display
-		displayDetailInventoryProcessInfo();
+
 	}
 	
 	public void onClick$addProcessButton(Event event) throws Exception {
@@ -220,7 +325,7 @@ public class ProcessCoilController extends GFCBaseController {
 		selInventoryProcess = new Ent_InventoryProcess();
 		selInventoryProcess.setProcessMaterials(new ArrayList<Ent_InventoryProcessMaterial>());
 		// set in progress
-		// selInventoryProcess.setAddInProgress(true);
+		selInventoryProcess.setAddInProgress(true);
 		
 		// allow user to enter new info
 		setToAllowEditInfo();
@@ -234,6 +339,10 @@ public class ProcessCoilController extends GFCBaseController {
 		addMaterialButton.setVisible(true);
 		// hide the edit and print button
 		printReportButton.setVisible(false);
+		// hide the cancel process button
+		cancelProcessButton.setVisible(false);
+		// allow user to cancell add process coil
+		cancelAddProcessButton.setVisible(true);
 	}
 	
 	private void setToAllowEditInfo() {
@@ -250,7 +359,10 @@ public class ProcessCoilController extends GFCBaseController {
 		processTypeLabel.setValue(" ");
 		processTypeCombobox.setVisible(true);
 
-		customerNameCombobox.setSelectedIndex(0);
+		int selCustIdx =
+				customerProcessCombobox.getSelectedIndex();
+		
+		customerNameCombobox.setSelectedIndex(selCustIdx);
 		processDatebox.setValue(asDate(getLocalDate(getZoneId()), getZoneId()));
 		Ent_Serial serial = getProcessNumberSerial(Enm_TypeDocument.PROCESS_ORDER, getLocalDate(getZoneId()));
 		processNumberLabel.setValue(serial.getSerialComp());
@@ -674,6 +786,7 @@ public class ProcessCoilController extends GFCBaseController {
 		}
 		// get the process data before saving
 		selInventoryProcess = getEditedInventoryProcessData();
+		selInventoryProcess.setAddInProgress(false);
 		for (Ent_InventoryProcessMaterial processMaterial : selInventoryProcess.getProcessMaterials()) {
 			log.info(processMaterial.toString());
 			for (Ent_InventoryProcessProduct processProduct : processMaterial.getProcessProducts()) {
@@ -697,7 +810,9 @@ public class ProcessCoilController extends GFCBaseController {
 		// hide save button
 		processSaveButton.setVisible(false);
 		// allow user to print
-		printReportButton.setVisible(true);		
+		printReportButton.setVisible(true);
+		// hide cancel add process coil button
+		cancelAddProcessButton.setVisible(false);
 		
 		// Ent_InventoryProcess activeProcess = getEditedInventoryProcessData();
 		
@@ -820,6 +935,48 @@ public class ProcessCoilController extends GFCBaseController {
 				break;
 			}
 		}
+	}
+	
+	public void onClick$cancelProcessButton(Event event) throws Exception {
+		// change the process status to BATAL
+		
+		// disable the Print button
+		
+		
+	}
+	
+	public void onClick$cancelAddProcessButton(Event event) throws Exception {
+		// load inventoryProcess list
+		// loadInventoryProcessList();
+		// render inventoryProcess list
+		// renderInventoryProcessList();
+		
+		// select to display details
+		if (!processModelList.isEmpty()) {
+			selInventoryProcess =
+					processModelList.get(0);
+				
+			// display
+			displayDetailInventoryProcessInfo();
+			// hide add material button
+			addMaterialButton.setVisible(false);
+			// allow user to cancel the process
+			cancelProcessButton.setVisible(true);
+		} else {
+			// cleanup
+			resetDetailInventoryProcessInfo();			
+		}
+		
+//		if (!processListbox.getItems().isEmpty()) {
+//			selInventoryProcess =
+//					processListbox.getSelectedItem().getValue();
+//			// display
+//			displayDetailInventoryProcessInfo();
+//		}
+		// hide add material button
+		addMaterialButton.setVisible(false);
+		
+		cancelAddProcessButton.setVisible(false);
 	}
 	
 //	public void onClick$processEditButton(Event event) throws Exception {

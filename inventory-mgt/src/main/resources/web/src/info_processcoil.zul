@@ -5,7 +5,7 @@
 	</n:div>
 	<div sclass="row mt-3">
 		<n:div sclass="col-4">
-			<n:div sclass="mt-3">
+			<n:div>
 <!--
  				<n:div sclass="flex ">
 					Dari:
@@ -15,18 +15,18 @@
 				</n:div>
  -->
 				<div>
-					<combobox id="customerCombobox" width="300px" visible="true"></combobox>
+					<combobox id="customerProcessCombobox" width="300px" visible="true"></combobox>
 					<button id="processFilterButton" label="Filter" visible="false" iconSclass="z-icon-search" sclass="compButton"></button>
 					<button id="addProcessButton" label="Tambah" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>
 				</div>
  				<div>
 				</div>
 			</n:div>
-			<listbox sclass="mt-3" id="processListbox" height="735px">
+			<listbox sclass="mt-3" id="processListbox" height="705px">
 				<listhead>
 		 			<listheader label="Tgl.Proses" width="120px"/>
-		 			<listheader label="No.Proses" width="120px"/>
-		 			<listheader label="Customer"/>
+		 			<listheader label="No.Proses" width="130px"/>
+		 			<listheader label="Status"/>
 				</listhead>
 			</listbox>
 			<n:div sclass="mt-3">
@@ -35,30 +35,27 @@
 		</n:div>
 		<n:div sclass="col-8">
 			<label id="customerNameLabel" sclass="h5 text-primary"></label>
-			<combobox id="customerNameCombobox" width="430px" visible="false"></combobox>
+			<combobox id="customerNameCombobox" width="390px" visible="false"></combobox>
 			<n:div>
 				<grid style="border:none;">
 					<rows>
 						<row>
 							<cell width="15%">Tgl.Proses:</cell>
-							<cell width="35%" sclass="text-primary">
+							<cell width="20%" sclass="text-primary">
 								<label id="processDateLabel"></label>
-								<datebox id="processDatebox" visible="false" width="180px"></datebox>
+								<datebox id="processDatebox" visible="false" width="150px"></datebox>
 							</cell>
 							<cell width="15%">No.Proses:</cell>
-							<cell sclass="text-primary">
+							<cell width="15%" sclass="text-primary">
 								<label id="processNumberLabel"></label>
 								<!-- <textbox id="processNumberTextbox" disabled="true" visible="false" width="180px"></textbox> -->
 							</cell>
-						</row>
-						<row>
-							<cell>Status:</cell>
+							<cell width="10%">Status:</cell>
 							<cell sclass="text-primary">
-								<label id="statusLabel" value="Proses"></label>
+								<label id="statusLabel" value="Proses" sclass="badge bg-info"></label>
 							</cell>
-							<cell></cell>
-							<cell></cell>
 						</row>
+
 					</rows>
 				</grid>			
 			</n:div>
@@ -120,6 +117,7 @@
 <!-- 				<button id="processEditButton" label="Ubah" visible="false" iconSclass="z-icon-pencil" sclass="compButton" style="background-color: var()"></button> -->
 				<button id="processSaveButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-o" sclass="compButton" style="background-color: var(--bs-primary)"></button>
 				<button id="printReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton"></button>
+				<button id="cancelAddProcessButton" label="Batal" visible="false" iconSclass="z-icon-xmark" sclass="compButton" style="background-color: var(--bs-warning)"></button>
 			</n:div>
 		</n:div>	
 	</div>	

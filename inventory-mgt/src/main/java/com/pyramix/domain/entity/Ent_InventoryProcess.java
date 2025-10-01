@@ -55,5 +55,9 @@ public class Ent_InventoryProcess extends IdBasedObject {
 	private List<Ent_InventoryProcessMaterial> processMaterials;	
 	
 	@Column(name = "process_type")
+	@Enumerated(EnumType.ORDINAL)
 	private Enm_TypeProcess processType;
+	
+	@Transient
+	private boolean addInProgress = false;
 }
