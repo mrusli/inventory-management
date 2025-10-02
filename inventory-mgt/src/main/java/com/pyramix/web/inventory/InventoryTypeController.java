@@ -1,6 +1,7 @@
 package com.pyramix.web.inventory;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.zkoss.zk.ui.event.Event;
@@ -51,7 +52,7 @@ public class InventoryTypeController extends GFCBaseController {
 		displayInventoryTypeList();
 		
 		// select
-		selectInventoryType();
+		selectInventoryType(0);
 	}
 
 	private void loadInventoryTypeList() throws Exception {
@@ -135,6 +136,10 @@ public class InventoryTypeController extends GFCBaseController {
 					inventoryType.setEditInProgress(false);
 					// change to edit icon, so that this can be edited again
 					modifToEdit(button);
+					int lastIdx =
+							inventoryTypeModelList.size()-1;
+					// display
+					selectInventoryType(lastIdx);
 				} else {
 					// allow to edit
 					log.info("allow user to edit inventoryType");
@@ -151,7 +156,7 @@ public class InventoryTypeController extends GFCBaseController {
 		};
 	}
 	
-	private void selectInventoryType() throws Exception {
+	private void selectInventoryType(int idx) throws Exception {
 //		inventoryTypeListbox.renderAll();
 //		if (!inventoryTypeListbox.getItems().isEmpty()) {
 //			Listitem item = 
@@ -163,7 +168,7 @@ public class InventoryTypeController extends GFCBaseController {
 		
 		if (!inventoryTypeModelList.isEmpty()) {
 			selInvtType = 
-					inventoryTypeModelList.get(0);
+					inventoryTypeModelList.get(idx);
 			log.info(selInvtType.toString());
 			displayInventoryCode(selInvtType);
 		}
@@ -187,6 +192,18 @@ public class InventoryTypeController extends GFCBaseController {
 		loadToDisplayInventoryCodes(selInvtType);
 	}	
 
+
+	private void resetInventoryCode(Ent_InventoryType inventoryType) {
+		log.info("resetInventoryCode...");
+		tipeLabel.setValue("");
+		brtJnsLabel.setValue("");
+		keteranganLabel.setValue("");
+		
+		inventoryType.setInventoryCodes(new ArrayList<Ent_InventoryCode>());
+		loadToDisplayInventoryCodes(inventoryType);
+		
+	}
+	
 	public void onClick$addInventoryTypeButton(Event event) throws Exception {
 		log.info("addInventoryTypeButton click");
 		// add to the last pos
@@ -216,6 +233,9 @@ public class InventoryTypeController extends GFCBaseController {
 		setupEditToSaveButton(activeItem, 3);
 		// switch to true so that it'll be updated / saved
 		inventoryType.setEditInProgress(true);
+		
+		// clean up the details
+		resetInventoryCode(inventoryType);
 	}
 
 	private Ent_InventoryType addInventoryTypeInLastPos() {
@@ -516,7 +536,7 @@ public class InventoryTypeController extends GFCBaseController {
 		
 		// displayInventoryTypeList();
 		
-		selectInventoryType();
+		selectInventoryType(0);
 	}
 
 	public InventoryTypeDao getInventoryTypeDao() {
