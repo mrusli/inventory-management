@@ -32,7 +32,8 @@ public class MainController extends GFCBaseController {
 		log.info("Region(Country): "+getLocale().getCountry());
 		log.info("Display Name: "+getLocale().getDisplayName());
 		
-		mainInclude.setSrc("~./src/info_produk.zul");
+		mainInclude.setSrc("~./src/info_inventory_table.zul");
+		// mainInclude.setSrc("~./src/info_produk.zul");
 		// mainInclude.setSrc("~./src/info_processcoil.zul");
 		// mainInclude.setSrc("~./src/info_company.zul");
 		// mainInclude.setSrc("~./src/info_penerimaancoil.zul");
@@ -86,7 +87,7 @@ public class MainController extends GFCBaseController {
 	public void onClickInventoryCodeMenu(Event event) {
 		log.info("inventoryCodeMenuitem click...");
 		
-		mainInclude.setSrc("~./src/info_inventory_code.zul");		
+		mainInclude.setSrc("~./src/info_inventory_table.zul");		
 	}	
 	
 	public void onClickCompanyMenu(Event event) {
