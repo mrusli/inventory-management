@@ -60,6 +60,7 @@
 
 	<bean id="inventoryTableController" class="com.pyramix.web.inventory.InventoryTableController" scope="prototype" parent="basisController">
 		<property name="inventoryTypeDao" ref="inventoryTypeDao"></property>
+		<property name="inventoryTableDao" ref="inventoryTableDao"></property>
 	</bean>
 	
 	<bean id="infoCompanyController" class="com.pyramix.web.company.CompanyController" scope="prototype" parent="basisController">

@@ -55,4 +55,10 @@
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
 	
+	<!-- inventoryTable -->
+
+	<bean id="inventoryTableDao" class="com.pyramix.persistence.inventorytable.dao.hibernate.InventoryTableHibernate">
+		<property name="sessionFactory" ref="sessionFactory"></property>	
+	</bean>
+	
 </beans>

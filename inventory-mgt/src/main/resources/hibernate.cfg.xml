@@ -23,5 +23,7 @@
 
 		<mapping class="com.pyramix.domain.entity.Ent_InventoryProcessProduct"/>
 
+		<mapping class="com.pyramix.domain.entity.Ent_InventoryTable"/>
+		
 	</session-factory>
 </hibernate-configuration>

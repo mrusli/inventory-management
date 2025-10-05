@@ -3,49 +3,87 @@
 	<n:div sclass="mt-3">
 		<n:h3>Hasil Produksi</n:h3>	
 	</n:div>
-	<div sclass="row mt-3">
-		<n:div sclass="col-6">
-			<n:div>
-				<n:h5>Material</n:h5>
+	<div sclass="mt-3">
+		<n:div sclass="row">
+			<n:div sclass="col-8">
+				<n:div>
+					<n:h5>Material</n:h5>
+				</n:div>
+				<n:div sclass="mt-3">
+	<!-- 			
+					Dari:
+					<datebox id="productFromDatebox" width="190px"></datebox>
+					<label value=" s/d "></label>
+					<datebox id="productToDatebox" width="190px"></datebox> 
+	-->
+					Customer:
+					<combobox id="customerProcessCombobox" width="280px" visible="true"></combobox>
+					No.Proses:
+					<combobox id="processCombobox" width="180px" visible="true"></combobox>
+				</n:div>
+				<listbox sclass="mt-3" id="materialListbox" height="250px">
+					<listhead>
+			 			<listheader label="Jenis-Coil" width="120px"></listheader>
+			 			<listheader label="Spek" width="180px"></listheader>
+						<listheader label="Qty(Kg)" width="120px"></listheader>
+						<listheader label="Marking"/>
+					</listhead>
+				</listbox>															
 			</n:div>
-			<n:div sclass="mt-3">
-<!-- 			
-				Dari:
-				<datebox id="productFromDatebox" width="190px"></datebox>
-				<label value=" s/d "></label>
-				<datebox id="productToDatebox" width="190px"></datebox> 
--->
-				Customer:
-				<combobox id="customerProcessCombobox" width="280px" visible="true"></combobox>
-				No.Proses:
-				<combobox id="processCombobox" width="180px" visible="true"></combobox>
+			<n:div sclass="col-4">
+				<n:div>
+					<n:h5></n:h5>				
+				</n:div>
+				<n:div>
+					<grid style="border: none;">
+						<rows>
+							<row>
+								<cell></cell>
+								<cell></cell>
+							</row>
+						</rows>
+					</grid>
+				</n:div>
 			</n:div>
-			<listbox sclass="mt-3" id="materialListbox" height="250px">
-				<listhead>
-		 			<listheader label="Jenis-Coil" width="120px"></listheader>
-		 			<listheader label="Spek" width="180px"></listheader>
-					<listheader label="Qty(Kg)" width="120px"></listheader>
-					<listheader label="Marking"/>
-				</listhead>
-			</listbox>												
 		</n:div>
-		<n:div sclass="col-6">
-			<n:div>
-				<n:h5>Produk</n:h5>
+		<n:div sclass="row mt-3">
+			<n:div sclass="col-8">
+				<n:div>
+					<n:h5>Produk</n:h5>
+				</n:div>
+				<n:div sclass="mt-3">
+					Proses:
+					<combobox id="processTypeCombobox" disabled="true" width="160px"></combobox>
+					Material:
+					<label id="materialLabel" width="220px"></label>
+					<button id="addProductButton" label="Tambah" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>
+				</n:div>
+				<listbox sclass="mt-3" id="productListbox" height="250px">
+					<listhead>
+						<listheader label="Marking" width="120px" />
+						<listheader label="Spek" width="260px" />
+						<listheader label="Qty(Kg)" width="120px" />
+						<listheader label="Qty(Lbr)" width="120px" />
+						<listheader/>
+					</listhead>
+				</listbox>			
 			</n:div>
-			<n:div sclass="mt-3">
-				Proses:
-				<combobox id="processTypeCombobox" disabled="true" width="160px"></combobox>
-				Material:
+			<n:div sclass="col-4">
+				<n:div>
+					<n:h5></n:h5>				
+				</n:div>
+				<n:div>
+					<grid style="border: none;">
+						<rows>
+							<row>
+								<cell></cell>
+								<cell></cell>
+							</row>
+						</rows>
+					</grid>
+				</n:div>
 			</n:div>
-			<listbox sclass="mt-3" id="productListbox" height="250px">
-				<listhead>
-					<listheader label="Marking" width="120px" />
-					<listheader label="Spek" width="260px" />
-					<listheader label="Qty(Kg)" width="120px" />
-					<listheader label="Qty(Lbr)"/>
-				</listhead>
-			</listbox>
+			
 		</n:div>
 	</div>	
 </div>

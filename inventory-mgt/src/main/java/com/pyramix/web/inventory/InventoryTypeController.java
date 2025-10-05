@@ -525,6 +525,7 @@ public class InventoryTypeController extends GFCBaseController {
 	private Ent_InventoryCode getUpdatedInventoryCode(Listitem activeItem, Ent_InventoryCode activeInvtCode) {
 		activeInvtCode.setProductCode(getKodeTextbox(activeItem));
 		activeInvtCode.setCodeDescription(getKodeKeteranganTextbox(activeItem));
+		activeInvtCode.setInventoryType(selInvtType);
 		
 		return activeInvtCode;
 	}

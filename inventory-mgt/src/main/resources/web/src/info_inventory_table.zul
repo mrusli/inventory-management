@@ -4,9 +4,18 @@
 	</n:div>
 	<div sclass="row mt-3">
 		<n:div sclass="col-12">
-			<n:div sclass="mt-3">
-
-			</n:div>
+			Kode-Inventory:
+			<combobox id="inventoryCodeCombobox" width="220px"></combobox>
+			<button id="addInventoryTableButton" label="Tambah" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>
+			<listbox sclass="mt-3" id="inventoryTableListbox" height="550px">
+				<listhead>
+					<listheader label="Jenis-Coil" width="180px"/>
+					<listheader label="Spek" width="320px"/>
+					<listheader label="Qty(Kg)" width="180px"/>
+					<listheader align="center" width="100px"/>
+					<listheader/>
+				</listhead>
+			</listbox>
 		</n:div>
 	</div>
 </div>

@@ -6,18 +6,26 @@ import java.util.List;
 import java.util.Set;
 
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
+import org.zkoss.zul.Doublebox;
+import org.zkoss.zul.Intbox;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
+import org.zkoss.zul.Textbox;
 
 import com.pyramix.domain.entity.Enm_StatusProcess;
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_InventoryProcess;
 import com.pyramix.domain.entity.Ent_InventoryProcessMaterial;
+import com.pyramix.domain.entity.Ent_InventoryProcessProduct;
 import com.pyramix.persistence.inventoryprocess.dao.InventoryProcessDao;
 import com.pyramix.web.common.GFCBaseController;
 
@@ -33,8 +41,12 @@ public class ProductController extends GFCBaseController {
 
 	private InventoryProcessDao inventoryProcessDao;
 	
-	private Combobox customerProcessCombobox, processCombobox;
-	private Listbox materialListbox;
+	private Combobox customerProcessCombobox, processCombobox, processTypeCombobox;
+	private Listbox materialListbox, productListbox;
+	private Label materialLabel;
+	
+	private ListModelList<Ent_InventoryProcessProduct> productModelList;
+	private Ent_InventoryProcessMaterial selMaterial;
 	
 	public void onCreate$infoProductCoilPanel(Event event) throws Exception {
 		log.info("infoProductCoilPanel created");
@@ -76,7 +88,6 @@ public class ProductController extends GFCBaseController {
 	}	
 
 	private void onSelectCustomerProcessCombobox() throws Exception {
-		
 		Ent_Customer selCust = customerProcessCombobox.getSelectedItem().getValue();
 		// list the processes status PROCESS
 		List<Ent_InventoryProcess> processList =
@@ -155,10 +166,329 @@ public class ProductController extends GFCBaseController {
 				lc = new Listcell(material.getMarking());
 				lc.setParent(item);
 				
+				item.setValue(material);
+			}
+		};
+	}
+	
+	public void onAfterRender$materialListbox(Event event) throws Exception {
+		if (!materialListbox.getItems().isEmpty()) {
+			// set selected material
+			Listitem item = materialListbox.getItemAtIndex(0);
+			selMaterial = item.getValue();
+			log.info("selected: "+selMaterial.toString());
+		
+			processTypeCombobox.setValue(selMaterial.getInventoryProcess().getProcessType().toString());
+			materialLabel.setValue(
+					selMaterial.getMarking()+" "+
+							selMaterial.getInventoryCode().getProductCode()+" "+
+							toDecimalFormat(new BigDecimal(selMaterial.getWeightQuantity()), getLocale(), getDecimalFormat())+" Kg."
+					);
+			List<Ent_InventoryProcessProduct> productList =
+					onSelectMaterialListbox(selMaterial);
+			
+			renderProcessProducts(productList);
+		}
+	}
+
+	public void onSelect$materialListbox(Event event) throws Exception {
+		Ent_InventoryProcessMaterial selMaterial =
+				materialListbox.getSelectedItem().getValue();
+		log.info("selected: "+selMaterial.toString());
+				
+		List<Ent_InventoryProcessProduct> productList =
+				onSelectMaterialListbox(selMaterial);
+		
+		renderProcessProducts(productList);
+	}
+
+	private List<Ent_InventoryProcessProduct> onSelectMaterialListbox(
+			Ent_InventoryProcessMaterial material) throws Exception {
+		Ent_InventoryProcessMaterial selMaterial = getInventoryProcessDao()
+				.findInventoryProcessProductsByProxy(material.getId());
+		// products
+		log.info("products: "+selMaterial.getProcessProducts().toString());
+		
+		return selMaterial.getProcessProducts();
+	}
+
+	private void renderProcessProducts(List<Ent_InventoryProcessProduct> productList) {
+		productModelList = 
+				new ListModelList<Ent_InventoryProcessProduct>(productList);
+		
+		productListbox.setModel(productModelList);
+		productListbox.setItemRenderer(getProcessProductListitemRenderer());
+	}	
+	
+	private ListitemRenderer<Ent_InventoryProcessProduct> getProcessProductListitemRenderer() {
+		
+		return new ListitemRenderer<Ent_InventoryProcessProduct>() {
+			
+			@Override
+			public void render(Listitem item, Ent_InventoryProcessProduct product, int index) throws Exception {
+				Listcell lc;
+				
+				// marking
+				lc = new Listcell(product.getMarking());
+				lc.setParent(item);
+				
+				// spek
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(product.getThickness()), getLocale(), "#0,00")+" x "+
+						toDecimalFormat(new BigDecimal(product.getWidth()), getLocale(), "###.###")+" x "+
+						toDecimalFormat(new BigDecimal(product.getLength()), getLocale(), "###.###"));
+				lc.setParent(item);
+				
+				// qty(kg)
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(product.getWeightQuantity()), getLocale(), "###.###")
+						);
+				lc.setParent(item);
+				
+				// qty(lbr)
+				lc = new Listcell(getFormatedInteger(product.getSheetQuantity()));
+				lc.setParent(item);
+				
+				// edit / save
+				lc = new Listcell();
+				lc.setParent(item);
+				
+				Button button = new Button();
+				button.setParent(lc);
+				button.setSclass("compButton");
+				modifToEdit(button);
+				button.addEventListener(Events.ON_CLICK, editProcessProduct(product));				
+				
 			}
 		};
 	}
 
+	protected EventListener<Event> editProcessProduct(Ent_InventoryProcessProduct product) {
+
+		return new EventListener<Event>() {
+			
+			@Override
+			public void onEvent(Event event) throws Exception {
+				log.info("editProcessProduct button click");			
+				Button button = (Button) event.getTarget();
+				// get the current listitem
+				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
+				
+				if (product.isEditInProgress()) {
+					// to update / save
+					log.info("to update or save");
+					Ent_InventoryProcessProduct updatedProduct =
+							getUpdatedInventoryProcessProduct(product, activeItem);
+					log.info(updatedProduct.toString());
+					
+					if (product.isAddInProgress()) {
+						// to add into the list
+						log.info("to add into the list...");
+						
+					} else {
+						// to update the existing list
+						log.info("to update existing list...");
+
+						for (Ent_InventoryProcessProduct processProduct : selMaterial.getProcessProducts()) {
+							if (processProduct.getId()==updatedProduct.getId()) {
+								processProduct.setMarking(updatedProduct.getMarking());
+							}
+						}
+						
+					}
+					
+					// re-load
+					List<Ent_InventoryProcessProduct> productList =
+							onSelectMaterialListbox(selMaterial);
+					// re-render
+					renderProcessProducts(productList);					
+					
+					// set to false
+					product.setEditInProgress(false);
+					product.setAddInProgress(false);
+					// change to edit
+					modifToEdit(button);
+				} else {
+					// set to edit
+					log.info("set to edit");
+					
+					setProductMarking(activeItem, product.getMarking());
+					setProductSpek(activeItem, product.getThickness(), product.getWidth(),
+							product.getLength());
+					setProductQtyKg(activeItem, product.getWeightQuantity());
+					setProductQtyLbr(activeItem, product.getSheetQuantity());
+					
+					// set to true
+					product.setEditInProgress(true);
+					// change to save
+					modifToSave(button);
+				}
+			}
+		};
+	}
+
+	public void onClick$addProductButton(Event event) throws Exception {
+		log.info("addProductButton click");
+		
+		// add to the last pos
+		Ent_InventoryProcessProduct processProduct = addInventoryProcessProductInLastPos();
+		processProduct.setInventoryCode(selMaterial.getInventoryCode());
+		processProduct.setEditInProgress(true);
+		processProduct.setAddInProgress(true);
+		
+		// last item
+		Listitem activeItem = getProductLastItem();
+		
+		setProductMarking(activeItem, processProduct.getMarking());
+		setProductSpek(activeItem, processProduct.getThickness(), processProduct.getWidth(),
+				processProduct.getLength());
+		setProductQtyKg(activeItem, processProduct.getWeightQuantity());
+		setProductQtyLbr(activeItem, processProduct.getSheetQuantity());
+		setEditToSaveButton(activeItem);
+
+	}
+
+	private String getProductMarking(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(0);
+		
+		Textbox textbox = (Textbox) lc.getFirstChild();
+		
+		return textbox.getValue();
+	}	
+	
+	private void setProductMarking(Listitem activeItem, String marking) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(0);
+		lc.setLabel("");
+		Textbox textbox = new Textbox();
+		textbox.setValue(marking);
+		textbox.setWidth("100px");
+		textbox.setParent(lc);
+	}
+	
+	private double getProductSpek(Listitem activeItem, int idx) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(1);
+		
+		Doublebox doublebox = (Doublebox) lc.getChildren().get(idx);
+		
+		return doublebox.getValue();
+	}	
+	
+	protected void setProductSpek(Listitem activeItem, double thickness, double width, double length) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(1);
+		lc.setLabel("");
+		// thickness
+		Doublebox doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(thickness);
+		doublebox.setParent(lc);
+		Label label = new Label();
+		label.setValue(" x ");
+		label.setParent(lc);
+		// width
+		doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(width);
+		doublebox.setParent(lc);
+		label = new Label();
+		label.setValue(" x ");
+		label.setParent(lc);
+		// length
+		doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(length);
+		doublebox.setParent(lc);	
+	}	
+	
+
+	private double getProductQtyKg(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+
+		Doublebox doublebox = (Doublebox) lc.getFirstChild();
+		
+		return doublebox.getValue();
+	}
+
+	protected void setProductQtyKg(Listitem activeItem, double weightQuantity) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		lc.setLabel("");
+		Doublebox doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setValue(weightQuantity);
+		doublebox.setWidth("100px");
+		doublebox.setParent(lc);
+	}	
+	
+	private int getProductQtyLbr(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+
+		Intbox intbox = (Intbox) lc.getFirstChild();
+		
+		return intbox.getValue();
+	}
+	
+	protected void setProductQtyLbr(Listitem activeItem, int sheetQuantity) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		lc.setLabel("");
+		Intbox intbox = new Intbox();
+		intbox.setValue(sheetQuantity);
+		intbox.setWidth("100px");
+		intbox.setParent(lc);		
+	}	
+	
+	private void setEditToSaveButton(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		Button button = (Button) lc.getFirstChild();
+		
+		// signal it can be used to save the entry
+		modifToSave(button);
+	}
+	
+	private Ent_InventoryProcessProduct addInventoryProcessProductInLastPos() {
+		Ent_InventoryProcessProduct processProduct = new Ent_InventoryProcessProduct();
+		
+		int posToAdd =
+				productModelList.size();
+		productModelList.add(posToAdd, processProduct);
+		
+		return processProduct;
+	}
+
+	private Listitem getProductLastItem() {
+		// renderAll
+		productListbox.renderAll();
+		// get the last item
+		int lastItemIdx =
+				productListbox.getItemCount();
+		
+		return productListbox.getItemAtIndex(lastItemIdx-1);
+	}	
+
+	protected Ent_InventoryProcessProduct getUpdatedInventoryProcessProduct(
+			Ent_InventoryProcessProduct product,
+			Listitem activeItem) {
+		product.setMarking(getProductMarking(activeItem));
+		product.setThickness(getProductSpek(activeItem,0));
+		product.setWidth(getProductSpek(activeItem,2));
+		product.setLength(getProductSpek(activeItem,4));
+		product.setWeightQuantity(getProductQtyKg(activeItem));
+		product.setSheetQuantity(getProductQtyLbr(activeItem));
+		
+		return product;
+	}	
+
+	protected void modifToSave(Button button) {
+		button.setIconSclass("z-icon-floppy-disk");
+		button.setStyle("background-color:var(--bs-primary);");
+	}
+
+	protected void modifToEdit(Button button) {
+		button.setIconSclass("z-icon-pen-to-square");
+		button.setStyle("background-color:var(--bs-warning);");			
+	}	
+	
 	public InventoryProcessDao getInventoryProcessDao() {
 		return inventoryProcessDao;
 	}
