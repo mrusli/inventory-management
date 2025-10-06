@@ -38,8 +38,8 @@
     </bean>
     
     <bean id="infoProductController" class="com.pyramix.web.product.ProductController" scope="prototype" parent="basisController">
+    	<property name="companyDao" ref="companyDao"></property>
     	<property name="inventoryProcessDao" ref="inventoryProcessDao"></property>
-    
     </bean>    
 
     <bean id="infoSuratJalanController" class="com.pyramix.web.suratjalan.SuratJalanController" scope="prototype" parent="basisController">

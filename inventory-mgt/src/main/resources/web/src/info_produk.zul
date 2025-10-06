@@ -58,12 +58,13 @@
 					<label id="materialLabel" width="220px"></label>
 					<button id="addProductButton" label="Tambah" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>
 				</n:div>
-				<listbox sclass="mt-3" id="productListbox" height="250px">
+				<listbox sclass="mt-3" id="productListbox" height="450px">
 					<listhead>
 						<listheader label="Marking" width="120px" />
 						<listheader label="Spek" width="260px" />
 						<listheader label="Qty(Kg)" width="120px" />
 						<listheader label="Qty(Lbr)" width="120px" />
+						<listheader width="80px"/>
 						<listheader/>
 					</listhead>
 				</listbox>			

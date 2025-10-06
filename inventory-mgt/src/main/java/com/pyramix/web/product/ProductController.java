@@ -22,10 +22,12 @@ import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Textbox;
 
 import com.pyramix.domain.entity.Enm_StatusProcess;
+import com.pyramix.domain.entity.Ent_Company;
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_InventoryProcess;
 import com.pyramix.domain.entity.Ent_InventoryProcessMaterial;
 import com.pyramix.domain.entity.Ent_InventoryProcessProduct;
+import com.pyramix.persistence.company.dao.CompanyDao;
 import com.pyramix.persistence.inventoryprocess.dao.InventoryProcessDao;
 import com.pyramix.web.common.GFCBaseController;
 
@@ -40,16 +42,24 @@ public class ProductController extends GFCBaseController {
 	private static final long serialVersionUID = 8679083207182593184L;
 
 	private InventoryProcessDao inventoryProcessDao;
+	private CompanyDao companyDao;
 	
 	private Combobox customerProcessCombobox, processCombobox, processTypeCombobox;
 	private Listbox materialListbox, productListbox;
 	private Label materialLabel;
 	
 	private ListModelList<Ent_InventoryProcessProduct> productModelList;
-	private Ent_InventoryProcessMaterial selMaterial;
+	private Ent_InventoryProcess selInvtProc = null;
+	private Ent_InventoryProcessMaterial selMaterial = null;
+	private Ent_Company defaultCompany = null;
+	
+	private static final Long DEF_COMPANY_IDX = (long) 3;
 	
 	public void onCreate$infoProductCoilPanel(Event event) throws Exception {
 		log.info("infoProductCoilPanel created");
+		
+		// set default company
+		defaultCompany = getCompanyDao().findCompanyById(DEF_COMPANY_IDX);
 		
 		// get all the customers from inventoryProcess
 		Set<Ent_Customer> customerSet = inventoryProcessCustomers();
@@ -93,6 +103,9 @@ public class ProductController extends GFCBaseController {
 		List<Ent_InventoryProcess> processList =
 				getInventoryProcessDao().findInventoryByCustomerByStatus(
 						selCust, Enm_StatusProcess.Proses);
+		// clear before load
+		processCombobox.getItems().clear();
+		// load
 		loadProcessCombobox(processList);
 		// select
 		if (!processCombobox.getItems().isEmpty()) {
@@ -117,17 +130,18 @@ public class ProductController extends GFCBaseController {
 	}
 	
 	public void onSelect$processCombobox(Event event) throws Exception {
+		log.info("processCombobox select");
 		onSelectProcessCombobox();
 	}
 
 	private void onSelectProcessCombobox() throws Exception {
-		Ent_InventoryProcess invtProc =
+		selInvtProc =
 				processCombobox.getSelectedItem().getValue();
 		// proxy
-		invtProc = getInventoryProcessDao()
-				.findInventoryProcessMaterialsByProxy(invtProc.getId());
+		selInvtProc = getInventoryProcessDao()
+				.findInventoryProcessMaterialsByProxy(selInvtProc.getId());
 		// display the materials from this process
-		renderProcessMaterials(invtProc.getProcessMaterials());		
+		renderProcessMaterials(selInvtProc.getProcessMaterials());		
 	}
 	
 	private void renderProcessMaterials(List<Ent_InventoryProcessMaterial> processMaterials) {
@@ -192,7 +206,7 @@ public class ProductController extends GFCBaseController {
 	}
 
 	public void onSelect$materialListbox(Event event) throws Exception {
-		Ent_InventoryProcessMaterial selMaterial =
+		selMaterial =
 				materialListbox.getSelectedItem().getValue();
 		log.info("selected: "+selMaterial.toString());
 				
@@ -204,6 +218,7 @@ public class ProductController extends GFCBaseController {
 
 	private List<Ent_InventoryProcessProduct> onSelectMaterialListbox(
 			Ent_InventoryProcessMaterial material) throws Exception {
+		// by proxy
 		Ent_InventoryProcessMaterial selMaterial = getInventoryProcessDao()
 				.findInventoryProcessProductsByProxy(material.getId());
 		// products
@@ -257,8 +272,18 @@ public class ProductController extends GFCBaseController {
 				button.setParent(lc);
 				button.setSclass("compButton");
 				modifToEdit(button);
-				button.addEventListener(Events.ON_CLICK, editProcessProduct(product));				
+				button.addEventListener(Events.ON_CLICK, editProcessProduct(product));
 				
+				// delete
+				lc = new Listcell();
+				lc.setParent(item);
+				
+				button = new Button();
+				button.setSclass("compButton");
+				button.setIconSclass("z-icon-trash");
+				button.setStyle("background-color:var(--bs-danger);");		
+				button.setParent(lc);
+				button.addEventListener(Events.ON_CLICK, onDeleteProductButtonClick(product));
 			}
 		};
 	}
@@ -280,29 +305,42 @@ public class ProductController extends GFCBaseController {
 					Ent_InventoryProcessProduct updatedProduct =
 							getUpdatedInventoryProcessProduct(product, activeItem);
 					log.info(updatedProduct.toString());
-					
+					// get products by proxy
+					Ent_InventoryProcessMaterial procMaterialByProxy = getInventoryProcessDao()
+							.findInventoryProcessProductsByProxy(selMaterial.getId());					
+					List<Ent_InventoryProcessProduct> procProducts = procMaterialByProxy.getProcessProducts();
 					if (product.isAddInProgress()) {
 						// to add into the list
 						log.info("to add into the list...");
-						
+						// add into the list
+						procProducts.add(updatedProduct);
 					} else {
 						// to update the existing list
 						log.info("to update existing list...");
-
-						for (Ent_InventoryProcessProduct processProduct : selMaterial.getProcessProducts()) {
-							if (processProduct.getId()==updatedProduct.getId()) {
-								processProduct.setMarking(updatedProduct.getMarking());
+						// find and update the product
+						for (Ent_InventoryProcessProduct procProduct : procProducts) {
+							if (procProduct.getId()==updatedProduct.getId()) {
+								procProduct.setMarking(updatedProduct.getMarking());
+								procProduct.setThickness(updatedProduct.getThickness());
+								procProduct.setWidth(updatedProduct.getWidth());
+								procProduct.setLength(updatedProduct.getLength());
+								procProduct.setWeightQuantity(updatedProduct.getWeightQuantity());
+								procProduct.setSheetQuantity(updatedProduct.getSheetQuantity());
+								procProduct.setProcessMaterial(selMaterial);
+								procProduct.setProcessedByCo(defaultCompany);
+								break;
 							}
 						}
-						
 					}
-					
+					// re-assign the products
+					selMaterial.setProcessProducts(procProducts);				
+					// update
+					getInventoryProcessDao().update(selInvtProc);
 					// re-load
 					List<Ent_InventoryProcessProduct> productList =
 							onSelectMaterialListbox(selMaterial);
 					// re-render
 					renderProcessProducts(productList);					
-					
 					// set to false
 					product.setEditInProgress(false);
 					product.setAddInProgress(false);
@@ -327,6 +365,37 @@ public class ProductController extends GFCBaseController {
 		};
 	}
 
+	protected EventListener<Event> onDeleteProductButtonClick(Ent_InventoryProcessProduct product) {
+
+		return new EventListener<Event>() {
+			
+			@Override
+			public void onEvent(Event event) throws Exception {
+				log.info("onDeleteProductButtonClick...");
+				// get products by proxy
+				Ent_InventoryProcessMaterial procMaterialByProxy = getInventoryProcessDao()
+						.findInventoryProcessProductsByProxy(selMaterial.getId());					
+				List<Ent_InventoryProcessProduct> procProducts = procMaterialByProxy.getProcessProducts();
+				for (Ent_InventoryProcessProduct procProduct : procProducts) {
+					if (procProduct.getId()==product.getId()) {
+						procProducts.remove(procProduct);
+						break;
+					}
+				}
+				// re-assign the products
+				selMaterial.setProcessProducts(procProducts);				
+				// update
+				getInventoryProcessDao().update(selInvtProc);
+				// re-load
+				List<Ent_InventoryProcessProduct> productList =
+						onSelectMaterialListbox(selMaterial);
+				// re-render
+				renderProcessProducts(productList);				
+			}
+		};
+	}
+	
+	
 	public void onClick$addProductButton(Event event) throws Exception {
 		log.info("addProductButton click");
 		
@@ -475,6 +544,8 @@ public class ProductController extends GFCBaseController {
 		product.setLength(getProductSpek(activeItem,4));
 		product.setWeightQuantity(getProductQtyKg(activeItem));
 		product.setSheetQuantity(getProductQtyLbr(activeItem));
+		product.setProcessMaterial(selMaterial);
+		product.setProcessedByCo(defaultCompany);
 		
 		return product;
 	}	
@@ -495,5 +566,13 @@ public class ProductController extends GFCBaseController {
 
 	public void setInventoryProcessDao(InventoryProcessDao inventoryProcessDao) {
 		this.inventoryProcessDao = inventoryProcessDao;
+	}
+
+	public CompanyDao getCompanyDao() {
+		return companyDao;
+	}
+
+	public void setCompanyDao(CompanyDao companyDao) {
+		this.companyDao = companyDao;
 	}
 }
