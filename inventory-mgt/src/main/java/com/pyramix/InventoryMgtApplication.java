@@ -3,6 +3,8 @@ package com.pyramix;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
+import org.zkoss.lang.Library;
+import org.zkoss.web.Attributes;
 
 @SpringBootApplication
 @ImportResource({
@@ -11,6 +13,10 @@ import org.springframework.context.annotation.ImportResource;
 public class InventoryMgtApplication {
 
 	public static void main(String[] args) {
+		// need to set the libaray to load the zk-label_id_ID.properties file !!!
+		Library.setProperty(Attributes.PREFERRED_LOCALE, "id_ID");
+		Library.setProperty(Attributes.PREFERRED_TIME_ZONE, "Asia/Jakarta");
+		
 		SpringApplication.run(InventoryMgtApplication.class, args);
 	}
 
