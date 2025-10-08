@@ -33,7 +33,7 @@ public class PdfPReport {
 	//		extension
 	private final String fileExt = ".pdf";
 	
-	private String outputDir = "/pyramix/pdf/";
+	private String outputDir = "/pyramix/inventory/pdf/";
 	private String fileName = "";
 	private String timestamp = LocalDateTime
 			.now()
