@@ -50,7 +50,7 @@
 				<!-- <value>classpath:hibernate.properties</value> -->
 				
 				<!-- using external file -->
-				<value>file:/pyramix/hibernate-inventory-3.0.properties</value>
+				<value>file:/pyramix/inventory/hibernate-inventory-3.0.properties</value>
 			</list>
 		</property>
 	</bean>

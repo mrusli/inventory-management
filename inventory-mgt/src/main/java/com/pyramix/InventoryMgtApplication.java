@@ -14,6 +14,8 @@ public class InventoryMgtApplication {
 
 	public static void main(String[] args) {
 		// need to set the libaray to load the zk-label_id_ID.properties file !!!
+		// alternatively, place the properties file externally in the file system
+		// by specifying in the zk.xml
 		Library.setProperty(Attributes.PREFERRED_LOCALE, "id_ID");
 		Library.setProperty(Attributes.PREFERRED_TIME_ZONE, "Asia/Jakarta");
 		

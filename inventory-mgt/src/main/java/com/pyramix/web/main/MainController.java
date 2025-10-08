@@ -1,12 +1,9 @@
 package com.pyramix.web.main;
 
-import java.time.LocalDateTime;
 import java.util.TimeZone;
 
-import org.zkoss.lang.Library;
 import org.zkoss.util.Locales;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.web.Attributes;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.Include;
 
@@ -29,27 +26,27 @@ public class MainController extends GFCBaseController {
 	
 	public void onCreate$mainWindow(Event event) throws Exception {
 		log.info("mainWindow created");
-		
+
 		log.info("Version: "+getSettingsUtility().getWebAppProperties("build.version"));
 		log.info("Build No: "+getSettingsUtility().getWebAppProperties("build.timestamp"));
 		log.info("Name: "+getSettingsUtility().getWebAppProperties("build.name"));
 		
-		log.info("Locale: "+getLocale().toString());
-		log.info("Language: "+getLocale().getLanguage());
-		log.info("Region(Country): "+getLocale().getCountry());
-		log.info("Display Name: "+getLocale().getDisplayName());
-		log.info("Zone Id: "+getZoneId().toString());
+		// log.info("Locale: "+getLocale().toString());
+		// log.info("Language: "+getLocale().getLanguage());
+		// log.info("Region(Country): "+getLocale().getCountry());
+		// log.info("Display Name: "+getLocale().getDisplayName());
+		// log.info("Zone Id: "+getZoneId().toString());
 		
-		log.info("Locale Set to: "+Locales.getCurrent());
+		log.info("Locale: "+Locales.getCurrent());
 		log.info("Label: "+Labels.getLabel("language"));
-		log.info("Timezone Set to: "+TimeZone.getDefault().getID());
+		log.info("Timezone: "+TimeZone.getDefault().getID());
 		log.info("Check DateTime: "+getLocalDateTime(getZoneId()));
 		
 		// log.info("Pref Locale: "+Library.getProperty(Attributes.PREFERRED_LOCALE));
 		
-		mainInclude.setSrc("~./src/info_produk.zul");
+		// mainInclude.setSrc("~./src/info_produk.zul");
 		// mainInclude.setSrc("~./src/info_inventory_table.zul");
-		// mainInclude.setSrc("~./src/info_processcoil.zul");
+		mainInclude.setSrc("~./src/info_processcoil.zul");
 		// mainInclude.setSrc("~./src/info_company.zul");
 		// mainInclude.setSrc("~./src/info_penerimaancoil.zul");
 		// mainInclude.setSrc("~./src/info_customer.zul");

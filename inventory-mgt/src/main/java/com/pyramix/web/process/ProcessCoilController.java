@@ -3,10 +3,13 @@ package com.pyramix.web.process;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -24,6 +27,7 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
 
 import com.pyramix.domain.entity.Enm_StatusProcess;
 import com.pyramix.domain.entity.Enm_TypeDocument;
@@ -1140,6 +1144,20 @@ public class ProcessCoilController extends GFCBaseController {
 //		};
 //	}	
 //	
+	
+	public void onClick$printReportButton(Event event) throws Exception {
+		log.info("printReportButton click...");
+		
+		LocalDate reportDate = getLocalDate(getZoneId());
+		ProcessCoilReportData reportData = new ProcessCoilReportData(
+				reportDate, selInventoryProcess);
+		
+		Map<String, ProcessCoilReportData> arg =
+				Collections.singletonMap("reportData", reportData);
+		Window processCoilReportWin = (Window) Executions.createComponents("~./src/info_processcoil_report.zul", null, arg);
+		processCoilReportWin.doModal();
+	}
+	
 	protected void modifToSave(Button button) {
 		button.setIconSclass("z-icon-floppy-o");
 		button.setStyle("background-color:var(--bs-primary);");

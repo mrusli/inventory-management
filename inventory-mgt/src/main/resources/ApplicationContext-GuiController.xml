@@ -15,6 +15,10 @@
 	
 	</bean>
 	
+	<bean id="pdfpReportUtility" class="com.pyramix.web.report.PdfPReport">
+	
+	</bean>
+	
 	<bean id="serialNumberGenerator" class="com.pyramix.web.common.SerialNumberGenerator" scope="prototype" parent="basisController">
     	<property name="serialDao" ref="serialDao"></property>	
 	</bean>
@@ -35,6 +39,10 @@
     	<property name="serialNumberGenerator" ref="serialNumberGenerator"></property>
     	<property name="companyDao" ref="companyDao"></property>
     	<property name="inventoryDao" ref="inventoryDao"></property>
+    </bean>
+    
+    <bean id="processcoildReportWinController" class="com.pyramix.web.process.ProcessCoilReportController" scope="prototype" parent="basisController">
+    	<property name="pdfpReportUtility" ref="pdfpReportUtility"></property>
     </bean>
     
     <bean id="infoProductController" class="com.pyramix.web.product.ProductController" scope="prototype" parent="basisController">
