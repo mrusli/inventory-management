@@ -51,7 +51,10 @@
     </bean>    
 
     <bean id="infoSuratJalanController" class="com.pyramix.web.suratjalan.SuratJalanController" scope="prototype" parent="basisController">
-    
+    	<property name="customerDao" ref="customerDao"></property>
+    	<property name="companyDao" ref="companyDao"></property>
+    	<property name="inventoryProcessDao" ref="inventoryProcessDao"></property>
+    	<property name="serialNumberGenerator" ref="serialNumberGenerator"></property>
     </bean>
     
     <bean id="infoInvoiceController" class="com.pyramix.web.invoice.InvoiceController" scope="prototype" parent="basisController">

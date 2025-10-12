@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Doublebox;
@@ -48,11 +48,13 @@ public class ProductController extends GFCBaseController {
 	private Combobox customerProcessCombobox, processCombobox, processTypeCombobox;
 	private Listbox materialListbox, productListbox;
 	private Label materialLabel;
+	private Checkbox processCompletedCheckbox;
 	
 	private ListModelList<Ent_InventoryProcessProduct> productModelList;
 	private Ent_InventoryProcess selInvtProc = null;
 	private Ent_InventoryProcessMaterial selMaterial = null;
 	private Ent_Company defaultCompany = null;
+	private Ent_Customer selCustomer;
 	
 	private static final Long DEF_COMPANY_IDX = (long) 3;
 	
@@ -99,11 +101,11 @@ public class ProductController extends GFCBaseController {
 	}	
 
 	private void onSelectCustomerProcessCombobox() throws Exception {
-		Ent_Customer selCust = customerProcessCombobox.getSelectedItem().getValue();
+		selCustomer = customerProcessCombobox.getSelectedItem().getValue();
 		// list the processes status PROCESS
 		List<Ent_InventoryProcess> processList =
 				getInventoryProcessDao().findInventoryByCustomerByStatus(
-						selCust, Enm_StatusProcess.Proses);
+						selCustomer, Enm_StatusProcess.Proses);
 		// clear before load
 		processCombobox.getItems().clear();
 		// load
@@ -138,6 +140,15 @@ public class ProductController extends GFCBaseController {
 	private void onSelectProcessCombobox() throws Exception {
 		selInvtProc =
 				processCombobox.getSelectedItem().getValue();
+		// is process completed?
+		if (selInvtProc.getCompletedDate() != null) {
+			processCompletedCheckbox.setChecked(true);
+			processCompletedCheckbox.setLabel(dateToStringDisplay(
+					selInvtProc.getCompletedDate(), getShortDateFormat(), getLocale()));
+		} else {
+			processCompletedCheckbox.setChecked(false);
+			processCompletedCheckbox.setLabel("");
+		}
 		// proxy
 		selInvtProc = getInventoryProcessDao()
 				.findInventoryProcessMaterialsByProxy(selInvtProc.getId());
@@ -329,6 +340,7 @@ public class ProductController extends GFCBaseController {
 								procProduct.setSheetQuantity(updatedProduct.getSheetQuantity());
 								procProduct.setProcessMaterial(selMaterial);
 								procProduct.setProcessedByCo(defaultCompany);
+								procProduct.setCustomer(selCustomer);								
 								break;
 							}
 						}
@@ -547,6 +559,7 @@ public class ProductController extends GFCBaseController {
 		product.setSheetQuantity(getProductQtyLbr(activeItem));
 		product.setProcessMaterial(selMaterial);
 		product.setProcessedByCo(defaultCompany);
+		product.setCustomer(selCustomer);
 		
 		return product;
 	}	

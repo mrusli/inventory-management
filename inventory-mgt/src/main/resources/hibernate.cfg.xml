@@ -25,5 +25,12 @@
 
 		<mapping class="com.pyramix.domain.entity.Ent_InventoryTable"/>
 		
+		<mapping class="com.pyramix.domain.entity.Ent_SuratJalan"/>
+
+		<mapping class="com.pyramix.domain.entity.Ent_SuratJalanProduct"/>
+		
+		<mapping class="com.pyramix.domain.entity.Ent_Invoice"/>
+		
+		<mapping class="com.pyramix.domain.entity.Ent_InvoiceProduct"/>
 	</session-factory>
 </hibernate-configuration>

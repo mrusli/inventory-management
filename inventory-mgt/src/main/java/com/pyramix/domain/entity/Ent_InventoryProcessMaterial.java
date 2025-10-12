@@ -33,7 +33,7 @@ public class Ent_InventoryProcessMaterial extends IdBasedObject {
 	private Double length;
 	
 	@Column(name = "inv_pack")
-	private Enm_InventoryPacking inventoryPacking;
+	private Enm_TypePacking inventoryPacking;
 	
 	@Column(name = "inv_w_qty")
 	private Double weightQuantity;

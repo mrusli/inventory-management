@@ -142,4 +142,53 @@ public class InventoryProcessHibernate extends DaoHibernate implements Inventory
 
 	}
 
+	@Override
+	public List<Ent_InventoryProcess> findInventoryByCustomerByStatusBySuratJalan(Ent_Customer customer, 
+			Enm_StatusProcess process) throws Exception {
+		
+		Session session = super.getSessionFactory().openSession();
+		
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<Ent_InventoryProcess> criteriaQuery = criteriaBuilder.createQuery(Ent_InventoryProcess.class);
+		Root<Ent_InventoryProcess> root = criteriaQuery.from(Ent_InventoryProcess.class);
+		criteriaQuery.select(root).where(
+				criteriaBuilder.equal(root.get("customer"), customer),
+				criteriaBuilder.equal(root.get("processStatus"), process),
+				criteriaBuilder.isNull(root.get("suratjalan")));
+		
+		try {
+			
+			return session.createQuery(criteriaQuery).getResultList();
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			session.close();
+		}
+		
+	}
+
+//	@Override
+//	public List<Ent_InventoryProcess> findInventoryProcessBySuratJalan() throws Exception {
+//		Session session = super.getSessionFactory().openSession();
+//		
+//		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+//		CriteriaQuery<Ent_InventoryProcess> criteriaQuery = criteriaBuilder.createQuery(Ent_InventoryProcess.class);
+//		Root<Ent_InventoryProcess> root = criteriaQuery.from(Ent_InventoryProcess.class);
+//		criteriaQuery.select(root).where(
+//				criteriaBuilder.isNotNull(root.get("completedDate")),
+//				criteriaBuilder.isNull(root.get("suratjalan")));
+//		
+//		try {
+//			
+//			return session.createQuery(criteriaQuery).getResultList();
+//			
+//		} catch (Exception e) {
+//			throw e;
+//		} finally {
+//			session.close();
+//		}
+//
+//	}
+
 }

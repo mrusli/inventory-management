@@ -20,6 +20,8 @@
 					<combobox id="customerProcessCombobox" width="280px" visible="true"></combobox>
 					No.Proses:
 					<combobox id="processCombobox" width="180px" visible="true"></combobox>
+					Selesai:
+					<checkbox id="processCompletedCheckbox"></checkbox>
 				</n:div>
 				<listbox sclass="mt-3" id="materialListbox" height="250px">
 					<listhead>

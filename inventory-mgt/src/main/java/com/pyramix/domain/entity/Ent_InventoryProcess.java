@@ -58,6 +58,9 @@ public class Ent_InventoryProcess extends IdBasedObject {
 	@Enumerated(EnumType.ORDINAL)
 	private Enm_TypeProcess processType;
 	
+	@ManyToOne
+	private Ent_SuratJalan suratjalan;
+	
 	@Transient
 	private boolean addInProgress = false;
 }

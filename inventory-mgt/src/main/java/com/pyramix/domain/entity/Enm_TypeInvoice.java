@@ -1,11 +1,11 @@
 package com.pyramix.domain.entity;
 
-public enum Enm_InventoryPacking {
-	coil(0), petian(1), lembaran(2);
+public enum Enm_TypeInvoice {
+	penjualan(0), normal(1);
 	
 	private int value;
 
-	private Enm_InventoryPacking(int value) {
+	private Enm_TypeInvoice(int value) {
 		this.setValue(value);
 	}
 
@@ -16,5 +16,6 @@ public enum Enm_InventoryPacking {
 	public void setValue(int value) {
 		this.value = value;
 	}
+	
 	
 }

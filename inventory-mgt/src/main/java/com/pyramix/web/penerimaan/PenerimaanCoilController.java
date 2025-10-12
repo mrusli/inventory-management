@@ -21,7 +21,7 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Textbox;
 
-import com.pyramix.domain.entity.Enm_InventoryPacking;
+import com.pyramix.domain.entity.Enm_TypePacking;
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_Inventory;
 import com.pyramix.domain.entity.Ent_InventoryCode;
@@ -223,7 +223,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 		inventory.setThickness(0);
 		inventory.setWidth(0);
 		inventory.setLength(0);
-		inventory.setInventoryPacking(Enm_InventoryPacking.coil);
+		inventory.setInventoryPacking(Enm_TypePacking.coil);
 		inventory.setWeightQuantity(0);
 		inventory.setMarking("");
 		// set to the item
@@ -266,7 +266,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 			inventory.setLength(spek[2]);
 			// prev Packing
 			lc = (Listcell) prevItem.getChildren().get(4);
-			inventory.setInventoryPacking((Enm_InventoryPacking) lc.getAttribute("packing"));
+			inventory.setInventoryPacking((Enm_TypePacking) lc.getAttribute("packing"));
 			// prev Jmlh/Kg
 			lc = (Listcell) prevItem.getChildren().get(5);
 			inventory.setWeightQuantity((double) lc.getAttribute("wgthQty"));
@@ -532,7 +532,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 		};
 	}
 
-	private void setupPacking(Listitem activeItem, Enm_InventoryPacking inventoryPacking) {
+	private void setupPacking(Listitem activeItem, Enm_TypePacking inventoryPacking) {
 		Listcell lc = (Listcell) activeItem.getChildren().get(4);
 		lc.setLabel("");
 		Combobox combobox = new Combobox();
@@ -540,7 +540,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 		setupPackingCombobox(combobox);
 		if (inventoryPacking != null) {
 			for (Comboitem comboitem : combobox.getItems()) {
-				Enm_InventoryPacking invtPack = comboitem.getValue();
+				Enm_TypePacking invtPack = comboitem.getValue();
 				if (inventoryPacking.equals(invtPack)) {
 					combobox.setSelectedItem(comboitem);
 					break;
@@ -565,7 +565,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 	
 	private void setupPackingCombobox(Combobox combobox) {
 		Comboitem comboitem;
-		for(Enm_InventoryPacking invtPack : Enm_InventoryPacking.values()) {
+		for(Enm_TypePacking invtPack : Enm_TypePacking.values()) {
 			comboitem = new Comboitem();
 			comboitem.setLabel(invtPack.toString());
 			comboitem.setValue(invtPack);

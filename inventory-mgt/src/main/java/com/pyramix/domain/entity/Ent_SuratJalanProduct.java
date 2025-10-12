@@ -18,14 +18,17 @@ import lombok.ToString;
 @ToString(callSuper = true)
 @Data
 @Entity
-@Table(name = "inventory_process_product")
-public class Ent_InventoryProcessProduct extends IdBasedObject {
-		
-	@Column(name = "mrkng")
-	private String marking;
-	
+@Table(name = "suratjalan_product")
+public class Ent_SuratJalanProduct extends IdBasedObject {
+
 	@ManyToOne
 	private Ent_InventoryCode inventoryCode;
+	
+	@Column(name = "marking")
+	private String marking;
+	
+	@Column(name = "spek")
+	private String spek;
 	
 	@Column(name = "inv_thkns")
 	private double thickness;
@@ -34,35 +37,23 @@ public class Ent_InventoryProcessProduct extends IdBasedObject {
 	private double width;
 	
 	@Column(name = "inv_lngth")
-	private double length;	
+	private double length;
+	
+	@Column(name = "pack")
+	@Enumerated(EnumType.ORDINAL)
+	private Enm_TypePacking packing;
+	
+	@Column(name = "w_qty")
+	private double quantityByKg;
+	
+	@Column(name = "s_qty")
+	private int quantityBySht;
 	
 	@Column(name = "re_coil")
 	@Convert(converter = TrueFalseConverter.class)
 	private boolean recoil;
 	
-	@Column(name = "inv_s_qty")
-	private int sheetQuantity;
-	
-	@Column(name = "inv_w_qty")
-	private double weightQuantity;
-	
-	@Column(name = "inv_pack")
-	@Enumerated(EnumType.ORDINAL)
-	private Enm_TypePacking inventoryPacking = Enm_TypePacking.petian;
-	
-	@ManyToOne
-	@ToString.Exclude
-	private Ent_Company processedByCo;
-	
-	@ManyToOne
-	private Ent_InventoryProcessMaterial processMaterial;
-	
-	@ManyToOne
-	private Ent_Customer customer;
-	
 	@Transient
 	private boolean editInProgress = false;
 	
-	@Transient
-	private boolean addInProgress = false;
 }

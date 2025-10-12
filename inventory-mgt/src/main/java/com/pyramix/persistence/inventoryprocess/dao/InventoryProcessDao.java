@@ -27,5 +27,10 @@ public interface InventoryProcessDao {
 
 	public List<Ent_InventoryProcess> findInventoryByCustomerByStatus(Ent_Customer customer,
 			Enm_StatusProcess statusProses) throws Exception;
+
+	public List<Ent_InventoryProcess> findInventoryByCustomerByStatusBySuratJalan(Ent_Customer customer, 
+			Enm_StatusProcess process) throws Exception;
+
+	// public List<Ent_InventoryProcess> findInventoryProcessBySuratJalan() throws Exception;
 	
 }

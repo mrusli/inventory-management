@@ -115,6 +115,12 @@ public class CompanyController extends GFCBaseController {
 		};
 	}
 
+	public void onSelect$companyListbox(Event event) throws Exception {
+		selCompany = companyListbox.getSelectedItem().getValue();
+		
+		displayCompanyInfo();
+	}
+	
 	private void displayCompanyInfo() {
 		companyNameLabel.setValue(selCompany.getCompanyType().toString()+"."+
 				selCompany.getCompanyLegalName());

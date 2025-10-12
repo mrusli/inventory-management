@@ -59,7 +59,7 @@ public class Ent_Inventory extends IdBasedObject {
 	
 	@Column(name = "inv_pack")
 	@Enumerated(EnumType.ORDINAL)
-	private Enm_InventoryPacking inventoryPacking = Enm_InventoryPacking.coil;
+	private Enm_TypePacking inventoryPacking = Enm_TypePacking.coil;
 
 	@Column(name = "inv_note")
 	private String note;
