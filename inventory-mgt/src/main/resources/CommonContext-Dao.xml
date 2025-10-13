@@ -61,4 +61,10 @@
 		<property name="sessionFactory" ref="sessionFactory"></property>	
 	</bean>
 	
+	<!-- suratjalan -->
+	
+	<bean id="suratjalanDao" class="com.pyramix.persistence.suratjalan.dao.hibernate.SuratJalanHibernate">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
 </beans>

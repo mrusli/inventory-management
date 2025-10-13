@@ -25,6 +25,10 @@
 					<listheader></listheader>
 				</listhead>
 			</listbox>												
+			<n:div sclass="mt-3">
+				<button id="editButton" label="Ubah" visible="true" iconSclass="z-icon-pen-to-square" sclass="compButton" style="background-color:var(--bs-warning)"></button>				
+			</n:div>
+
 		</n:div>
 		<n:div sclass="col-8">
 			<label id="customerNameLabel" value="PT.Kinmasaru Ranggun Mandiri" sclass="h5 text-primary"></label>
@@ -68,7 +72,7 @@
 				</listbox>
 				<n:div sclass="mt-3">
 					<button id="cancelAddButton" label="Batal" visible="false" iconSclass="z-icon-trash" sclass="compButton" style="background-color:var(--bs-warning)"></button>
-					<button id="saveAddButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-disk" sclass="compButton" style="background-color:var(--bs-warning)"></button>				
+					<button id="saveAddButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-disk" sclass="compButton" style="background-color:var(--bs-primary)"></button>				
 				</n:div>
 			</n:div>			
 		</n:div>

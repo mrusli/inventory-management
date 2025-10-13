@@ -55,6 +55,6 @@ public class Ent_SuratJalan extends IdBasedObject {
 	private String noPolisi;
 	
 	@Transient
-	private boolean editInProgress = false;
+	private boolean addInProgress = false;
 	
 }

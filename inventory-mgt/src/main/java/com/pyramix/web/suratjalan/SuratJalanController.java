@@ -12,6 +12,7 @@ import org.zkoss.zul.Button;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Div;
+import org.zkoss.zul.Doublebox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
@@ -34,6 +35,7 @@ import com.pyramix.domain.entity.Ent_SuratJalanProduct;
 import com.pyramix.persistence.company.dao.CompanyDao;
 import com.pyramix.persistence.customer.dao.CustomerDao;
 import com.pyramix.persistence.inventoryprocess.dao.InventoryProcessDao;
+import com.pyramix.persistence.suratjalan.dao.SuratJalanDao;
 import com.pyramix.web.common.GFCBaseController;
 import com.pyramix.web.common.SerialNumberGenerator;
 
@@ -51,11 +53,12 @@ public class SuratJalanController extends GFCBaseController {
 	private CompanyDao companyDao;
 	private InventoryProcessDao inventoryProcessDao;
 	private SerialNumberGenerator serialNumberGenerator;
+	private SuratJalanDao suratjalanDao;
 	
 	private Combobox customerCombobox, processCombobox;
 	private Listbox suratJalanListbox, suratjalanProductListbox;
 	private Div processSelDiv;
-	private Button cancelAddButton, saveAddButton;
+	private Button cancelAddButton, saveAddButton, editButton;
 	private Label customerNameLabel, suratjalanDateLabel, suratjalanNumberLabel, nopolLabel,
 		refdocLabel;
 	private Textbox nopolTextbox, refdocTextbox;
@@ -63,6 +66,7 @@ public class SuratJalanController extends GFCBaseController {
 	private Ent_SuratJalan currSuratJalan;
 	private ListModelList<Ent_SuratJalanProduct> suratjalanProductModelList;
 	private Ent_Company defaultCompany = null;
+	private List<Ent_SuratJalan> suratjalanList;
 	
 	private static final Long DEF_COMPANY_IDX = (long) 3;
 	
@@ -78,10 +82,66 @@ public class SuratJalanController extends GFCBaseController {
 
 		if (!customerCombobox.getItems().isEmpty()) {
 			// select 1st customer
-			customerCombobox.setSelectedIndex(0);			
+			customerCombobox.setSelectedIndex(0);
+			// load
+			loadSuratJalan();
+			// render
+			renderSuratJalan();
+		}
+	}
+
+	private void loadSuratJalan() throws Exception {
+		Ent_Customer selCustomer = customerCombobox.getSelectedItem().getValue();
+		
+		suratjalanList = 
+				getSuratjalanDao().findSuratJalanByCustomer(selCustomer);		
+	}
+
+	private void renderSuratJalan() {
+		ListModelList<Ent_SuratJalan> suratjalanModelList =
+				new ListModelList<Ent_SuratJalan>(suratjalanList);
+		suratJalanListbox.setModel(suratjalanModelList);
+		suratJalanListbox.setItemRenderer(getSuratJalanListitemRenderer());
+	}	
+	
+	private ListitemRenderer<Ent_SuratJalan> getSuratJalanListitemRenderer() {
+		
+		return new ListitemRenderer<Ent_SuratJalan>() {
+			
+			@Override
+			public void render(Listitem item, Ent_SuratJalan suratjalan, int index) throws Exception {
+				Listcell lc;
+				// no
+				lc = new Listcell(suratjalan.getSuratjalanSerial().getSerialComp());
+				lc.setParent(item);
+				// tgl
+				lc = new Listcell(dateToStringDisplay(suratjalan.getSuratjalanDate(), 
+						getShortDateFormat(), getLocale()));
+				lc.setParent(item);
+				
+				item.setValue(suratjalan);
+			}
+		};
+	}
+	
+	public void onAfterRender$suratJalanListbox(Event event) throws Exception {
+		// select 1st item in the listbox
+		if (!suratJalanListbox.getItems().isEmpty()) {
+			suratJalanListbox.setSelectedIndex(0);
+			currSuratJalan = suratJalanListbox.getSelectedItem().getValue();
+			// display
+			displaySuratJalan();
 		}
 	}
 	
+	public void onSelect$suratJalanListbox(Event event) throws Exception {
+		currSuratJalan = suratJalanListbox.getSelectedItem().getValue();
+		if (currSuratJalan != null) {
+			// display
+			displaySuratJalan();
+		}
+	}
+
 	public void onClick$suratJalanAddButton(Event event) throws Exception {
 		log.info("suratJalanAddButton click");
 
@@ -115,6 +175,8 @@ public class SuratJalanController extends GFCBaseController {
 		suratJalanListbox.setHeight("340px");
 		// make div visible true
 		processSelDiv.setVisible(true);
+		// hide the edit button
+		editButton.setVisible(false);
 		// allow user to cancel this add
 		cancelAddButton.setVisible(true);
 		// allow user to save this add
@@ -132,6 +194,13 @@ public class SuratJalanController extends GFCBaseController {
 			comboitem.setValue(customer);
 			comboitem.setParent(customerCombobox);
 		}
+	}
+	
+	public void onSelect$customerCombobox(Event event) throws Exception {
+		// load
+		loadSuratJalan();
+		// render
+		renderSuratJalan();
 	}
 
 	private void loadProcessCombobox(List<Ent_InventoryProcess> processList) {
@@ -164,6 +233,8 @@ public class SuratJalanController extends GFCBaseController {
 			}
 		}
 
+		// productList.forEach(p -> log.info(p.toString()));
+		
 		return productList;
 	}
 
@@ -180,7 +251,7 @@ public class SuratJalanController extends GFCBaseController {
 		suratjalan.setSuratjalanProducts(transformProductToSuratJalanProduct(productList));
 		suratjalan.setSuratjalanStatus(Enm_StatusDocument.Normal);
 		suratjalan.setNoPolisi("");
-		suratjalan.setEditInProgress(true);
+		suratjalan.setAddInProgress(true);
 		
 		return suratjalan;
 	}	
@@ -214,14 +285,18 @@ public class SuratJalanController extends GFCBaseController {
 			suratjalanProduct.setWidth(product.getWidth());
 			suratjalanProduct.setLength(product.getLength());
 			suratjalanProduct.setRecoil(product.isRecoil());
-			
+			// allow user to edit
+			suratjalanProduct.setEditInProgress(true);
+			// add
 			suratjalanProductList.add(suratjalanProduct);
 		}
+		
+		// suratjalanProductList.forEach(s -> log.info(s.toString()));
 		
 		return suratjalanProductList;
 	}
 
-	private void displaySuratJalan() {
+	private void displaySuratJalan() throws Exception {
 		customerNameLabel.setValue(currSuratJalan.getCustomer().getCompanyType()+"."+
 				currSuratJalan.getCustomer().getCompanyLegalName());
 		suratjalanDateLabel.setValue(dateToStringDisplay(currSuratJalan.getSuratjalanDate(),
@@ -233,14 +308,11 @@ public class SuratJalanController extends GFCBaseController {
 		setSuratJalanRefDoc();
 		// render the product list into the suratjalan listbox
 		renderSuratJalanProductList();
-		// activate the save button
 		
 	}	
 
-
-
 	private void setSuratJalanNoPolisi() {
-		if (currSuratJalan.isEditInProgress()) {
+		if (currSuratJalan.isAddInProgress()) {
 			nopolLabel.setVisible(false);
 			nopolLabel.setValue("");
 			nopolTextbox.setVisible(true);
@@ -254,7 +326,7 @@ public class SuratJalanController extends GFCBaseController {
 	}
 	
 	private void setSuratJalanRefDoc() {
-		if (currSuratJalan.isEditInProgress()) {
+		if (currSuratJalan.isAddInProgress()) {
 			refdocLabel.setVisible(false);
 			refdocLabel.setValue("");
 			refdocTextbox.setVisible(true);
@@ -267,10 +339,14 @@ public class SuratJalanController extends GFCBaseController {
 		}
 	}
 	
-	private void renderSuratJalanProductList() {
+	private void renderSuratJalanProductList() throws Exception {
+		if (currSuratJalan.isAddInProgress()) {
+			// no need to proxy, because currSuratJalan is new (not from DB)
+		} else {
+			currSuratJalan = getSuratjalanDao().getSuratJalanProductByProxy(currSuratJalan.getId());			
+		}
 		suratjalanProductModelList = 
 				new ListModelList<Ent_SuratJalanProduct>(currSuratJalan.getSuratjalanProducts());
-		
 		suratjalanProductListbox.setModel(suratjalanProductModelList);
 		suratjalanProductListbox.setItemRenderer(getSuratJalanProductListitemRenderer());
 	}
@@ -311,12 +387,15 @@ public class SuratJalanController extends GFCBaseController {
 				lc = new Listcell();
 				lc.setParent(item);
 				
-				Button button = new Button();
-				button.setIconSclass("");
-				button.setParent(lc);
-				button.setSclass("compButton");
-				modifToEdit(button);
-				button.addEventListener(Events.ON_CLICK, editSuratJalanProduct(product));
+				if (product.isEditInProgress()) {
+					Button button = new Button();
+					button.setIconSclass("");
+					button.setParent(lc);
+					button.setSclass("compButton");
+					modifToEdit(button);
+					button.addEventListener(Events.ON_CLICK, editSuratJalanProduct(product));
+				}
+				
 				
 				item.setValue(product);
 			}
@@ -330,44 +409,126 @@ public class SuratJalanController extends GFCBaseController {
 			@Override
 			public void onEvent(Event event) throws Exception {
 				Button button = (Button) event.getTarget();
-				
+				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
 				if (product.isEditInProgress()) {
-					log.info("to saveSuratJalanProduct click");
-					// set to false
-					product.setEditInProgress(false);
-					
-					// transform this button to edit
-					modifToEdit(button);
-				} else {
 					log.info("to editSuratJalanProduct click");
-					// set to edit
-					product.setEditInProgress(true);
+					// set to save
+					product.setEditInProgress(false);
+					// set columns to edit
+					setMarking(activeItem, product.getMarking());
+					setSpek(activeItem, product.getThickness(), product.getWidth(), 
+							product.getLength());
+					
 					
 					// transform this button to save
 					modifToSave(button);
+				} else {
+					log.info("to saveSuratJalanProduct click");
+					// set to edit
+					product.setEditInProgress(true);
+					//			
+					product.setMarking(getMarking(activeItem));
+					product.setThickness(getSpek(activeItem, 0));
+					product.setWidth(getSpek(activeItem,2));
+					product.setLength(getSpek(activeItem,4));
+					
+					// getSuratjalanDao().update(currSuratJalan);
+					
+					// render the product list into the suratjalan listbox
+					renderSuratJalanProductList();
+					
+					// transform this button to edit
+					modifToEdit(button);
+				
 				}
 				
 			}
 		};
 	}
 	
+	private String getMarking(Listitem item) {
+		Listcell lc = (Listcell) item.getChildren().get(0);
+		
+		Textbox textbox = (Textbox) lc.getFirstChild();
+		
+		return textbox.getValue();
+	}
+	
+	private void setMarking(Listitem activeItem, String marking) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(0);
+		lc.setLabel("");
+		Textbox textbox = new Textbox();
+		textbox.setValue(marking);
+		textbox.setWidth("100px");
+		textbox.setParent(lc);
+	}
+
+	private double getSpek(Listitem activeItem, int idx) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		
+		Doublebox doublebox = (Doublebox) lc.getChildren().get(idx);
+		
+		return doublebox.getValue();
+	}	
+	
+	protected void setSpek(Listitem activeItem, double thickness, double width, double length) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		lc.setLabel("");
+		// thickness
+		Doublebox doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(thickness);
+		doublebox.setParent(lc);
+		Label label = new Label();
+		label.setValue(" x ");
+		label.setParent(lc);
+		// width
+		doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(width);
+		doublebox.setParent(lc);
+		label = new Label();
+		label.setValue(" x ");
+		label.setParent(lc);
+		// length
+		doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(length);
+		doublebox.setParent(lc);
+	}	
+	
 	public void onClick$saveAddButton(Event event) throws Exception {
 		log.info("saveAddButton click");
-
+		
 		// make div visible false
 		processSelDiv.setVisible(false);
 		// increase listbox height to 400px
 		suratJalanListbox.setHeight("390px");
-		// hide this button
+		// hide save button
 		saveAddButton.setVisible(false);
-		
+		// hide cancel button
+		cancelAddButton.setVisible(false);
+		// make edit button visible
+		editButton.setVisible(true);
 		// save / update the currSuratJalan
-		
+		currSuratJalan = getSuratjalanDao().update(getUpdatedSuratJalan());
 		// load surat jalan for the sel customer
-		
+
 		// locate the currSuratJalan in the listbox
 		
 		// display currSuratJalan
+		displaySuratJalan();
+	}
+
+	private Ent_SuratJalan getUpdatedSuratJalan() {
+		currSuratJalan.setNoPolisi(nopolTextbox.getValue());
+		currSuratJalan.setRefDocument(refdocTextbox.getValue());
+		
+		
+		return currSuratJalan;
 	}
 
 	public void onClick$cancelAddButton(Event event) throws Exception {
@@ -377,19 +538,22 @@ public class SuratJalanController extends GFCBaseController {
 		processSelDiv.setVisible(false);
 		// increase listbox height to 400px
 		suratJalanListbox.setHeight("390px");
+		// make edit button visible
+		editButton.setVisible(true);		
 		// hide this button
 		cancelAddButton.setVisible(false);
+		// hide save button
+		saveAddButton.setVisible(false);
 		
-		// get the selected customer
-		
-		// find existing suratjalan
-		
-		// list the suratjalan
-		
-		// set curr suratjalan
-		
-		// display suratjalan
-		
+		// list the suratjalan 
+		loadSuratJalan();		
+		// display suratjalan --> after render --> set currSuratJalan
+		renderSuratJalan();
+	}
+	
+	public void onClick$editButton(Event event) throws Exception {
+		log.info("editButton click");
+
 	}
 	
 	protected void modifToSave(Button button) {
@@ -432,6 +596,14 @@ public class SuratJalanController extends GFCBaseController {
 
 	public void setSerialNumberGenerator(SerialNumberGenerator serialNumberGenerator) {
 		this.serialNumberGenerator = serialNumberGenerator;
+	}
+
+	public SuratJalanDao getSuratjalanDao() {
+		return suratjalanDao;
+	}
+
+	public void setSuratjalanDao(SuratJalanDao suratjalanDao) {
+		this.suratjalanDao = suratjalanDao;
 	}
 	
 }
