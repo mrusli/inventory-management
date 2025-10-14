@@ -57,4 +57,7 @@ public class Ent_SuratJalan extends IdBasedObject {
 	@Transient
 	private boolean addInProgress = false;
 	
+	@Transient
+	private boolean editInProgress = false;
+	
 }

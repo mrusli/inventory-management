@@ -37,4 +37,6 @@ public class Ent_InvoiceProduct extends IdBasedObject {
 	
 	private double pallet_price;
 	
+	private int pallet_qty;
+	
 }

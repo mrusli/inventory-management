@@ -41,13 +41,18 @@ public class Ent_Invoice extends IdBasedObject {
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	private Ent_Serial invc_ser;
-	
+		
 	private Enm_StatusDocument invc_status;
 	
-	@ManyToOne
-	private Ent_SuratJalan ref_suratjalan;
+	@OneToMany
+	private List<Ent_SuratJalan> suratjalans;
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Ent_InvoiceProduct> invoiceProducts;
 	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Ent_InvoiceKwitansi> invoiceKwitansis;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Ent_InvoiceFaktur> invoiceFakturs;
 }

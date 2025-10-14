@@ -312,7 +312,7 @@ public class SuratJalanController extends GFCBaseController {
 	}	
 
 	private void setSuratJalanNoPolisi() {
-		if (currSuratJalan.isAddInProgress()) {
+		if (currSuratJalan.isAddInProgress() || currSuratJalan.isEditInProgress()) {
 			nopolLabel.setVisible(false);
 			nopolLabel.setValue("");
 			nopolTextbox.setVisible(true);
@@ -326,7 +326,7 @@ public class SuratJalanController extends GFCBaseController {
 	}
 	
 	private void setSuratJalanRefDoc() {
-		if (currSuratJalan.isAddInProgress()) {
+		if (currSuratJalan.isAddInProgress() || currSuratJalan.isEditInProgress()) {
 			refdocLabel.setVisible(false);
 			refdocLabel.setValue("");
 			refdocTextbox.setVisible(true);
@@ -340,10 +340,15 @@ public class SuratJalanController extends GFCBaseController {
 	}
 	
 	private void renderSuratJalanProductList() throws Exception {
+		boolean suratjalanEditInProgress;
+		
 		if (currSuratJalan.isAddInProgress()) {
 			// no need to proxy, because currSuratJalan is new (not from DB)
 		} else {
-			currSuratJalan = getSuratjalanDao().getSuratJalanProductByProxy(currSuratJalan.getId());			
+			suratjalanEditInProgress = currSuratJalan.isEditInProgress();
+			currSuratJalan = getSuratjalanDao().getSuratJalanProductByProxy(currSuratJalan.getId());
+			currSuratJalan.setEditInProgress(suratjalanEditInProgress);
+			currSuratJalan.getSuratjalanProducts().forEach(c -> c.setEditInProgress(suratjalanEditInProgress));
 		}
 		suratjalanProductModelList = 
 				new ListModelList<Ent_SuratJalanProduct>(currSuratJalan.getSuratjalanProducts());
@@ -387,15 +392,13 @@ public class SuratJalanController extends GFCBaseController {
 				lc = new Listcell();
 				lc.setParent(item);
 				
-				if (product.isEditInProgress()) {
-					Button button = new Button();
-					button.setIconSclass("");
-					button.setParent(lc);
-					button.setSclass("compButton");
-					modifToEdit(button);
-					button.addEventListener(Events.ON_CLICK, editSuratJalanProduct(product));
-				}
-				
+				Button button = new Button();
+				button.setVisible(product.isEditInProgress());
+				button.setIconSclass("");
+				button.setParent(lc);
+				button.setSclass("compButton");
+				modifToEdit(button);
+				button.addEventListener(Events.ON_CLICK, editSuratJalanProduct(product));
 				
 				item.setValue(product);
 			}
@@ -433,9 +436,12 @@ public class SuratJalanController extends GFCBaseController {
 					product.setLength(getSpek(activeItem,4));
 					
 					// getSuratjalanDao().update(currSuratJalan);
-					
+					if (currSuratJalan.isEditInProgress()) {
+						// update
+						getSuratjalanDao().update(currSuratJalan);
+					}
 					// render the product list into the suratjalan listbox
-					renderSuratJalanProductList();
+					renderSuratJalanProductList();						
 					
 					// transform this button to edit
 					modifToEdit(button);
@@ -554,6 +560,13 @@ public class SuratJalanController extends GFCBaseController {
 	public void onClick$editButton(Event event) throws Exception {
 		log.info("editButton click");
 
+		currSuratJalan.setEditInProgress(true);
+		// show cancel button
+		cancelAddButton.setVisible(true);
+		// show save button
+		saveAddButton.setVisible(true);
+		
+		displaySuratJalan();
 	}
 	
 	protected void modifToSave(Button button) {

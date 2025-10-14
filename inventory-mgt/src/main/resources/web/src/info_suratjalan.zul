@@ -53,7 +53,7 @@
 								<textbox id="nopolTextbox" width="80px" visible="false"></textbox>
 							</cell>
 							<cell>No PO/DO:</cell>
-							<cell>
+							<cell sclass="text-primary">
 								<label id="refdocLabel" value="240"></label>
 								<textbox id="refdocTextbox" width="80px" visible="false"></textbox>
 							</cell>
