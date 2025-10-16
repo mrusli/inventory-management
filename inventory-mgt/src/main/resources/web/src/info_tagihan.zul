@@ -20,110 +20,110 @@
 			</n:div>
 			<n:div sclass="col-6">
 				<n:div>
-					<n:h4>Jasa Shearing / Slitting</n:h4>
+					<n:h5>Jasa Shearing / Slitting</n:h5>
 				</n:div>
 				<grid style="border:none">
 					<rows>
 						<row>
 							<cell width="25%">
-								<label value="Jumlah" sclass="h5"></label>
+								<label value="Jumlah" sclass="h6"></label>
 							</cell>
 							<cell width="5%">
-								<label value=":" sclass="h5"></label>
+								<label value=":" sclass="h6"></label>
 							</cell>
 							<cell width="30%" align="right" sclass="text-primary">
-								<label id="subtotal01JasaLabel" sclass="h5" value="35.090.500,00"></label>
+								<label id="subtotal01JasaLabel" sclass="h6" value="35.090.500,00"></label>
 							</cell>
 							<cell></cell>
 						</row>
 						<row>
 							<cell>
-								<label value="PPn 11%" sclass="h5"></label>
+								<label value="PPn 11%" sclass="h6"></label>
 							</cell>
 							<cell>
-								<label value=":" sclass="h5"></label>
+								<label value=":" sclass="h6"></label>
 							</cell>
 							<cell align="right" sclass="text-primary">
-								<label id="ppnJasaLabel" sclass="h5" value="3.859.955,00"></label>
+								<label id="ppnJasaLabel" sclass="h6" value="3.859.955,00"></label>
 							</cell>
 							<cell></cell>							
 						</row>
 						<row>
 							<cell>
-								<label value="" sclass="h5"></label>
+								<label value="" sclass="h6"></label>
 							</cell>
 							<cell>
-								<label value="" sclass="h5"></label>
+								<label value="" sclass="h6"></label>
 							</cell>
 							<cell align="right" sclass="text-primary">
-								<label id="subtotal02JasaLabel" sclass="h5" value="38.950.455,00"></label>
+								<label id="subtotal02JasaLabel" sclass="h6" value="38.950.455,00"></label>
 							</cell>
 							<cell></cell>							
 						</row>
 						<row>
 							<cell>
-								<label value="PPh23" sclass="h5"></label>
+								<label value="PPh23" sclass="h6"></label>
 							</cell>
 							<cell>
-								<label value=":" sclass="h5"></label>
+								<label value=":" sclass="h6"></label>
 							</cell>
 							<cell align="right" sclass="text-primary">
-								<label id="pph23JasaLabel" sclass="h5" value="-701.810,00"></label>
+								<label id="pph23JasaLabel" sclass="h6" value="-701.810,00"></label>
 							</cell>
 							<cell></cell>							
 						</row>
 						<row>
 							<cell>
-								<label value="Total" sclass="h5"></label>
+								<label value="Total" sclass="h6"></label>
 							</cell>
 							<cell>
-								<label value=":" sclass="h5"></label>
+								<label value=":" sclass="h6"></label>
 							</cell>
 							<cell align="right" sclass="text-primary">
-								<label id="totalJasaLabel" sclass="h5" value="38.248.645,00"></label>
+								<label id="totalJasaLabel" sclass="h6" value="38.248.645,00"></label>
 							</cell>
 							<cell></cell>							
 						</row>
 					</rows>
 				</grid>
 				<n:div sclass="mt-3">
-					<n:h4>Pallet</n:h4>
+					<n:h5>Pallet</n:h5>
 				</n:div>
 				<grid style="border:none" sclass="mt-3">
 					<rows>
 						<row>
 							<cell width="25%">
-								<label value="Pallet" sclass="h5"></label>
+								<label value="Pallet" sclass="h6"></label>
 							</cell>
 							<cell width="5%">
-								<label value=":" sclass="h5"></label>
+								<label value=":" sclass="h6"></label>
 							</cell>
 							<cell width="30%" align="right" sclass="text-primary">
-								<label id="subtotalPalletLabel" sclass="h5" value="3.000.000,00"></label>
+								<label id="subtotalPalletLabel" sclass="h6" value="3.000.000,00"></label>
 							</cell>
 							<cell></cell>
 						</row>
 						<row>
 							<cell>
-								<label value="PPn 11%" sclass="h5"></label>
+								<label value="PPn 11%" sclass="h6"></label>
 							</cell>
 							<cell>
-								<label value=":" sclass="h5"></label>
+								<label value=":" sclass="h6"></label>
 							</cell>
 							<cell align="right" sclass="text-primary">
-								<label id="ppnPalletLabel" sclass="h5" value="330.000,00"></label>
+								<label id="ppnPalletLabel" sclass="h6" value="330.000,00"></label>
 							</cell>
 							<cell></cell>							
 						</row>
 						<row>
 							<cell>
-								<label value="Total" sclass="h5"></label>
+								<label value="Total" sclass="h6"></label>
 							</cell>
 							<cell>
-								<label value=":" sclass="h5"></label>
+								<label value=":" sclass="h6"></label>
 							</cell>
 							<cell align="right" sclass="text-primary">
-								<label id="totalPalletLabel" sclass="h5" value="3.330.000,00"></label>
+								<label id="totalPalletLabel" sclass="h6" value="3.330.000,00"></label>
 							</cell>
 							<cell></cell>							
 						</row>						
@@ -133,120 +133,140 @@
 		</n:div>
 		<n:div sclass="mt-3">
 			<label id="customerNameLabel" value="PT.Kinmasaru Ranggun Mandiri" sclass="h3 text-primary"></label>
-		</n:div>												
-		<grid style="border:none;">
-			<rows>
-				<row>
-					<cell width="10%">Tgl.Invoice:</cell>
-					<cell width="10%" sclass="text-primary">
-						<label id="invoiceDateLabel"
-							value="10/07/2025">
-						</label>
-						<datebox id="invoiceDatebox" visible="false"
-							width="150px">
-						</datebox>
-					</cell>
-					<cell width="10%">No.Invoice:</cell>
-					<cell width="15%" sclass="text-primary">
-						<label id="invoiceNumberLabel"
-							value="517338">
-						</label>
-					</cell>
-					<cell width="10%">No.Kwitansi:</cell>
-					<cell width="15%" sclass="text-primary">
-						<label id="kwitansiNumberLabel"
-							value="084/WSM/K/06/2025">
-						</label>
-					</cell>
-					<cell width="10%">No.Faktur:</cell>
-					<cell sclass="text-primary">
-						<label id="fakturNumberLabel"
-							value="004002500183309713">
-						</label>
-					</cell>
-				</row>
-			</rows>
-		</grid>
-		<grid id="suratjalanGrid" style="border:none;" visible="true">
-			<rows>
-				<row>
-					<cell width="15%">No.SuratJalan:</cell>
-					<cell width="20%" sclass="text-primary">
-						<combobox id="suratjalanCombobox"
-							width="220px">
-						</combobox>
-					</cell>
-					<cell width="15%">
-						<button id="suratjalanAddButton"
-							label="Tambah" visible="true" iconSclass="z-icon-plus"
-							sclass="compButton"
-							style="background-color:var(--bs-success)">
-						</button>
-					</cell>
-					<cell></cell>
-				</row>
-			</rows>
-		</grid>
-		<listbox id="invoiceProductListbox" height="460px">
-			<listhead>
-				<listheader label="SJ" width="120px" />
-				<listheader label="No.Coil" width="120px" />
-				<listheader label="PO" width="120px" />
-				<listheader label="Spek" width="260px" />
-				<listheader label="Pcs" width="120px" />
-				<listheader label="Berat" width="120px" />
-				<listheader label="Rp/Kg" width="120px" />
-				<listheader label="Jumlah" width="120px" />
-				<listheader label="Plt" width="60px" />
-				<listheader />
-			</listhead>
-		</listbox>
-		<n:div sclass="mt-3">
-			<n:h4>Pallet</n:h4>
 		</n:div>
-		<grid style="border:none;">
-			<rows>
-				<row>
-					<cell width="10%">Tgl.Invoice:</cell>
-					<cell width="10%" sclass="text-primary">
-						<label id="invoicePltDateLabel"
-							value="10/07/2025">
-						</label>
-						<datebox id="invoicePltDatebox" visible="false"
-							width="150px">
-						</datebox>
-					</cell>
-					<cell width="10%">No.Invoice:</cell>
-					<cell width="15%" sclass="text-primary">
-						<label id="invoiceNumberPltLabel"
-							value="517338">
-						</label>
-					</cell>
-					<cell width="10%">No.Kwitansi:</cell>
-					<cell width="15%" sclass="text-primary">
-						<label id="kwitansiNumberPltLabel"
-							value="085/WSM/K/06/2025">
-						</label>
-					</cell>
-					<cell width="10%">No.Faktur:</cell>
-					<cell sclass="text-primary">
-						<label id="fakturNumberPltLabel"
-							value="004002500183330312">
-						</label>
-					</cell>
-				</row>
-			</rows>
-		</grid>
-		<listbox id="palletListbox" height="340px">
-			<listhead>
-				<listheader label="SJ" width="120px" />
-				<listheader label="No.Coil" width="120px" />
-				<listheader label="Pcs" width="120px"/>
-				<listheader label="Pallet" width="120px"/>
-				<listheader label="Jumlah" width="120px"/>
-				<listheader/>
-			</listhead>
-		</listbox>
+		<tabbox id="invoiceTabbox">
+			<tabs>
+				<tab label="Jasa"></tab>
+				<tab label="Bahan"></tab>
+			</tabs>
+			<tabpanels>
+				<tabpanel>
+					<n:div>
+						<grid style="border:none;">
+							<rows>
+								<row>
+									<cell width="10%">Tgl.Invoice:</cell>
+									<cell width="10%" sclass="text-primary">
+										<label id="invoiceDateLabel"
+											value="10/07/2025">
+										</label>
+										<datebox id="invoiceDatebox" visible="false"
+											width="150px">
+										</datebox>
+									</cell>
+									<cell width="10%">No.Invoice:</cell>
+									<cell width="15%" sclass="text-primary">
+										<label id="invoiceNumberLabel"
+											value="517338">
+										</label>
+									</cell>
+									<cell width="10%">No.Kwitansi:</cell>
+									<cell width="15%" sclass="text-primary">
+										<label id="kwitansiNumberLabel"
+											value="084/WSM/K/06/2025">
+										</label>
+										
+									</cell>
+									<cell width="10%">No.Faktur:</cell>
+									<cell sclass="text-primary">
+										<label id="fakturNumberLabel"
+											value="004002500183309713">
+										</label>
+									</cell>
+								</row>
+							</rows>
+						</grid>
+						<grid id="suratjalanGrid" style="border:none;" visible="false">
+							<rows>
+								<row>
+									<cell width="15%">No.SuratJalan:</cell>
+									<cell width="20%" sclass="text-primary">
+										<combobox id="suratjalanCombobox"
+											width="220px">
+										</combobox>
+									</cell>
+									<cell width="15%">
+										<button id="suratjalanAddButton"
+											label="Tambah" visible="true" iconSclass="z-icon-plus"
+											sclass="compButton"
+											style="background-color:var(--bs-success)">
+										</button>
+									</cell>
+									<cell></cell>
+								</row>
+							</rows>
+						</grid>
+						<listbox id="invoiceProductListbox" height="460px">
+							<listhead>
+								<listheader label="SJ" width="120px" />
+								<listheader label="No.Coil" width="120px" />
+								<listheader label="PO" width="120px" />
+								<listheader label="Spek" width="230px" />
+								<listheader label="Pcs" width="120px" />
+								<listheader label="Berat" width="120px" />
+								<listheader label="Rp/Kg" width="120px" />
+								<listheader label="Jumlah" width="120px" />
+								<listheader label="Plt" width="80px" />
+								<listheader />
+							</listhead>
+						</listbox>
+					</n:div>
+				</tabpanel>
+				<tabpanel>
+					<n:div>
+<!--
+ 						<n:div sclass="mt-3">
+							<n:h4>Pallet</n:h4>
+						</n:div>
+ -->
+						<grid style="border:none;">
+							<rows>
+								<row>
+									<cell width="10%">Tgl.Invoice:</cell>
+									<cell width="10%" sclass="text-primary">
+										<label id="invoicePltDateLabel"
+											value="10/07/2025">
+										</label>
+										<datebox id="invoicePltDatebox" visible="false"
+											width="150px">
+										</datebox>
+									</cell>
+									<cell width="10%">No.Invoice:</cell>
+									<cell width="15%" sclass="text-primary">
+										<label id="invoiceNumberPltLabel"
+											value="517338">
+										</label>
+									</cell>
+									<cell width="10%">No.Kwitansi:</cell>
+									<cell width="15%" sclass="text-primary">
+										<label id="kwitansiNumberPltLabel"
+											value="085/WSM/K/06/2025">
+										</label>
+									</cell>
+									<cell width="10%">No.Faktur:</cell>
+									<cell sclass="text-primary">
+										<label id="fakturNumberPltLabel"
+											value="004002500183330312">
+										</label>
+									</cell>
+								</row>
+							</rows>
+						</grid>
+						<listbox id="palletListbox" height="340px">
+							<listhead>
+								<listheader label="SJ" width="120px" />
+								<listheader label="No.Coil" width="120px" />
+								<listheader label="Pcs" width="120px"/>
+								<listheader label="Pallet" width="120px"/>
+								<listheader label="Jumlah" width="120px"/>
+								<listheader/>
+							</listhead>
+						</listbox>
+
+					</n:div>				
+				</tabpanel>
+			</tabpanels>
+		</tabbox>												
 		<n:div sclass="mt-3">
 			<button id="cancelAddButton" label="Batal"
 				visible="false" iconSclass="z-icon-trash" sclass="compButton"

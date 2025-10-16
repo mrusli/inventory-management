@@ -3,6 +3,7 @@ package com.pyramix.domain.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -14,6 +15,9 @@ import lombok.ToString;
 @Table(name = "invoice_product")
 public class Ent_InvoiceProduct extends IdBasedObject {
 
+	@ManyToOne
+	private Ent_SuratJalan ref_suratjalan;
+	
 	@ManyToOne
 	private Ent_InventoryCode inventoryCode;
 	
@@ -38,5 +42,10 @@ public class Ent_InvoiceProduct extends IdBasedObject {
 	private double pallet_price;
 	
 	private int pallet_qty;
+	
+	private String ref_document;
+	
+	@Transient
+	private boolean editInProgress = false;
 	
 }

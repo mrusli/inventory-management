@@ -60,6 +60,10 @@
     
     <bean id="infoInvoiceController" class="com.pyramix.web.invoice.InvoiceController" scope="prototype" parent="basisController">
     	<property name="invoiceDao" ref="invoiceDao"></property>
+    	<property name="customerDao" ref="customerDao"></property>
+    	<property name="serialNumberGenerator" ref="serialNumberGenerator"></property>
+    	<property name="companyDao" ref="companyDao"></property>
+    	<property name="suratjalanDao" ref="suratjalanDao"></property>
     </bean>
     
     <bean id="infoCustomerController" class="com.pyramix.web.customer.CustomerController" scope="prototype" parent="basisController">

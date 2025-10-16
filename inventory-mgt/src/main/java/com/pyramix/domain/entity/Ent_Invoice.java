@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -30,9 +31,24 @@ public class Ent_Invoice extends IdBasedObject {
 	
 	private boolean use_ppn;
 	
+	/**
+	 * before ppn 11%
+	 */
+	private double subtotal01;
+	
+	/**
+	 * after ppn 11%
+	 */
+	private double subtotal02;
+	
+	/**
+	 * after deducting pph23 from subtotal02
+	 */
 	private double total_invoice;
 	
-	private double total_ppn;
+	private double amount_ppn;
+	
+	private double amount_pph;
 	
 	private String invc_note;
 
@@ -43,10 +59,7 @@ public class Ent_Invoice extends IdBasedObject {
 	private Ent_Serial invc_ser;
 		
 	private Enm_StatusDocument invc_status;
-	
-	@OneToMany
-	private List<Ent_SuratJalan> suratjalans;
-	
+		
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Ent_InvoiceProduct> invoiceProducts;
 	
@@ -55,4 +68,7 @@ public class Ent_Invoice extends IdBasedObject {
 	
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Ent_InvoiceFaktur> invoiceFakturs;
+	
+	@Transient
+	private boolean addInProgress;
 }
