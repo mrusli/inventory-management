@@ -1,0 +1,34 @@
+<div xmlns:n="native" id="infoDashboardPanel" apply="${infoDashboardController}">
+	<n:div sclass="mt-3">
+		<n:h3>Dashboard</n:h3>	
+	</n:div>
+	<n:section>
+
+		<div id="barchart_3d"></div>
+
+	</n:section>
+	<n:script type="text/javascript">
+		google.charts.load("current", {packages:["corechart"]});
+	</n:script>
+	<n:script defer="true" src="/zkau/web/js/chart-pass-data.js">
+	</n:script>	
+<!--
+ 	<n:div class="card">
+		<n:div class="card-header">
+			My Chart
+		</n:div>
+		<n:div class="card-body">
+			<n:canvas id="myAreaChart"></n:canvas>	
+		</n:div>
+	</n:div>
+	<n:script defer="true" src="/zkau/web/js/chart.js">
+	</n:script>	
+	<n:script defer="true" src="/zkau/web/js/chart-area.js">
+	</n:script>
+	  <n:section>
+	
+	    <div id="piechart_3d"></div>
+	    
+	  </n:section>
+ -->	
+</div>

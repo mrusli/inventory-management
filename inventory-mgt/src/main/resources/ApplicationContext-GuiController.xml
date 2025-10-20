@@ -81,5 +81,9 @@
 	
 	<bean id="infoCompanyController" class="com.pyramix.web.company.CompanyController" scope="prototype" parent="basisController">
 		<property name="companyDao" ref="companyDao"></property>
+	</bean>
+	
+	<bean id="infoDashboardController" class="com.pyramix.web.dashboard.DashboardController" scope="prototype" parent="basisController">
+	
 	</bean>    
 </beans>

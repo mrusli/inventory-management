@@ -1,6 +1,7 @@
 <?link rel="stylesheet" type="text/css" href="/zkau/web/css/style-main.css"?>
 <?link rel="stylesheet" type="text/css" href="/zkau/web/css/bootstrap.min.css"?>
 <?script type="text/javascript" src="/zkau/web/js/bootstrap.bundle.min.js"?>
+<?script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"?>
 <?page title="Inventory" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk>
@@ -120,4 +121,5 @@
 	</n:div>
 </window>
 <script defer="true" src="/zkau/web/js/main.js"></script>
+
 </zk>
