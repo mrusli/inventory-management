@@ -29,6 +29,7 @@ import com.pyramix.domain.entity.Enm_TypePayment;
 import com.pyramix.domain.entity.Ent_Company;
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_Invoice;
+import com.pyramix.domain.entity.Ent_InvoicePallet;
 import com.pyramix.domain.entity.Ent_InvoiceProduct;
 import com.pyramix.domain.entity.Ent_Serial;
 import com.pyramix.domain.entity.Ent_SuratJalan;
@@ -57,7 +58,7 @@ public class InvoiceController extends GFCBaseController {
 	private SuratJalanDao suratjalanDao;
 	
 	private Combobox customerCombobox, suratjalanCombobox;
-	private Listbox invoiceListbox, invoiceProductListbox;
+	private Listbox invoiceListbox, invoiceProductListbox, palletListbox;
 	private Label subtotal01JasaLabel, ppnJasaLabel, subtotal02JasaLabel,
 		pph23JasaLabel, totalJasaLabel, subtotalPalletLabel, ppnPalletLabel, 
 		totalPalletLabel, invoiceDateLabel, invoiceNumberLabel, kwitansiNumberLabel,
@@ -65,7 +66,7 @@ public class InvoiceController extends GFCBaseController {
 		kwitansiNumberPltLabel, fakturNumberPltLabel, customerNameLabel;
 	private Tabbox invoiceTabbox;
 	private Grid suratjalanGrid;
-	private Button cancelAddButton, saveAddButton;
+	private Button cancelAddButton, saveAddButton, cancelAddPltButton, saveAddPltButton;
 	
 	private Ent_Customer selCustomer;
 	private ListModelList<Ent_Invoice> invoiceModelList;
@@ -75,6 +76,7 @@ public class InvoiceController extends GFCBaseController {
 	private List<Ent_SuratJalan> selSuratJalanList =
 			new ArrayList<Ent_SuratJalan>();
 	private Ent_Invoice activeInvoice = null;
+	private List<Ent_InvoicePallet> palletList;
 	
 	private static final Long DEF_COMPANY_IDX = (long) 3;
 	
@@ -115,7 +117,7 @@ public class InvoiceController extends GFCBaseController {
 			pph23JasaLabel.setValue("-"+toDecimalFormat(new BigDecimal(activeInvoice.getAmount_pph()), getLocale(), getDecimalFormat()));
 			double total = subtotal - activeInvoice.getAmount_pph();
 			totalJasaLabel.setValue(toDecimalFormat(new BigDecimal(total), getLocale(), getDecimalFormat()));
-			// display customer name
+			// jasa
 			customerNameLabel.setValue(activeInvoice.getInvc_customer().getCompanyType()+"."+
 					activeInvoice.getInvc_customer().getCompanyLegalName());
 			invoiceDateLabel.setValue(dateToStringDisplay(activeInvoice.getInvc_date(), 
@@ -123,7 +125,12 @@ public class InvoiceController extends GFCBaseController {
 			invoiceNumberLabel.setValue(activeInvoice.getInvc_ser().getSerialComp());
 			kwitansiNumberLabel.setValue("");
 			fakturNumberLabel.setValue("");
-			//
+			// bahan
+			invoicePltDateLabel.setValue(dateToStringDisplay(activeInvoice.getInvc_date(), 
+					getShortDateFormat(), getLocale()));
+			invoiceNumberPltLabel.setValue(activeInvoice.getInvc_ser().getSerialComp());
+			// clear from previous objects
+			invoiceProductList.clear();
 			invoiceProductList.addAll(activeInvoice.getInvoiceProducts());
 			// render
 			renderInvoiceProduct();
@@ -212,11 +219,16 @@ public class InvoiceController extends GFCBaseController {
 		invoiceModelList.add(activeInvoice);
 		// use invoiceTabbox
 		invoiceTabbox.setSelectedIndex(0);
-		// enable suratjalan selection
+		// jasa - enable suratjalan selection
 		suratjalanGrid.setVisible(true);
 		invoiceDateLabel.setValue(dateToStringDisplay(activeInvoice.getInvc_date(), 
 								getShortDateFormat(), getLocale()));
 		invoiceNumberLabel.setValue(activeInvoice.getInvc_ser().getSerialComp());
+		// bahan
+		invoicePltDateLabel.setValue(dateToStringDisplay(activeInvoice.getInvc_date(), 
+				getShortDateFormat(), getLocale()));
+		invoiceNumberPltLabel.setValue(activeInvoice.getInvc_ser().getSerialComp());
+
 		// load suratjalan to invoice by selCustomer
 		loadSuratJalanCombobox();
 		// allow to cancel or save
@@ -523,6 +535,143 @@ public class InvoiceController extends GFCBaseController {
 		// hide cancel and save button
 		cancelAddButton.setVisible(false);
 		saveAddButton.setVisible(false);
+		
+	}
+	
+	public void onClick$palletAddButton(Event event) throws Exception {
+		log.info("palletAddButton click");
+//		if (activeInvoice.isAddInProgress()) {
+			palletList = 
+					transformToInvoicePallet(activeInvoice.getInvoiceProducts());
+			// allow user to cancel or save
+			cancelAddPltButton.setVisible(true);
+			saveAddPltButton.setVisible(true);
+			// render
+			renderPalletListbox(palletList);
+//		}
+	}
+	
+	protected List<Ent_InvoicePallet> transformToInvoicePallet(List<Ent_InvoiceProduct> invoiceProducts) {
+		List<Ent_InvoicePallet> palletList = new ArrayList<Ent_InvoicePallet>();
+		// get all the products and transform
+		activeInvoice.getInvoiceProducts().forEach(p -> {
+			if (p.isUse_pallet()) {
+				Ent_InvoicePallet pallet = new Ent_InvoicePallet();
+				pallet.setMarking(p.getMarking());
+				pallet.setPallet_price(0.0);
+				pallet.setPallet_subtotal(0.0);
+				pallet.setQty_pcs(0);
+				pallet.setRef_suratjalan(p.getRef_suratjalan());
+				pallet.setEditInProgress(true);
+				
+				palletList.add(pallet);					
+			}
+		});
+
+		return palletList;
+	}
+
+	protected void renderPalletListbox(List<Ent_InvoicePallet> invoicePallets) {
+		// render
+		ListModelList<Ent_InvoicePallet> palletModelList =
+				new ListModelList<Ent_InvoicePallet>(invoicePallets);
+		palletListbox.setModel(palletModelList);
+		palletListbox.setItemRenderer(getPalletListitemRenderer());		
+	}
+	
+	private ListitemRenderer<Ent_InvoicePallet> getPalletListitemRenderer() {
+		
+		return new ListitemRenderer<Ent_InvoicePallet>() {
+			
+			@Override
+			public void render(Listitem item, Ent_InvoicePallet pallet, int index) throws Exception {
+				Listcell lc;
+				
+				// SJ
+				lc = new Listcell(pallet.getRef_suratjalan().getSuratjalanSerial().getSerialComp());
+				lc.setParent(item);
+				
+				// No.Coil
+				lc = new Listcell(pallet.getMarking());
+				lc.setParent(item);
+				
+				// Pcs
+				lc = new Listcell(getFormatedInteger(pallet.getQty_pcs()));
+				lc.setParent(item);
+				
+				// Pallet
+				lc = new Listcell(toDecimalFormat(new BigDecimal(pallet.getPallet_price()), getLocale(), getDecimalFormat()));
+				lc.setParent(item);
+				
+				// Jumlah
+				lc = new Listcell(toDecimalFormat(new BigDecimal(pallet.getPallet_subtotal()), getLocale(), getDecimalFormat()));
+				lc.setParent(item);
+				
+				// Edit/Save
+				lc = new Listcell();
+				lc.setParent(item);
+				Button button = new Button();
+				button.setVisible(pallet.isEditInProgress());
+				button.setIconSclass("");
+				button.setParent(lc);
+				button.setSclass("compButton");
+				modifToEdit(button);
+				button.addEventListener(Events.ON_CLICK, editInvoicePallet(pallet));
+ 
+			}
+		};
+	}
+
+	protected EventListener<Event> editInvoicePallet(Ent_InvoicePallet pallet) {
+		
+		return new EventListener<Event>() {
+			
+			@Override
+			public void onEvent(Event event) throws Exception {
+				Button button = (Button) event.getTarget();
+				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
+				if (pallet.isEditInProgress()) {
+					log.info("to edit invoice pallet");
+					// set to save
+					pallet.setEditInProgress(false);
+					// set columns to edit
+					setMarking(activeItem, pallet.getMarking());
+					
+					// transform this button to save
+					modifToSave(button);
+				} else {
+					log.info("to save invoice pallet");
+					// set to edit
+					pallet.setEditInProgress(true);
+					// get edited invoice pallet
+					pallet.setMarking(getMarking(activeItem));
+					// re-render
+					renderPalletListbox(palletList);
+					
+					// transform this button to edit
+					modifToEdit(button);
+				}
+			}
+		};
+	}
+
+	public void onClick$cancelAddPltButton(Event event) throws Exception {
+		log.info("cancelAddPltButton click");
+		
+		// create empty pallet list
+		List<Ent_InvoicePallet> palletList = new ArrayList<Ent_InvoicePallet>();
+		// render
+		renderPalletListbox(palletList);
+		
+		cancelAddPltButton.setVisible(false);
+		saveAddPltButton.setVisible(false);
+	}
+	
+	public void onClick$saveAddPltButton(Event event) throws Exception {
+		log.info("saveAddPltButton click");
+
+		cancelAddPltButton.setVisible(false);
+		saveAddPltButton.setVisible(false);
 	}
 	
 	protected void modifToSave(Button button) {

@@ -145,27 +145,34 @@
 						<grid style="border:none;">
 							<rows>
 								<row>
-									<cell width="10%">Tgl.Invoice:</cell>
-									<cell width="10%" sclass="text-primary">
+									<cell width="10%">
+										Tgl.Invoice:
+									</cell>
+									<cell width="10%"
+										sclass="text-primary">
 										<label id="invoiceDateLabel"
 											value="10/07/2025">
 										</label>
-										<datebox id="invoiceDatebox" visible="false"
-											width="150px">
+										<datebox id="invoiceDatebox"
+											visible="false" width="150px">
 										</datebox>
 									</cell>
 									<cell width="10%">No.Invoice:</cell>
-									<cell width="15%" sclass="text-primary">
+									<cell width="15%"
+										sclass="text-primary">
 										<label id="invoiceNumberLabel"
 											value="517338">
 										</label>
 									</cell>
-									<cell width="10%">No.Kwitansi:</cell>
-									<cell width="15%" sclass="text-primary">
+									<cell width="10%">
+										No.Kwitansi:
+									</cell>
+									<cell width="15%"
+										sclass="text-primary">
 										<label id="kwitansiNumberLabel"
 											value="084/WSM/K/06/2025">
 										</label>
-										
+
 									</cell>
 									<cell width="10%">No.Faktur:</cell>
 									<cell sclass="text-primary">
@@ -176,13 +183,17 @@
 								</row>
 							</rows>
 						</grid>
-						<grid id="suratjalanGrid" style="border:none;" visible="false">
+						<grid id="suratjalanGrid" style="border:none;"
+							visible="false">
 							<rows>
 								<row>
-									<cell width="15%">No.SuratJalan:</cell>
-									<cell width="20%" sclass="text-primary">
-										<combobox id="suratjalanCombobox"
-											width="220px">
+									<cell width="15%">
+										No.SuratJalan:
+									</cell>
+									<cell width="20%"
+										sclass="text-primary">
+										<combobox
+											id="suratjalanCombobox" width="220px">
 										</combobox>
 									</cell>
 									<cell width="15%">
@@ -196,20 +207,33 @@
 								</row>
 							</rows>
 						</grid>
-						<listbox id="invoiceProductListbox" height="460px">
+						<listbox id="invoiceProductListbox"
+							height="460px">
 							<listhead>
 								<listheader label="SJ" width="120px" />
-								<listheader label="No.Coil" width="120px" />
+								<listheader label="No.Coil"
+									width="120px" />
 								<listheader label="PO" width="120px" />
 								<listheader label="Spek" width="230px" />
 								<listheader label="Pcs" width="120px" />
 								<listheader label="Berat" width="120px" />
 								<listheader label="Rp/Kg" width="120px" />
-								<listheader label="Jumlah" width="120px" />
+								<listheader label="Jumlah"
+									width="120px" />
 								<listheader label="Plt" width="80px" />
 								<listheader />
 							</listhead>
 						</listbox>
+					</n:div>
+					<n:div sclass="mt-3">
+						<button id="cancelAddButton" label="Batal"
+							visible="false" iconSclass="z-icon-trash" sclass="compButton"
+							style="background-color:var(--bs-warning)">
+						</button>
+						<button id="saveAddButton" label="Simpan"
+							visible="false" iconSclass="z-icon-floppy-disk"
+							sclass="compButton" style="background-color:var(--bs-primary)">
+						</button>
 					</n:div>
 				</tabpanel>
 				<tabpanel>
@@ -252,6 +276,26 @@
 								</row>
 							</rows>
 						</grid>
+						<grid id="palletGrid" style="border:none;"
+							visible="true">
+							<rows>
+								<row>
+									<cell width="15%">
+										<button id="palletAddButton"
+											label="Tambah" visible="true" iconSclass="z-icon-plus"
+											sclass="compButton"
+											style="background-color:var(--bs-success)">
+										</button>										
+									</cell>
+									<cell width="20%" sclass="text-primary">
+									</cell>
+									<cell width="15%">
+									</cell>
+									<cell>								
+									</cell>
+								</row>
+							</rows>
+						</grid>						
 						<listbox id="palletListbox" height="340px">
 							<listhead>
 								<listheader label="SJ" width="120px" />
@@ -262,20 +306,20 @@
 								<listheader/>
 							</listhead>
 						</listbox>
-
+						<n:div sclass="mt-3">
+							<button id="cancelAddPltButton" label="Batal"
+								visible="false" iconSclass="z-icon-trash" sclass="compButton"
+								style="background-color:var(--bs-warning)">
+							</button>
+							<button id="saveAddPltButton" label="Simpan"
+								visible="false" iconSclass="z-icon-floppy-disk"
+								sclass="compButton" style="background-color:var(--bs-primary)">
+							</button>
+						</n:div>
 					</n:div>				
 				</tabpanel>
 			</tabpanels>
 		</tabbox>												
-		<n:div sclass="mt-3">
-			<button id="cancelAddButton" label="Batal"
-				visible="false" iconSclass="z-icon-trash" sclass="compButton"
-				style="background-color:var(--bs-warning)">
-			</button>
-			<button id="saveAddButton" label="Simpan"
-				visible="false" iconSclass="z-icon-floppy-disk" sclass="compButton"
-				style="background-color:var(--bs-primary)">
-			</button>
-		</n:div>
+
 	</n:div>	
 </div>

@@ -32,23 +32,35 @@ public class Ent_Invoice extends IdBasedObject {
 	private boolean use_ppn;
 	
 	/**
-	 * before ppn 11%
+	 * subtotal for jasa BEFORE ppn 11%
 	 */
-	private double subtotal01;
+	private double subtotal01 = 0.0;
 	
 	/**
-	 * after ppn 11%
+	 * subtotal for pallete / bahan BEFORE ppn 11% 
 	 */
-	private double subtotal02;
+	private double subtotal01Plt = 0.0;
+	
+	/**
+	 * subtotal for jasa AFTER ppn 11%
+	 */
+	private double subtotal02 = 0.0;
+	
+	/**
+	 * subtotal for pallete / bahan AFTER ppn 11%
+	 */
+	private double subtotal02Plt;
 	
 	/**
 	 * after deducting pph23 from subtotal02
 	 */
-	private double total_invoice;
+	private double total_invoice = 0.0;
 	
-	private double amount_ppn;
+	private double amount_ppn = 0.0;
 	
-	private double amount_pph;
+	private double amount_ppn_plt = 0.0;
+	
+	private double amount_pph = 0.0;
 	
 	private String invc_note;
 
@@ -60,15 +72,26 @@ public class Ent_Invoice extends IdBasedObject {
 		
 	private Enm_StatusDocument invc_status;
 		
+	@EqualsAndHashCode.Exclude
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Ent_InvoiceProduct> invoiceProducts;
+
+	@EqualsAndHashCode.Exclude
+	@OneToMany(cascade = CascadeType.ALL)	
+	private List<Ent_InvoicePallet> invoicePallet;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<Ent_InvoiceKwitansi> invoiceKwitansis;
+	@ManyToOne
+	private Ent_InvoiceKwitansi jasaKwitansi;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<Ent_InvoiceFaktur> invoiceFakturs;
+	@ManyToOne
+	private Ent_InvoiceKwitansi bahanKwitansi;
+	
+	@ManyToOne
+	private Ent_InvoiceFaktur jasaFaktur;
+	
+	@ManyToOne
+	private Ent_InvoiceFaktur bahanFaktur;
 	
 	@Transient
-	private boolean addInProgress;
+	private boolean addInProgress = false;
 }

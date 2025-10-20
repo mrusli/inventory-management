@@ -36,5 +36,7 @@
 		<mapping class="com.pyramix.domain.entity.Ent_InvoiceKwitansi"/>
 		
 		<mapping class="com.pyramix.domain.entity.Ent_InvoiceFaktur"/>
+		
+		<mapping class="com.pyramix.domain.entity.Ent_InvoicePallet"/>
 	</session-factory>
 </hibernate-configuration>

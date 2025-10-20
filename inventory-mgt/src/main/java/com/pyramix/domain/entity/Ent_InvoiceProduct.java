@@ -1,5 +1,8 @@
 package com.pyramix.domain.entity;
 
+import org.hibernate.type.TrueFalseConverter;
+
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -27,21 +30,22 @@ public class Ent_InvoiceProduct extends IdBasedObject {
 	
 	private Enm_TypePacking packing;
 	
-	private int quantity_by_sht;
+	private int quantity_by_sht = 0;
 	
-	private double quantity_by_kg;
+	private double quantity_by_kg = 0.0;
 	
 	private boolean by_kg;
 	
-	private double unit_price;
+	private double unit_price = 0.0;
 	
-	private double sub_total;
+	private double sub_total = 0.0;
 	
-	private boolean use_pallet;
+	@Convert(converter = TrueFalseConverter.class)
+	private boolean use_pallet = false;
 	
-	private double pallet_price;
+	private double pallet_price = 0.0;
 	
-	private int pallet_qty;
+	private int pallet_qty = 0;
 	
 	private String ref_document;
 	
