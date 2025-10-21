@@ -29,6 +29,7 @@ import com.pyramix.domain.entity.Enm_TypePayment;
 import com.pyramix.domain.entity.Ent_Company;
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_Invoice;
+import com.pyramix.domain.entity.Ent_InvoiceKwitansi;
 import com.pyramix.domain.entity.Ent_InvoicePallet;
 import com.pyramix.domain.entity.Ent_InvoiceProduct;
 import com.pyramix.domain.entity.Ent_Serial;
@@ -66,7 +67,8 @@ public class InvoiceController extends GFCBaseController {
 		kwitansiNumberPltLabel, fakturNumberPltLabel, customerNameLabel;
 	private Tabbox invoiceTabbox;
 	private Grid suratjalanGrid;
-	private Button cancelAddButton, saveAddButton, cancelAddPltButton, saveAddPltButton;
+	private Button cancelAddButton, saveAddButton, cancelAddPltButton, saveAddPltButton,
+		createKwitansiButton;
 	
 	private Ent_Customer selCustomer;
 	private ListModelList<Ent_Invoice> invoiceModelList;
@@ -123,7 +125,15 @@ public class InvoiceController extends GFCBaseController {
 			invoiceDateLabel.setValue(dateToStringDisplay(activeInvoice.getInvc_date(), 
 					getShortDateFormat(), getLocale()));
 			invoiceNumberLabel.setValue(activeInvoice.getInvc_ser().getSerialComp());
-			kwitansiNumberLabel.setValue("");
+			if (activeInvoice.getJasaKwitansi()==null) {
+				// allow user to create and display - enable the createKwitansiButton
+				createKwitansiButton.setVisible(true);
+				kwitansiNumberLabel.setValue("");
+			} else {
+				createKwitansiButton.setVisible(false);
+				kwitansiNumberLabel.setValue(activeInvoice
+						.getJasaKwitansi().getKwitansi_ser().getSerialComp());
+			}
 			fakturNumberLabel.setValue("");
 			// bahan
 			invoicePltDateLabel.setValue(dateToStringDisplay(activeInvoice.getInvc_date(), 
@@ -135,6 +145,26 @@ public class InvoiceController extends GFCBaseController {
 			// render
 			renderInvoiceProduct();
 		}
+	}
+	
+	public void onClick$createKwitansiButton(Event event) throws Exception {
+		log.info("createKwitansiButton click");
+		
+		Ent_InvoiceKwitansi kwitansi = new Ent_InvoiceKwitansi();
+		kwitansi.setAmount(0.0);
+		kwitansi.setAmount_words("");
+		kwitansi.setKwitansi_date(activeInvoice.getInvc_date());
+		kwitansi.setKwitansi_for(activeInvoice.getInvc_customer().getCompanyType()+"."+
+				activeInvoice.getInvc_customer().getCompanyLegalName());
+		kwitansi.setKwitansi_ser(getDocumentSerial(Enm_TypeDocument.KWITANSI, 
+				activeInvoice.getInvc_date()));
+		// set
+		activeInvoice.setJasaKwitansi(kwitansi);
+		// save
+		activeInvoice = getInvoiceDao().update(activeInvoice);
+		// display
+		kwitansiNumberLabel.setValue(activeInvoice
+				.getJasaKwitansi().getKwitansi_ser().getSerialComp());
 	}
 
 	private void setActiveInvoice() throws Exception {
@@ -265,12 +295,12 @@ public class InvoiceController extends GFCBaseController {
 	private void createInvoice() {
 		activeInvoice = new Ent_Invoice();
 		activeInvoice.setInvc_date(getLocalDate(getZoneId()));
-		activeInvoice.setInvc_ser(getInvoiceSerial(Enm_TypeDocument.FAKTUR,
+		activeInvoice.setInvc_ser(getDocumentSerial(Enm_TypeDocument.FAKTUR,
 				getLocalDate(getZoneId())));
 		activeInvoice.setAddInProgress(true);		
 	}
 
-	private Ent_Serial getInvoiceSerial(Enm_TypeDocument typeDocument, LocalDate localDate) {
+	private Ent_Serial getDocumentSerial(Enm_TypeDocument typeDocument, LocalDate localDate) {
 		int serialNum = getSerialNumberGenerator()
 				.getSerialNumber(typeDocument, localDate, defaultCompany);
 		
@@ -281,6 +311,8 @@ public class InvoiceController extends GFCBaseController {
 		serial.setSerialNumber(serialNum);
 		serial.setSerialComp(
 				formatSerialComp(typeDocument.toCode(typeDocument.getValue()),localDate,serialNum));
+		
+		log.info(serial.toString());
 		
 		return serial;
 	}
@@ -669,6 +701,16 @@ public class InvoiceController extends GFCBaseController {
 	
 	public void onClick$saveAddPltButton(Event event) throws Exception {
 		log.info("saveAddPltButton click");
+		// set kwitansi
+		
+		// set faktur
+		
+		// set invoicePallet
+		activeInvoice.setInvoicePallet(palletList);
+		// save
+		getInvoiceDao().update(activeInvoice);
+		// re-render
+		renderPalletListbox(activeInvoice.getInvoicePallet());
 
 		cancelAddPltButton.setVisible(false);
 		saveAddPltButton.setVisible(false);

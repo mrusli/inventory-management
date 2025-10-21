@@ -169,10 +169,8 @@
 									</cell>
 									<cell width="15%"
 										sclass="text-primary">
-										<label id="kwitansiNumberLabel"
-											value="084/WSM/K/06/2025">
-										</label>
-
+										<label id="kwitansiNumberLabel" value="084/WSM/K/06/2025"></label>
+										<button id="createKwitansiButton" label="Create" sclass="compButton" visible="true"></button>
 									</cell>
 									<cell width="10%">No.Faktur:</cell>
 									<cell sclass="text-primary">

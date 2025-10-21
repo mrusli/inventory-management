@@ -5,7 +5,7 @@ public enum Enm_TypeDocument {
 		CUSTOMER_ORDER(4), SURATJALAN(5), FAKTUR(6), CUSTOMER(7), EMPLOYEE(8),
 			SETTLEMENT(9), RECEIVABLE(10), NON_PPN_ORDER(11), NON_PPN_SURATJALAN(12),
 				NON_PPN_FAKTUR(13), PROCESS_ORDER_COMPLETE(14), PURCHASE_ORDER(15), 
-					PAYABLE(16), QUOTATION(18);
+					PAYABLE(16), QUOTATION(18), KWITANSI(19);
 
 	private int value;
 
@@ -33,6 +33,7 @@ public enum Enm_TypeDocument {
 			case 15: return "PO";
 			case 16: return "PY";
 			case 18: return "QT";
+			case 19: return "KW";
 			default:
 				return null;
 		}

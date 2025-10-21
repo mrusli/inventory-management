@@ -80,7 +80,7 @@ public class Ent_Invoice extends IdBasedObject {
 	@OneToMany(cascade = CascadeType.ALL)	
 	private List<Ent_InvoicePallet> invoicePallet;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Ent_InvoiceKwitansi jasaKwitansi;
 	
 	@ManyToOne
