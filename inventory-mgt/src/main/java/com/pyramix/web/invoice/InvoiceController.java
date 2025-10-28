@@ -105,6 +105,7 @@ public class InvoiceController extends GFCBaseController {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void displayInvoiceInfo() throws Exception {
 		if (activeInvoice==null) {
 			log.info("clear InvoiceInfo");
@@ -134,7 +135,12 @@ public class InvoiceController extends GFCBaseController {
 				kwitansiNumberLabel.setValue(activeInvoice
 						.getJasaKwitansi().getKwitansi_ser().getSerialComp());
 			}
-			fakturNumberLabel.setValue("");
+			if (activeInvoice.getJasaFaktur()==null) {
+				fakturNumberLabel.setValue("ClickToAdd");				
+			} else {
+				fakturNumberLabel.setValue(activeInvoice.getJasaFaktur().getFaktur_number());
+			}
+			fakturNumberLabel.addEventListener(Events.ON_CLICK, new fakturNumberLabelClickListener());
 			// bahan
 			invoicePltDateLabel.setValue(dateToStringDisplay(activeInvoice.getInvc_date(), 
 					getShortDateFormat(), getLocale()));
@@ -144,6 +150,9 @@ public class InvoiceController extends GFCBaseController {
 			invoiceProductList.addAll(activeInvoice.getInvoiceProducts());
 			// render
 			renderInvoiceProduct();
+			// render bahan
+			activeInvoice = getInvoiceDao().findInvoicePalletsByProxy(activeInvoice.getId());
+			renderPalletListbox(activeInvoice.getInvoicePallet());
 		}
 	}
 	
@@ -165,8 +174,21 @@ public class InvoiceController extends GFCBaseController {
 		// display
 		kwitansiNumberLabel.setValue(activeInvoice
 				.getJasaKwitansi().getKwitansi_ser().getSerialComp());
+		
+		// hide this button
+		createKwitansiButton.setVisible(false);
 	}
 
+	@SuppressWarnings("rawtypes")
+	public class fakturNumberLabelClickListener implements EventListener {
+
+		@Override
+		public void onEvent(Event event) throws Exception {
+			log.info("fakturNumberLabel click...");
+			
+		}		
+	}	
+	
 	private void setActiveInvoice() throws Exception {
 		int latestInvc = invoiceModelList.getSize()-1;
 		if (latestInvc>=0) {
@@ -234,6 +256,21 @@ public class InvoiceController extends GFCBaseController {
 				item.setValue(invoice);
 			}
 		};
+	}
+	
+	public void onSelect$invoiceListbox(Event event) throws Exception {
+		log.info("invoiceListbox select");
+		if (activeInvoice.isAddInProgress()) {
+			// cancel add
+			log.info("cancel add");
+			cancelAdd();			
+		} else {
+			activeInvoice = invoiceListbox.getSelectedItem().getValue();
+			// init to load invoiceProduct
+			activeInvoice = getInvoiceDao().findInvoiceProductsByProxy(activeInvoice.getId());
+			// display invoice info
+			displayInvoiceInfo();
+		}
 	}
 	
 	public void onClick$invoiceAddButton(Event event) throws Exception {
@@ -367,14 +404,6 @@ public class InvoiceController extends GFCBaseController {
 			invoiceProductList.addAll(invoiceProducts);
 		}
 	}
-	
-	private void renderInvoiceProduct() throws Exception {
-		ListModelList<Ent_InvoiceProduct> invoiceProductListModel = 
-				new ListModelList<Ent_InvoiceProduct>(invoiceProductList);
-		// render
-		invoiceProductListbox.setModel(invoiceProductListModel);
-		invoiceProductListbox.setItemRenderer(getInvoiceProductListitemRenderer());
-	}
 
 	private List<Ent_InvoiceProduct> suratjalanProductToInvoiceProductList(Ent_SuratJalan suratjalan) throws Exception {
 		List<Ent_InvoiceProduct> productList = new ArrayList<Ent_InvoiceProduct>();
@@ -402,6 +431,14 @@ public class InvoiceController extends GFCBaseController {
 		return productList;
 	}
 
+	private void renderInvoiceProduct() throws Exception {
+		ListModelList<Ent_InvoiceProduct> invoiceProductListModel = 
+				new ListModelList<Ent_InvoiceProduct>(invoiceProductList);
+		// render
+		invoiceProductListbox.setModel(invoiceProductListModel);
+		invoiceProductListbox.setItemRenderer(getInvoiceProductListitemRenderer());
+	}	
+	
 	private ListitemRenderer<Ent_InvoiceProduct> getInvoiceProductListitemRenderer() {
 		
 		return new ListitemRenderer<Ent_InvoiceProduct>() {
@@ -465,7 +502,7 @@ public class InvoiceController extends GFCBaseController {
 			}
 		};
 	}	
-	
+
 	protected EventListener<Event> editInvoiceProduct(Ent_InvoiceProduct product) {
 
 		return new EventListener<Event>() {
@@ -481,6 +518,7 @@ public class InvoiceController extends GFCBaseController {
 
 					// set columns to edit
 					setMarking(activeItem, product.getMarking());
+					setUsePalette(activeItem, product.isUse_pallet());
 					// transform this button to save
 					modifToSave(button);
 				} else {
@@ -488,6 +526,7 @@ public class InvoiceController extends GFCBaseController {
 					product.setEditInProgress(true);
 					// get updated product
 					product.setMarking(getMarking(activeItem));
+					product.setUse_pallet(getUsePallete(activeItem));
 					
 					// re-render
 					renderInvoiceProduct();
@@ -516,7 +555,25 @@ public class InvoiceController extends GFCBaseController {
 		textbox.setParent(lc);
 	}
 
+	protected boolean getUsePallete(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(8);
+		Checkbox checkbox = (Checkbox) lc.getFirstChild();
+		
+		return checkbox.isChecked();
+	}	
+	
+	protected void setUsePalette(Listitem activeItem, boolean use_pallet) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(8);
+		
+		Checkbox checkbox = (Checkbox) lc.getFirstChild();
+		checkbox.setDisabled(false);
+	}	
+	
 	public void onClick$cancelAddButton(Event event) throws Exception {
+		cancelAdd();
+	}
+	
+	private void cancelAdd() throws Exception {
 		// re-load invoice
 		loadInvoiceBySelCustomer();
 		// latest invoice for this customer

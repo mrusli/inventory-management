@@ -21,4 +21,6 @@ public interface InvoiceDao {
 
 	public Ent_Invoice findInvoiceProductsByProxy(long id) throws Exception;
 	
+	public Ent_Invoice findInvoicePalletsByProxy(long id) throws Exception;
+	
 }

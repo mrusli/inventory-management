@@ -90,4 +90,26 @@ public class InvoiceHibernate extends DaoHibernate implements InvoiceDao {
 		return invoice;
 	}
 
+	@Override
+	public Ent_Invoice findInvoicePalletsByProxy(long id) throws Exception {
+		Session session = super.getSessionFactory().openSession();
+		
+		Transaction tx = session.beginTransaction();
+		Ent_Invoice invoice = null;
+		try {
+			invoice = session
+					.get(Ent_Invoice.class, id);
+			Hibernate.initialize(invoice.getInvoicePallet());
+			tx.commit();
+			invoice.getInvoiceProducts().size();
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			session.close();
+		}
+
+		return invoice;
+
+	}
+
 }
