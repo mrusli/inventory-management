@@ -197,7 +197,8 @@ public class ProcessCoilController extends GFCBaseController {
 				lc.setParent(item);
 				
 				Label label = new Label(process.getProcessStatus().toString());
-				label.setSclass("badge bg-info");
+				label.setSclass(process.getProcessStatus().equals(Enm_StatusProcess.Selesai) ? 
+						"badge bg-success" : "badge bg-info");
 				label.setParent(lc);
 				
 				item.setValue(process);
@@ -220,6 +221,8 @@ public class ProcessCoilController extends GFCBaseController {
 		
 		statusLabel.setVisible(true);
 		statusLabel.setValue(selInventoryProcess.getProcessStatus().toString());
+		statusLabel.setSclass(selInventoryProcess.getProcessStatus().equals(Enm_StatusProcess.Selesai) ? 
+						"badge bg-success" : "badge bg-info");
 		
 		processTypeCombobox.setVisible(false);
 		processTypeLabel.setVisible(true);

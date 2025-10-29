@@ -213,7 +213,7 @@
 								<listheader label="No.Coil"
 									width="120px" />
 								<listheader label="PO" width="120px" />
-								<listheader label="Spek" width="230px" />
+								<listheader label="Spek" width="260px" />
 								<listheader label="Pcs" width="120px" />
 								<listheader label="Berat" width="120px" />
 								<listheader label="Rp/Kg" width="120px" />

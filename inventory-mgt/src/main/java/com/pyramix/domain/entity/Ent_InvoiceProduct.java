@@ -2,6 +2,7 @@ package com.pyramix.domain.entity;
 
 import org.hibernate.type.TrueFalseConverter;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
@@ -27,6 +28,15 @@ public class Ent_InvoiceProduct extends IdBasedObject {
 	private String marking;
 	
 	private String spek;
+	
+	@Column(name = "inv_thkns")
+	private double thickness;
+	
+	@Column(name = "inv_wdth")
+	private double width;
+	
+	@Column(name = "inv_lngth")
+	private double length;
 	
 	private Enm_TypePacking packing;
 	

@@ -69,7 +69,10 @@
 						<listheader width="80px"/>
 						<listheader/>
 					</listhead>
-				</listbox>			
+				</listbox>
+				<n:div sclass="mt-3">
+					<button id="saveProcButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-disk" sclass="compButton" style="background-color:var(--bs-primary)"></button>
+				</n:div>			
 			</n:div>
 			<n:div sclass="col-4">
 				<n:div>
@@ -86,7 +89,6 @@
 					</grid>
 				</n:div>
 			</n:div>
-			
 		</n:div>
 	</div>	
 </div>

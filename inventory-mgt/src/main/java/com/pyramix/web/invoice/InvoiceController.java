@@ -8,11 +8,14 @@ import java.util.List;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
+import org.zkoss.zul.Doublebox;
 import org.zkoss.zul.Grid;
+import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
@@ -29,6 +32,7 @@ import com.pyramix.domain.entity.Enm_TypePayment;
 import com.pyramix.domain.entity.Ent_Company;
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_Invoice;
+import com.pyramix.domain.entity.Ent_InvoiceFaktur;
 import com.pyramix.domain.entity.Ent_InvoiceKwitansi;
 import com.pyramix.domain.entity.Ent_InvoicePallet;
 import com.pyramix.domain.entity.Ent_InvoiceProduct;
@@ -69,6 +73,7 @@ public class InvoiceController extends GFCBaseController {
 	private Grid suratjalanGrid;
 	private Button cancelAddButton, saveAddButton, cancelAddPltButton, saveAddPltButton,
 		createKwitansiButton;
+	private Textbox fakturNumberTextbox;
 	
 	private Ent_Customer selCustomer;
 	private ListModelList<Ent_Invoice> invoiceModelList;
@@ -82,8 +87,12 @@ public class InvoiceController extends GFCBaseController {
 	
 	private static final Long DEF_COMPANY_IDX = (long) 3;
 	
+	@SuppressWarnings("unchecked")
 	public void onCreate$infoInvoicePanel(Event event) throws Exception {
 		log.info("infoInvoicePanel created");
+		
+		// set listener
+		fakturNumberTextbox.addEventListener(Events.ON_OK, new fakturNumberTextboxListener());
 		
 		// set default company
 		defaultCompany = getCompanyDao().findCompanyById(DEF_COMPANY_IDX);
@@ -141,6 +150,7 @@ public class InvoiceController extends GFCBaseController {
 				fakturNumberLabel.setValue(activeInvoice.getJasaFaktur().getFaktur_number());
 			}
 			fakturNumberLabel.addEventListener(Events.ON_CLICK, new fakturNumberLabelClickListener());
+			fakturNumberLabel.setStyle("cursor:pointer;");
 			// bahan
 			invoicePltDateLabel.setValue(dateToStringDisplay(activeInvoice.getInvc_date(), 
 					getShortDateFormat(), getLocale()));
@@ -185,9 +195,40 @@ public class InvoiceController extends GFCBaseController {
 		@Override
 		public void onEvent(Event event) throws Exception {
 			log.info("fakturNumberLabel click...");
-			
+			fakturNumberLabel.setVisible(false);
+			fakturNumberTextbox.setVisible(true);
 		}		
-	}	
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public class fakturNumberTextboxListener implements EventListener {
+
+		@Override
+		public void onEvent(Event event) throws Exception {
+			Ent_InvoiceFaktur invcFaktur;
+			log.info("fakturNumberTextbox...:"+fakturNumberTextbox.getValue());
+			if (activeInvoice.getJasaFaktur()==null) {
+				// create
+				invcFaktur = new Ent_InvoiceFaktur();
+				invcFaktur.setFaktur_date(activeInvoice.getInvc_date());
+				invcFaktur.setFaktur_number(fakturNumberTextbox.getValue());
+				// set
+				activeInvoice.setJasaFaktur(invcFaktur);
+			} else {
+				// modify
+				activeInvoice.getJasaFaktur().setFaktur_number(fakturNumberTextbox.getValue());
+			}
+			// update
+			activeInvoice = getInvoiceDao().update(activeInvoice);
+			// display
+			fakturNumberTextbox.setVisible(false);
+			fakturNumberLabel.setVisible(true);
+			fakturNumberLabel.setValue(activeInvoice.getJasaFaktur().getFaktur_number());
+			// notif
+			Clients.showNotification(
+					   "No.Faktur berhasil disimpan", "info", null, "bottom_left", 10000);
+		}	
+	}
 	
 	private void setActiveInvoice() throws Exception {
 		int latestInvc = invoiceModelList.getSize()-1;
@@ -283,7 +324,7 @@ public class InvoiceController extends GFCBaseController {
 		// create new invoice
 		createInvoice();
 		// insert to last pos
-		invoiceModelList.add(activeInvoice);
+		invoiceModelList.add(0, activeInvoice);
 		// use invoiceTabbox
 		invoiceTabbox.setSelectedIndex(0);
 		// jasa - enable suratjalan selection
@@ -417,6 +458,9 @@ public class InvoiceController extends GFCBaseController {
 					toDecimalFormat(new BigDecimal(suratjalanProduct.getThickness()), getLocale(), "#0,00")+" x "+
 					toDecimalFormat(new BigDecimal(suratjalanProduct.getWidth()), getLocale(), "###.###")+" x "+
 					toDecimalFormat(new BigDecimal(suratjalanProduct.getLength()), getLocale(), "###.###"));
+			invoiceProduct.setThickness(suratjalanProduct.getThickness());
+			invoiceProduct.setWidth(suratjalanProduct.getWidth());
+			invoiceProduct.setLength(suratjalanProduct.getLength());
 			invoiceProduct.setQuantity_by_sht(suratjalanProduct.getQuantityBySht());
 			invoiceProduct.setQuantity_by_kg(suratjalanProduct.getQuantityByKg());
 			invoiceProduct.setUnit_price(0.0);
@@ -460,7 +504,10 @@ public class InvoiceController extends GFCBaseController {
 				lc.setParent(item);
 				
 				// Spek
-				lc = new Listcell(product.getSpek());
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(product.getThickness()), getLocale(), "#0,00")+" x "+
+						toDecimalFormat(new BigDecimal(product.getWidth()), getLocale(), "###.###")+" x "+
+						toDecimalFormat(new BigDecimal(product.getLength()), getLocale(), "###.###"));
 				lc.setParent(item);
 				
 				// Pcs
@@ -518,6 +565,12 @@ public class InvoiceController extends GFCBaseController {
 
 					// set columns to edit
 					setMarking(activeItem, product.getMarking());
+					setPO(activeItem, product.getRef_document());
+					setSpek(activeItem, product.getThickness(), product.getWidth(), product.getLength());
+					setPcs(activeItem, product.getQuantity_by_sht());
+					setBerat(activeItem, product.getQuantity_by_kg());
+					setRpKg(activeItem, product.getUnit_price());
+					setJumlah(activeItem, product.getSub_total());
 					setUsePalette(activeItem, product.isUse_pallet());
 					// transform this button to save
 					modifToSave(button);
@@ -526,6 +579,14 @@ public class InvoiceController extends GFCBaseController {
 					product.setEditInProgress(true);
 					// get updated product
 					product.setMarking(getMarking(activeItem));
+					product.setRef_document(getPO(activeItem));
+					product.setThickness(getSpek(activeItem,0));
+					product.setWidth(getSpek(activeItem,2));
+					product.setLength(getSpek(activeItem,4));
+					product.setQuantity_by_sht(getPcs(activeItem));
+					product.setQuantity_by_kg(getBerat(activeItem));
+					product.setUnit_price(getRpKg(activeItem));
+					product.setSub_total(getJumlah(activeItem));
 					product.setUse_pallet(getUsePallete(activeItem));
 					
 					// re-render
@@ -555,9 +616,181 @@ public class InvoiceController extends GFCBaseController {
 		textbox.setParent(lc);
 	}
 
+	protected String getPO(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		
+		Textbox textbox = (Textbox) lc.getFirstChild();
+		
+		return textbox.getValue();
+	}	
+
+	protected void setPO(Listitem activeItem, String ref_document) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		lc.setLabel("");
+		Textbox textbox = new Textbox();
+		textbox.setValue(ref_document);
+		textbox.setWidth("100px");
+		textbox.setParent(lc);
+	}
+
+	private double getSpek(Listitem activeItem, int idx) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		
+		Doublebox doublebox = (Doublebox) lc.getChildren().get(idx);
+		
+		return doublebox.getValue();
+	}	
+	
+	protected void setSpek(Listitem activeItem, double thickness, double width, double length) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		lc.setLabel("");
+		// thickness
+		Doublebox doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(thickness);
+		doublebox.setParent(lc);
+		Label label = new Label();
+		label.setValue(" x ");
+		label.setParent(lc);
+		// width
+		doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(width);
+		doublebox.setParent(lc);
+		label = new Label();
+		label.setValue(" x ");
+		label.setParent(lc);
+		// length
+		doublebox = new Doublebox();
+		doublebox.setLocale(getLocale());
+		doublebox.setWidth("60px");
+		doublebox.setValue(length);
+		doublebox.setParent(lc);
+	}	
+
+	protected int getPcs(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		
+		Intbox intbox = (Intbox) lc.getFirstChild();
+		
+		return intbox.getValue();
+	}
+
+	protected void setPcs(Listitem activeItem, int quantity_by_sht) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		lc.setLabel("");
+		Intbox intbox = new Intbox();
+		intbox.setValue(quantity_by_sht);
+		intbox.setWidth("100px");
+		intbox.setParent(lc);
+	}
+
+	protected double getBerat(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(5);
+
+		Doublebox doublebox = (Doublebox) lc.getFirstChild();
+		
+		return doublebox.getValue();
+	}	
+
+	protected void setBerat(Listitem activeItem, double quantity_by_kg) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(5);
+		lc.setLabel("");
+		Doublebox doublebox = new Doublebox();
+		doublebox.setValue(quantity_by_kg);
+		doublebox.setWidth("100px");
+		doublebox.setParent(lc);
+		doublebox.addEventListener(Events.ON_CHANGE, new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				Listcell lc;
+				Doublebox doublebox;
+				double qtyKg, rpKg, subtotal;
+				doublebox = (Doublebox) event.getTarget();
+				qtyKg = doublebox.getValue();
+				log.info("calc Jumlah:"+qtyKg);
+				// get the 'RpKg'
+				lc = (Listcell) activeItem.getChildren().get(6);
+				doublebox = (Doublebox) lc.getFirstChild();
+				rpKg = doublebox.getValue();
+				log.info("calc Jumlah:"+rpKg);
+				// calc
+				subtotal = qtyKg * rpKg;
+				log.info("calc Jumlah:"+subtotal);
+				// jumlah
+				lc = (Listcell) activeItem.getChildren().get(7);				
+				doublebox = (Doublebox) lc.getFirstChild();
+				doublebox.setValue(subtotal);				
+			}
+		});
+	}
+
+	protected double getRpKg(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(6);
+		
+		Doublebox doublebox = (Doublebox) lc.getFirstChild();
+		
+		return doublebox.getValue();
+	}
+
+	protected void setRpKg(Listitem activeItem, double unit_price) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(6);
+		lc.setLabel("");
+		Doublebox doublebox = new Doublebox();
+		doublebox.setValue(unit_price);
+		doublebox.setWidth("100px");
+		doublebox.setParent(lc);
+		doublebox.addEventListener(Events.ON_CHANGE, new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				Listcell lc;
+				Doublebox doublebox;
+				double qtyKg, rpKg, subtotal;
+				doublebox = (Doublebox) event.getTarget();
+				rpKg = doublebox.getValue();
+				log.info("calc Jumlah:"+rpKg);
+				// get the 'Berat'
+				lc = (Listcell) activeItem.getChildren().get(5);
+				doublebox = (Doublebox) lc.getFirstChild();
+				qtyKg = doublebox.getValue();
+				log.info("calc Jumlah:"+qtyKg);
+				// calc
+				subtotal = qtyKg * rpKg;
+				log.info("calc Jumlah:"+subtotal);
+				// jumlah
+				lc = (Listcell) activeItem.getChildren().get(7);				
+				doublebox = (Doublebox) lc.getFirstChild();
+				doublebox.setValue(subtotal);
+			}
+		});
+	}	
+
+	protected double getJumlah(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(7);
+		
+		Doublebox doublebox = (Doublebox) lc.getFirstChild();
+		
+		return doublebox.getValue();
+	}
+
+	protected void setJumlah(Listitem activeItem, double sub_total) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(7);
+		lc.setLabel("");
+		Doublebox doublebox = new Doublebox();
+		doublebox.setValue(sub_total);
+		doublebox.setWidth("100px");
+		doublebox.setParent(lc);
+		
+	}
+	
 	protected boolean getUsePallete(Listitem activeItem) {
 		Listcell lc = (Listcell) activeItem.getChildren().get(8);
 		Checkbox checkbox = (Checkbox) lc.getFirstChild();
+		checkbox.setDisabled(true);
 		
 		return checkbox.isChecked();
 	}	

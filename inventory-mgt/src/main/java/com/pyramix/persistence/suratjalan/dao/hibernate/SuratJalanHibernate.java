@@ -57,6 +57,8 @@ public class SuratJalanHibernate extends DaoHibernate implements SuratJalanDao {
 		Root<Ent_SuratJalan> root = criteriaQuery.from(Ent_SuratJalan.class);
 		criteriaQuery.select(root).where(
 				criteriaBuilder.equal(root.get("customer"), customer));
+		criteriaQuery.orderBy(
+				criteriaBuilder.desc(root.get("suratjalanDate")));
 		
 		try {
 			

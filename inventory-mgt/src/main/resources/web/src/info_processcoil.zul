@@ -52,7 +52,7 @@
 							</cell>
 							<cell width="10%">Status:</cell>
 							<cell sclass="text-primary">
-								<label id="statusLabel" value="Proses" sclass="badge bg-info"></label>
+								<label id="statusLabel" value=""></label>
 							</cell>
 						</row>
 

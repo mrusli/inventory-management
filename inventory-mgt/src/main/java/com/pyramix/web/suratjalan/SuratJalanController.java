@@ -13,6 +13,7 @@ import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Doublebox;
+import org.zkoss.zul.Intbox;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
@@ -67,6 +68,7 @@ public class SuratJalanController extends GFCBaseController {
 	private ListModelList<Ent_SuratJalanProduct> suratjalanProductModelList;
 	private Ent_Company defaultCompany = null;
 	private List<Ent_SuratJalan> suratjalanList;
+	private ListModelList<Ent_SuratJalan> suratjalanModelList;
 	
 	private static final Long DEF_COMPANY_IDX = (long) 3;
 	
@@ -98,7 +100,7 @@ public class SuratJalanController extends GFCBaseController {
 	}
 
 	private void renderSuratJalan() {
-		ListModelList<Ent_SuratJalan> suratjalanModelList =
+		suratjalanModelList =
 				new ListModelList<Ent_SuratJalan>(suratjalanList);
 		suratJalanListbox.setModel(suratjalanModelList);
 		suratJalanListbox.setItemRenderer(getSuratJalanListitemRenderer());
@@ -154,7 +156,6 @@ public class SuratJalanController extends GFCBaseController {
 				getInventoryProcessDao().findInventoryByCustomerByStatusBySuratJalan(
 						selCustomer, Enm_StatusProcess.Selesai);
 			// populate the process in the combobox
-			// processList.forEach(p -> log.info(p.toString()));
 			loadProcessCombobox(processList);
 			// select the 1st item in the process combobox
 			if (!processCombobox.getItems().isEmpty()) {
@@ -165,9 +166,10 @@ public class SuratJalanController extends GFCBaseController {
 				List<Ent_InventoryProcessProduct> productList = 
 						getInventoryProcessProducts(invtProc);
 				currSuratJalan = createSuratJalan(selCustomer, productList);
-				// display suratjalan
-				displaySuratJalan();
+				// add suratjalan to listbox
+				suratjalanModelList.add(0, currSuratJalan);
 				
+				displaySuratJalan();				
 			}
 		}
 		
@@ -238,6 +240,20 @@ public class SuratJalanController extends GFCBaseController {
 		return productList;
 	}
 
+	public void onSelect$processCombobox(Event event) throws Exception {
+		Ent_InventoryProcess selInvtProcess = processCombobox.getSelectedItem().getValue();
+		log.info("select processCombobox: "+selInvtProcess.getProcessNumber().getSerialComp());
+		Ent_Customer selCustomer = customerCombobox.getSelectedItem().getValue();
+		// Ent_InventoryProcess invtProc =
+		// 		processCombobox.getSelectedItem().getValue();
+		// get all the materials and the products into product list
+		List<Ent_InventoryProcessProduct> productList = 
+				getInventoryProcessProducts(selInvtProcess);
+		currSuratJalan = createSuratJalan(selCustomer, productList);
+		// display suratjalan
+		displaySuratJalan();
+	}
+	
 	private Ent_SuratJalan createSuratJalan(Ent_Customer customer, List<Ent_InventoryProcessProduct> productList) {
 		Ent_SuratJalan suratjalan = new Ent_SuratJalan();
 		suratjalan.setCustomer(customer);
@@ -308,7 +324,6 @@ public class SuratJalanController extends GFCBaseController {
 		setSuratJalanRefDoc();
 		// render the product list into the suratjalan listbox
 		renderSuratJalanProductList();
-		
 	}	
 
 	private void setSuratJalanNoPolisi() {
@@ -421,7 +436,8 @@ public class SuratJalanController extends GFCBaseController {
 					setMarking(activeItem, product.getMarking());
 					setSpek(activeItem, product.getThickness(), product.getWidth(), 
 							product.getLength());
-					
+					setQtyKg(activeItem, product.getQuantityByKg());
+					setQtyLbr(activeItem, product.getQuantityBySht());
 					
 					// transform this button to save
 					modifToSave(button);
@@ -434,6 +450,8 @@ public class SuratJalanController extends GFCBaseController {
 					product.setThickness(getSpek(activeItem, 0));
 					product.setWidth(getSpek(activeItem,2));
 					product.setLength(getSpek(activeItem,4));
+					product.setQuantityByKg(getQuantityByKg(activeItem));
+					product.setQuantityBySht(getQuantityBySht(activeItem));
 					
 					// getSuratjalanDao().update(currSuratJalan);
 					if (currSuratJalan.isEditInProgress()) {
@@ -451,7 +469,7 @@ public class SuratJalanController extends GFCBaseController {
 			}
 		};
 	}
-	
+
 	private String getMarking(Listitem item) {
 		Listcell lc = (Listcell) item.getChildren().get(0);
 		
@@ -504,6 +522,40 @@ public class SuratJalanController extends GFCBaseController {
 		doublebox.setWidth("60px");
 		doublebox.setValue(length);
 		doublebox.setParent(lc);
+	}	
+
+	protected double getQuantityByKg(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		
+		Doublebox doublebox = (Doublebox) lc.getFirstChild();
+		
+		return doublebox.getValue();
+	}
+	
+	protected void setQtyKg(Listitem activeItem, double quantityByKg) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		lc.setLabel("");
+		Doublebox doublebox = new Doublebox();
+		doublebox.setValue(quantityByKg);
+		doublebox.setWidth("100px");
+		doublebox.setParent(lc);
+	}	
+
+	protected int getQuantityBySht(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		
+		Intbox intbox = (Intbox) lc.getFirstChild();
+		
+		return intbox.getValue();
+	}
+
+	protected void setQtyLbr(Listitem activeItem, int quantityBySht) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		lc.setLabel("");
+		Intbox intbox = new Intbox();
+		intbox.setValue(quantityBySht);
+		intbox.setWidth("100px");
+		intbox.setParent(lc);
 	}	
 	
 	public void onClick$saveAddButton(Event event) throws Exception {

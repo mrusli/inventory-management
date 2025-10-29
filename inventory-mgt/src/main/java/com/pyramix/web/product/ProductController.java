@@ -49,6 +49,7 @@ public class ProductController extends GFCBaseController {
 	private Listbox materialListbox, productListbox;
 	private Label materialLabel;
 	private Checkbox processCompletedCheckbox;
+	private Button saveProcButton;
 	
 	private ListModelList<Ent_InventoryProcessProduct> productModelList;
 	private Ent_InventoryProcess selInvtProc = null;
@@ -108,6 +109,7 @@ public class ProductController extends GFCBaseController {
 						selCustomer, Enm_StatusProcess.Proses);
 		// clear before load
 		processCombobox.getItems().clear();
+		processCombobox.setValue("");
 		// load
 		loadProcessCombobox(processList);
 		// select
@@ -140,15 +142,17 @@ public class ProductController extends GFCBaseController {
 	private void onSelectProcessCombobox() throws Exception {
 		selInvtProc =
 				processCombobox.getSelectedItem().getValue();
-		// is process completed?
-		if (selInvtProc.getCompletedDate() != null) {
-			processCompletedCheckbox.setChecked(true);
-			processCompletedCheckbox.setLabel(dateToStringDisplay(
-					selInvtProc.getCompletedDate(), getShortDateFormat(), getLocale()));
-		} else {
-			processCompletedCheckbox.setChecked(false);
-			processCompletedCheckbox.setLabel("");
-		}
+
+// 		is process completed?
+//		if (selInvtProc.getCompletedDate() != null) {
+//			processCompletedCheckbox.setChecked(true);
+//			processCompletedCheckbox.setLabel(dateToStringDisplay(
+//					selInvtProc.getCompletedDate(), getShortDateFormat(), getLocale()));
+//		} else {
+//			processCompletedCheckbox.setChecked(false);
+//			processCompletedCheckbox.setLabel("");
+//		}
+
 		// proxy
 		selInvtProc = getInventoryProcessDao()
 				.findInventoryProcessMaterialsByProxy(selInvtProc.getId());
@@ -564,6 +568,26 @@ public class ProductController extends GFCBaseController {
 		return product;
 	}	
 
+	public void onCheck$processCompletedCheckbox(Event event) throws Exception {
+		log.info("processCompletedCheckbox: "+processCompletedCheckbox.isChecked());
+		
+		// allow user to click save
+		saveProcButton.setVisible(processCompletedCheckbox.isChecked());
+		
+	}
+	
+	public void onClick$saveProcButton(Event event) throws Exception {
+		// set to 'Selesai'
+		selInvtProc.setProcessStatus(Enm_StatusProcess.Selesai);
+		selInvtProc.setCompletedDate(getLocalDate(getZoneId()));
+		// update
+		getInventoryProcessDao().update(selInvtProc);
+		// reload
+		onSelectCustomerProcessCombobox();
+		// reset checkbox
+		processCompletedCheckbox.setChecked(false);		
+	}
+	
 	protected void modifToSave(Button button) {
 		button.setIconSclass("z-icon-floppy-disk");
 		button.setStyle("background-color:var(--bs-primary);");

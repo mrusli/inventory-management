@@ -57,6 +57,8 @@ public class InvoiceHibernate extends DaoHibernate implements InvoiceDao {
 		Root<Ent_Invoice> root = criteriaQuery.from(Ent_Invoice.class);
 		criteriaQuery.select(root).where(
 				criteriaBuilder.equal(root.get("invc_customer"), customer));
+		criteriaQuery.orderBy(
+				criteriaBuilder.desc(root.get("invc_date")));
 		
 		try {
 			
