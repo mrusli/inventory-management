@@ -11,6 +11,7 @@ import java.util.Set;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
@@ -93,7 +94,13 @@ public class InventoryTableController extends GFCBaseController {
 			
 		});
 		
+		// all
 		Comboitem comboitem;
+		comboitem = new Comboitem();
+		comboitem.setLabel("ALL");
+		comboitem.setValue(null);
+		comboitem.setParent(inventoryCodeCombobox);
+		
 		for (Ent_InventoryCode inventoryCode : inventoryCodeList) {
 			comboitem = new Comboitem();
 			comboitem.setLabel(inventoryCode.getProductCode());
@@ -102,10 +109,24 @@ public class InventoryTableController extends GFCBaseController {
 		}
 	}
 	
-	public void onSelect$InventoryCodeCombobox(Event event) throws Exception {
-		log.info("selected: "+inventoryCodeCombobox.getSelectedItem().getValue());
-		// re-load the inventoryTable according to inventoryCode
-		
+	public void onSelect$inventoryCodeCombobox(Event event) throws Exception {
+		onInventoryCodeComboboxSelected();
+	}
+	
+	private void onInventoryCodeComboboxSelected() throws Exception {
+		if (inventoryCodeCombobox.getSelectedItem().getValue()==null) {
+			// load all
+			loadInventoryTableListModel();
+		} else {
+			Ent_InventoryCode invtCode = inventoryCodeCombobox.getSelectedItem().getValue();
+			log.info("selected: "+invtCode);
+			// re-load the inventoryTable according to inventoryCode
+			List<Ent_InventoryTable> inventoryTableList =
+					getInventoryTableDao().findInventoryByInventoryCode(invtCode);
+			inventoryTableListModel = new ListModelList<Ent_InventoryTable>(inventoryTableList);
+		}
+		// render
+		renderInventoryTable();
 	}
 	
 	private void loadInventoryTableListModel() throws Exception {
@@ -217,11 +238,13 @@ public class InventoryTableController extends GFCBaseController {
 					Ent_InventoryTable activeInvtTable = getInventoryTableDao().update(
 							getUpdatedInventoryTable(invtTable, activeItem));
 					log.info(activeInvtTable.toString());
-					
+					Clients.showNotification(
+							   "Penambahan Item sudah disimpan.", "info", null, "bottom_left", 10000);
 					// re-load inventoryTable from db
-					loadInventoryTableListModel();
+					// loadInventoryTableListModel();
 					// re-render the data into the listbox
-					renderInventoryTable();
+					// renderInventoryTable();
+					onInventoryCodeComboboxSelected();
 					// locate
 					locateInventoryTableData(activeInvtTable);
 					
@@ -262,21 +285,27 @@ public class InventoryTableController extends GFCBaseController {
 		log.info("addInventoryTableButton click");
 		
 		selInventoryCode = inventoryCodeCombobox.getSelectedItem().getValue();
-		log.info(selInventoryCode.toString());
-
-		// add to the last pos using selInventoryCode
-		Ent_InventoryTable inventoryTable = addInventoryTableInLastPos();
-		inventoryTable.setInventoryCode(selInventoryCode);
-		inventoryTable.setEditInProgress(true);
-		
-		// last item
-		Listitem activeItem = getLastItem();
-		
-		setJenisCoil(activeItem, inventoryTable.getInventoryCode());
-		setSpek(activeItem, inventoryTable.getThickness(), inventoryTable.getWidth(), 
-				inventoryTable.getLength(), inventoryTable.getInventoryCode());
-		setQtyKg(activeItem, inventoryTable.getWeightQuantity());
-		setEditToSaveButton(activeItem);
+		if (selInventoryCode==null) {
+			// notif
+			Clients.showNotification(
+					   "Penambahan Item Harus memilih Kode Inventory", "error", null, "bottom_left", 10000);
+		} else {
+			log.info(selInventoryCode.toString());
+			
+			// add to the last pos using selInventoryCode
+			Ent_InventoryTable inventoryTable = addInventoryTableInLastPos();
+			inventoryTable.setInventoryCode(selInventoryCode);
+			inventoryTable.setEditInProgress(true);
+			
+			// last item
+			Listitem activeItem = getLastItem();
+			
+			setJenisCoil(activeItem, inventoryTable.getInventoryCode());
+			setSpek(activeItem, inventoryTable.getThickness(), inventoryTable.getWidth(), 
+					inventoryTable.getLength(), inventoryTable.getInventoryCode());
+			setQtyKg(activeItem, inventoryTable.getWeightQuantity());
+			setEditToSaveButton(activeItem);
+		}
 	}
 
 	private Ent_InventoryTable addInventoryTableInLastPos() {

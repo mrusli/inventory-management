@@ -2,6 +2,7 @@ package com.pyramix.persistence.inventorytable.dao;
 
 import java.util.List;
 
+import com.pyramix.domain.entity.Ent_InventoryCode;
 import com.pyramix.domain.entity.Ent_InventoryTable;
 
 public interface InventoryTableDao {
@@ -15,5 +16,7 @@ public interface InventoryTableDao {
 	public void save(Ent_InventoryTable inventoryTable) throws Exception;
 	
 	public void delete(Ent_InventoryTable inventoryTable) throws Exception;
+
+	public List<Ent_InventoryTable> findInventoryByInventoryCode(Ent_InventoryCode inventoryCode) throws Exception;
 	
 }
