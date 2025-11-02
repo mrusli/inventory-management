@@ -72,7 +72,7 @@ public class InvoiceController extends GFCBaseController {
 	private Tabbox invoiceTabbox;
 	private Grid suratjalanGrid;
 	private Button cancelAddButton, saveAddButton, cancelAddPltButton, saveAddPltButton,
-		createKwitansiButton;
+		createKwitansiButton, editButton;
 	private Textbox fakturNumberTextbox;
 	
 	private Ent_Customer selCustomer;
@@ -162,7 +162,9 @@ public class InvoiceController extends GFCBaseController {
 			renderInvoiceProduct();
 			// render bahan
 			activeInvoice = getInvoiceDao().findInvoicePalletsByProxy(activeInvoice.getId());
-			renderPalletListbox(activeInvoice.getInvoicePallet());
+			// activeInvoice.getInvoicePallet().forEach(p -> log.info(p.toString()));
+			palletList = activeInvoice.getInvoicePallet();
+			renderPalletListbox();
 		}
 	}
 	
@@ -293,6 +295,18 @@ public class InvoiceController extends GFCBaseController {
 						"" : dateToStringDisplay(invoice.getInvc_date(), 
 								getShortDateFormat(), getLocale()));
 				lc.setParent(item);
+				
+				// status
+				lc = new Listcell();
+				lc.setParent(item);
+
+				if (invoice.isAddInProgress()) {
+					Label label = new Label("New");
+					label.setSclass("badge bg-success");
+					label.setParent(lc);
+				} else {
+					
+				}
 
 				item.setValue(invoice);
 			}
@@ -342,6 +356,8 @@ public class InvoiceController extends GFCBaseController {
 		// allow to cancel or save
 		cancelAddButton.setVisible(true);
 		saveAddButton.setVisible(true);
+		// not allow to edit
+		editButton.setVisible(false);
 	}
 
 	private void clearInvoiceInfo() throws Exception {
@@ -362,6 +378,10 @@ public class InvoiceController extends GFCBaseController {
 		// render with empty array
 		invoiceProductList.clear();
 		renderInvoiceProduct();
+		if (palletList!=null) {
+			palletList.clear();
+			renderPalletListbox();			
+		}
 		
 		// bahan label
 		invoicePltDateLabel.setValue("");
@@ -838,15 +858,15 @@ public class InvoiceController extends GFCBaseController {
 			activeInvoice.setPay_type(Enm_TypePayment.bank);
 			activeInvoice.setInvc_customer(selCustomer);
 			// save
-			getInvoiceDao().update(activeInvoice);
-			// re-load invoice
-			loadInvoiceBySelCustomer();
+			activeInvoice = getInvoiceDao().update(activeInvoice);
 			// latest invoice for this customer
-			setActiveInvoice();
+			// setActiveInvoice();
 			// display invoice info
 			displayInvoiceInfo();
+			// re-load invoice
+			loadInvoiceBySelCustomer();
 			// reset to invoiceTabbox
-			invoiceTabbox.setSelectedIndex(0);
+			// invoiceTabbox.setSelectedIndex(0);
 			// hide suratjalan selection
 			suratjalanGrid.setVisible(false);
 			// clear selected list
@@ -857,26 +877,47 @@ public class InvoiceController extends GFCBaseController {
 		// hide cancel and save button
 		cancelAddButton.setVisible(false);
 		saveAddButton.setVisible(false);
+		// allow user to edit
+		editButton.setVisible(true);
+	}
+	
+	public void onClick$editButton(Event event) throws Exception {
+		log.info("editButton click");
 		
+		invoiceProductList.forEach(p -> {
+			p.setEditInProgress(true);
+		});
+		// re-render
+		renderInvoiceProduct();
+		// set to 'inProgress'
+		activeInvoice.setAddInProgress(true);
+		// allow user to save or batal
+		saveAddButton.setVisible(true);
+		cancelAddButton.setVisible(true);
 	}
 	
 	public void onClick$palletAddButton(Event event) throws Exception {
-		log.info("palletAddButton click");
-//		if (activeInvoice.isAddInProgress()) {
+		log.info("palletAddButton click");		
+		if (activeInvoice.isAddInProgress()) {
 			palletList = 
+					transformToInvoicePallet(invoiceProductList);
+							//activeInvoice.getInvoiceProducts());
+		} else {
+			palletList =
 					transformToInvoicePallet(activeInvoice.getInvoiceProducts());
-			// allow user to cancel or save
-			cancelAddPltButton.setVisible(true);
-			saveAddPltButton.setVisible(true);
-			// render
-			renderPalletListbox(palletList);
-//		}
+		}
+		
+		// allow user to cancel or save
+		cancelAddPltButton.setVisible(true);
+		saveAddPltButton.setVisible(true);
+		// render
+		renderPalletListbox();
 	}
 	
 	protected List<Ent_InvoicePallet> transformToInvoicePallet(List<Ent_InvoiceProduct> invoiceProducts) {
 		List<Ent_InvoicePallet> palletList = new ArrayList<Ent_InvoicePallet>();
 		// get all the products and transform
-		activeInvoice.getInvoiceProducts().forEach(p -> {
+		invoiceProducts.forEach(p -> {
 			if (p.isUse_pallet()) {
 				Ent_InvoicePallet pallet = new Ent_InvoicePallet();
 				pallet.setMarking(p.getMarking());
@@ -893,10 +934,10 @@ public class InvoiceController extends GFCBaseController {
 		return palletList;
 	}
 
-	protected void renderPalletListbox(List<Ent_InvoicePallet> invoicePallets) {
+	protected void renderPalletListbox() {
 		// render
 		ListModelList<Ent_InvoicePallet> palletModelList =
-				new ListModelList<Ent_InvoicePallet>(invoicePallets);
+				new ListModelList<Ent_InvoicePallet>(palletList);
 		palletListbox.setModel(palletModelList);
 		palletListbox.setItemRenderer(getPalletListitemRenderer());		
 	}
@@ -968,7 +1009,7 @@ public class InvoiceController extends GFCBaseController {
 					// get edited invoice pallet
 					pallet.setMarking(getMarking(activeItem));
 					// re-render
-					renderPalletListbox(palletList);
+					renderPalletListbox();
 					
 					// transform this button to edit
 					modifToEdit(button);
@@ -981,9 +1022,10 @@ public class InvoiceController extends GFCBaseController {
 		log.info("cancelAddPltButton click");
 		
 		// create empty pallet list
-		List<Ent_InvoicePallet> palletList = new ArrayList<Ent_InvoicePallet>();
+		// List<Ent_InvoicePallet> palletList = new ArrayList<Ent_InvoicePallet>();
+		palletList.clear();
 		// render
-		renderPalletListbox(palletList);
+		renderPalletListbox();
 		
 		cancelAddPltButton.setVisible(false);
 		saveAddPltButton.setVisible(false);
@@ -1000,7 +1042,8 @@ public class InvoiceController extends GFCBaseController {
 		// save
 		getInvoiceDao().update(activeInvoice);
 		// re-render
-		renderPalletListbox(activeInvoice.getInvoicePallet());
+		palletList = activeInvoice.getInvoicePallet();
+		renderPalletListbox();
 
 		cancelAddPltButton.setVisible(false);
 		saveAddPltButton.setVisible(false);
