@@ -72,8 +72,8 @@ public class InvoiceController extends GFCBaseController {
 	private Tabbox invoiceTabbox;
 	private Grid suratjalanGrid;
 	private Button cancelAddButton, saveAddButton, cancelAddPltButton, saveAddPltButton,
-		createKwitansiButton, editButton;
-	private Textbox fakturNumberTextbox;
+		createKwitansiButton, editButton, createKwitansiPltButton;
+	private Textbox fakturNumberTextbox, fakturNumberPltTextbox;
 	
 	private Ent_Customer selCustomer;
 	private ListModelList<Ent_Invoice> invoiceModelList;
@@ -86,6 +86,8 @@ public class InvoiceController extends GFCBaseController {
 	private List<Ent_InvoicePallet> palletList;
 	
 	private static final Long DEF_COMPANY_IDX = (long) 3;
+	private static final Double PPN = 11.0;
+	private static final Double PPH = 2.0;
 	
 	@SuppressWarnings("unchecked")
 	public void onCreate$infoInvoicePanel(Event event) throws Exception {
@@ -93,7 +95,7 @@ public class InvoiceController extends GFCBaseController {
 		
 		// set listener
 		fakturNumberTextbox.addEventListener(Events.ON_OK, new fakturNumberTextboxListener());
-		
+		fakturNumberPltTextbox.addEventListener(Events.ON_OK, new fakturNumberPltTextboxListener());
 		// set default company
 		defaultCompany = getCompanyDao().findCompanyById(DEF_COMPANY_IDX);
 		
@@ -122,13 +124,13 @@ public class InvoiceController extends GFCBaseController {
 			clearInvoiceInfo();
 		} else {
 			// display total
-			subtotal01JasaLabel.setValue(toDecimalFormat(new BigDecimal(activeInvoice.getTotal_invoice()), getLocale(), getDecimalFormat()));
-			ppnJasaLabel.setValue(toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn()), getLocale(), getDecimalFormat()));
-			double subtotal = activeInvoice.getTotal_invoice() + activeInvoice.getAmount_ppn();
-			subtotal02JasaLabel.setValue(toDecimalFormat(new BigDecimal(subtotal), getLocale(), getDecimalFormat()));
-			pph23JasaLabel.setValue("-"+toDecimalFormat(new BigDecimal(activeInvoice.getAmount_pph()), getLocale(), getDecimalFormat()));
-			double total = subtotal - activeInvoice.getAmount_pph();
-			totalJasaLabel.setValue(toDecimalFormat(new BigDecimal(total), getLocale(), getDecimalFormat()));
+			// subtotal01JasaLabel.setValue(toDecimalFormat(new BigDecimal(activeInvoice.getTotal_invoice()), getLocale(), getDecimalFormat()));
+			// ppnJasaLabel.setValue(toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn()), getLocale(), getDecimalFormat()));
+			// double subtotal = activeInvoice.getTotal_invoice() + activeInvoice.getAmount_ppn();
+			// subtotal02JasaLabel.setValue(toDecimalFormat(new BigDecimal(subtotal), getLocale(), getDecimalFormat()));
+			// pph23JasaLabel.setValue("-"+toDecimalFormat(new BigDecimal(activeInvoice.getAmount_pph()), getLocale(), getDecimalFormat()));
+			// double total = subtotal - activeInvoice.getAmount_pph();
+			// totalJasaLabel.setValue(toDecimalFormat(new BigDecimal(total), getLocale(), getDecimalFormat()));
 			// jasa
 			customerNameLabel.setValue(activeInvoice.getInvc_customer().getCompanyType()+"."+
 					activeInvoice.getInvc_customer().getCompanyLegalName());
@@ -151,13 +153,32 @@ public class InvoiceController extends GFCBaseController {
 			}
 			fakturNumberLabel.addEventListener(Events.ON_CLICK, new fakturNumberLabelClickListener());
 			fakturNumberLabel.setStyle("cursor:pointer;");
+			
 			// bahan
 			invoicePltDateLabel.setValue(dateToStringDisplay(activeInvoice.getInvc_date(), 
 					getShortDateFormat(), getLocale()));
 			invoiceNumberPltLabel.setValue(activeInvoice.getInvc_ser().getSerialComp());
+			if (activeInvoice.getBahanKwitansi()==null) {
+				// allow user to create
+				createKwitansiPltButton.setVisible(true);
+				kwitansiNumberPltLabel.setValue("");
+			} else {
+				createKwitansiPltButton.setVisible(false);
+				kwitansiNumberPltLabel.setValue(activeInvoice
+						.getBahanKwitansi().getKwitansi_ser().getSerialComp());
+			}
+			if (activeInvoice.getBahanFaktur()==null) {
+				fakturNumberPltLabel.setValue("ClickToAdd");
+			} else {
+				fakturNumberPltLabel.setValue(activeInvoice.getBahanFaktur().getFaktur_number());
+
+			}
+			fakturNumberPltLabel.addEventListener(Events.ON_CLICK, new fakturNumberPltLabelClickListener());
+			fakturNumberPltLabel.setStyle("cursor:pointer;");
 			// clear from previous objects
 			invoiceProductList.clear();
 			invoiceProductList.addAll(activeInvoice.getInvoiceProducts());
+			
 			// render
 			renderInvoiceProduct();
 			// render bahan
@@ -171,16 +192,8 @@ public class InvoiceController extends GFCBaseController {
 	public void onClick$createKwitansiButton(Event event) throws Exception {
 		log.info("createKwitansiButton click");
 		
-		Ent_InvoiceKwitansi kwitansi = new Ent_InvoiceKwitansi();
-		kwitansi.setAmount(0.0);
-		kwitansi.setAmount_words("");
-		kwitansi.setKwitansi_date(activeInvoice.getInvc_date());
-		kwitansi.setKwitansi_for(activeInvoice.getInvc_customer().getCompanyType()+"."+
-				activeInvoice.getInvc_customer().getCompanyLegalName());
-		kwitansi.setKwitansi_ser(getDocumentSerial(Enm_TypeDocument.KWITANSI, 
-				activeInvoice.getInvc_date()));
 		// set
-		activeInvoice.setJasaKwitansi(kwitansi);
+		activeInvoice.setJasaKwitansi(createKwitansi());
 		// save
 		activeInvoice = getInvoiceDao().update(activeInvoice);
 		// display
@@ -191,6 +204,34 @@ public class InvoiceController extends GFCBaseController {
 		createKwitansiButton.setVisible(false);
 	}
 
+	public void onClick$createKwitansiPltButton(Event event) throws Exception {
+		log.info("createKwitansiPltButton click");
+		
+		// set
+		activeInvoice.setBahanKwitansi(createKwitansi());
+		// save
+		activeInvoice = getInvoiceDao().update(activeInvoice);
+		// display
+		kwitansiNumberPltLabel.setValue(activeInvoice
+				.getBahanKwitansi().getKwitansi_ser().getSerialComp());
+		
+		// hide this button
+		createKwitansiPltButton.setVisible(false);
+	}
+
+	private Ent_InvoiceKwitansi createKwitansi() throws Exception {
+		Ent_InvoiceKwitansi kwitansi = new Ent_InvoiceKwitansi();
+		kwitansi.setAmount(0.0);
+		kwitansi.setAmount_words("");
+		kwitansi.setKwitansi_date(activeInvoice.getInvc_date());
+		kwitansi.setKwitansi_for(activeInvoice.getInvc_customer().getCompanyType()+"."+
+				activeInvoice.getInvc_customer().getCompanyLegalName());
+		kwitansi.setKwitansi_ser(getDocumentSerial(Enm_TypeDocument.KWITANSI, 
+				activeInvoice.getInvc_date()));
+
+		return kwitansi;
+	}
+	
 	@SuppressWarnings("rawtypes")
 	public class fakturNumberLabelClickListener implements EventListener {
 
@@ -198,8 +239,22 @@ public class InvoiceController extends GFCBaseController {
 		public void onEvent(Event event) throws Exception {
 			log.info("fakturNumberLabel click...");
 			fakturNumberLabel.setVisible(false);
+			fakturNumberTextbox.setValue("");
 			fakturNumberTextbox.setVisible(true);
 		}		
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public class fakturNumberPltLabelClickListener implements EventListener {
+
+		@Override
+		public void onEvent(Event event) throws Exception {
+			log.info("fakturNumberPltLabel click...");
+			fakturNumberPltLabel.setVisible(false);
+			fakturNumberPltTextbox.setValue("");
+			fakturNumberPltTextbox.setVisible(true);
+		}
+		
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -230,6 +285,37 @@ public class InvoiceController extends GFCBaseController {
 			Clients.showNotification(
 					   "No.Faktur berhasil disimpan", "info", null, "bottom_left", 10000);
 		}	
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public class fakturNumberPltTextboxListener implements EventListener {
+
+		@Override
+		public void onEvent(Event event) throws Exception {
+			Ent_InvoiceFaktur invcFaktur;			
+			log.info("fakturNumberPltTextbox...:"+fakturNumberPltTextbox.getValue());
+			if (activeInvoice.getBahanFaktur()==null) {
+				// create
+				invcFaktur = new Ent_InvoiceFaktur();
+				invcFaktur.setFaktur_date(activeInvoice.getInvc_date());
+				invcFaktur.setFaktur_number(fakturNumberPltTextbox.getValue());
+				// set
+				activeInvoice.setBahanFaktur(invcFaktur);
+			} else {
+				// modify
+				activeInvoice.getBahanFaktur().setFaktur_number(fakturNumberPltTextbox.getValue());
+			}
+			// update
+			activeInvoice = getInvoiceDao().update(activeInvoice);
+			// display
+			fakturNumberPltTextbox.setVisible(false);
+			fakturNumberPltLabel.setVisible(true);
+			fakturNumberPltLabel.setValue(activeInvoice.getBahanFaktur().getFaktur_number());
+			// notif
+			Clients.showNotification(
+					   "No.Faktur berhasil disimpan", "info", null, "bottom_left", 10000);
+		}
+		
 	}
 	
 	private void setActiveInvoice() throws Exception {
@@ -569,7 +655,39 @@ public class InvoiceController extends GFCBaseController {
 			}
 		};
 	}	
+	
+	public void onAfterRender$invoiceProductListbox(Event event) throws Exception {
+		double jumlahJasa = calcJumlahJasa();
+		subtotal01JasaLabel.setValue(
+				toDecimalFormat(new BigDecimal(jumlahJasa), getLocale(), getDecimalFormat()));
+		log.info(String.valueOf(jumlahJasa));
+		double jumlahPpn = PPN * jumlahJasa / 100;
+		ppnJasaLabel.setValue(
+				toDecimalFormat(new BigDecimal(jumlahPpn), getLocale(), getDecimalFormat()));
+		log.info(String.valueOf(jumlahPpn));
+		double jumlahTotalJasa = jumlahJasa + jumlahPpn;
+		subtotal02JasaLabel.setValue(
+				toDecimalFormat(new BigDecimal(jumlahTotalJasa), getLocale(), getDecimalFormat()));
+		double jumlahPph = PPH * jumlahJasa / 100;
+		log.info(String.valueOf(jumlahPpn));
+		pph23JasaLabel.setValue("-"+
+				toDecimalFormat(new BigDecimal(jumlahPph), getLocale(), getDecimalFormat()));
+		double jumlahTotalJasaDecPph = jumlahTotalJasa - jumlahPph;
+		log.info(String.valueOf(jumlahTotalJasaDecPph));
+		totalJasaLabel.setValue(
+				toDecimalFormat(new BigDecimal(jumlahTotalJasaDecPph), getLocale(), getDecimalFormat()));
+				
+	}
 
+	private double calcJumlahJasa() {
+		double jumlah = 0;
+		for(Ent_InvoiceProduct invcProd : activeInvoice.getInvoiceProducts()) {
+			jumlah = jumlah + invcProd.getSub_total();
+		}
+		return jumlah;
+	}
+	
+	
 	protected EventListener<Event> editInvoiceProduct(Ent_InvoiceProduct product) {
 
 		return new EventListener<Event>() {
@@ -584,7 +702,7 @@ public class InvoiceController extends GFCBaseController {
 					product.setEditInProgress(false);
 
 					// set columns to edit
-					setMarking(activeItem, product.getMarking());
+					setMarking(activeItem, product.getMarking(),1);
 					setPO(activeItem, product.getRef_document());
 					setSpek(activeItem, product.getThickness(), product.getWidth(), product.getLength());
 					setPcs(activeItem, product.getQuantity_by_sht());
@@ -598,7 +716,7 @@ public class InvoiceController extends GFCBaseController {
 					log.info("to save invoiceProduct click");
 					product.setEditInProgress(true);
 					// get updated product
-					product.setMarking(getMarking(activeItem));
+					product.setMarking(getMarking(activeItem,1));
 					product.setRef_document(getPO(activeItem));
 					product.setThickness(getSpek(activeItem,0));
 					product.setWidth(getSpek(activeItem,2));
@@ -619,17 +737,17 @@ public class InvoiceController extends GFCBaseController {
 		};
 	}
 
-	protected String getMarking(Listitem item) {
-		Listcell lc = (Listcell) item.getChildren().get(1);
+	protected String getMarking(Listitem item, int idx) {
+		Listcell lc = (Listcell) item.getChildren().get(idx);
 		
 		Textbox textbox = (Textbox) lc.getFirstChild();
 		
 		return textbox.getValue();
 	}
 	
-	protected void setMarking(Listitem activeItem, String marking) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(1);
-		lc.setLabel("");
+	protected void setMarking(Listitem activeItem, String marking, int idx) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(idx);
+		lc.setLabel(" ");
 		Textbox textbox = new Textbox();
 		textbox.setValue(marking);
 		textbox.setWidth("100px");
@@ -653,10 +771,10 @@ public class InvoiceController extends GFCBaseController {
 		textbox.setParent(lc);
 	}
 
-	private double getSpek(Listitem activeItem, int idx) {
+	private double getSpek(Listitem activeItem, int subIdx) {
 		Listcell lc = (Listcell) activeItem.getChildren().get(3);
 		
-		Doublebox doublebox = (Doublebox) lc.getChildren().get(idx);
+		Doublebox doublebox = (Doublebox) lc.getChildren().get(subIdx);
 		
 		return doublebox.getValue();
 	}	
@@ -903,8 +1021,25 @@ public class InvoiceController extends GFCBaseController {
 					transformToInvoicePallet(invoiceProductList);
 							//activeInvoice.getInvoiceProducts());
 		} else {
-			palletList =
-					transformToInvoicePallet(activeInvoice.getInvoiceProducts());
+			
+			if (palletList.isEmpty()) {
+				palletList =
+						transformToInvoicePallet(activeInvoice.getInvoiceProducts());				
+			} else {
+				// grab the suratjalan
+				Ent_SuratJalan ref_suratJalan = palletList.get(0).getRef_suratjalan();
+				// add another item
+				Ent_InvoicePallet pallet = new Ent_InvoicePallet();
+				pallet.setMarking("");
+				pallet.setPallet_price(0.0);
+				pallet.setPallet_subtotal(0.0);
+				pallet.setQty_pcs(0);
+				pallet.setRef_suratjalan(ref_suratJalan);
+				pallet.setEditInProgress(true);
+
+				palletList.add(pallet);
+			}
+			
 		}
 		
 		// allow user to cancel or save
@@ -985,6 +1120,29 @@ public class InvoiceController extends GFCBaseController {
 		};
 	}
 
+	public void onAfterRender$palletListbox(Event event) throws Exception {
+		double jumlahBahan = calcJumlahBahan();
+		log.info("bhn - jumlah:"+jumlahBahan);
+		subtotalPalletLabel.setValue(
+				toDecimalFormat(new BigDecimal(jumlahBahan), getLocale(), getDecimalFormat()));
+		double jumlahPpn = PPN * jumlahBahan / 100;
+		log.info("bhn - ppn:"+jumlahPpn);
+		ppnPalletLabel.setValue(
+				toDecimalFormat(new BigDecimal(jumlahPpn), getLocale(), getDecimalFormat()));
+		double jumlahTotalBahan = jumlahBahan + jumlahPpn;
+		log.info("bhn - total:"+jumlahTotalBahan);
+		totalPalletLabel.setValue(
+				toDecimalFormat(new BigDecimal(jumlahTotalBahan), getLocale(), getDecimalFormat()));
+	}
+	
+	private double calcJumlahBahan() throws Exception {
+		double jumlah = 0;
+		for(Ent_InvoicePallet invcPlt : palletList) {
+			jumlah = jumlah + invcPlt.getPallet_subtotal();
+		}
+		return jumlah;
+	}
+	
 	protected EventListener<Event> editInvoicePallet(Ent_InvoicePallet pallet) {
 		
 		return new EventListener<Event>() {
@@ -998,7 +1156,10 @@ public class InvoiceController extends GFCBaseController {
 					// set to save
 					pallet.setEditInProgress(false);
 					// set columns to edit
-					setMarking(activeItem, pallet.getMarking());
+					setMarking(activeItem, pallet.getMarking(),1);
+					setPltPcs(activeItem, pallet.getQty_pcs());
+					setPalletPrc(activeItem, pallet.getPallet_price());
+					setPltJumlah(activeItem, pallet.getPallet_subtotal());
 					
 					// transform this button to save
 					modifToSave(button);
@@ -1007,7 +1168,10 @@ public class InvoiceController extends GFCBaseController {
 					// set to edit
 					pallet.setEditInProgress(true);
 					// get edited invoice pallet
-					pallet.setMarking(getMarking(activeItem));
+					pallet.setMarking(getMarking(activeItem,1));
+					pallet.setQty_pcs(getPltPcs(activeItem));
+					pallet.setPallet_price(getPalletPrc(activeItem));
+					pallet.setPallet_subtotal(getPltJumlah(activeItem));
 					// re-render
 					renderPalletListbox();
 					
@@ -1018,6 +1182,109 @@ public class InvoiceController extends GFCBaseController {
 		};
 	}
 
+	protected int getPltPcs(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		
+		Intbox intbox = (Intbox) lc.getFirstChild();
+		
+		return intbox.getValue();
+	}
+
+	protected void setPltPcs(Listitem activeItem, int qty_pcs) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		lc.setLabel("");
+		Intbox intbox = new Intbox();
+		intbox.setValue(qty_pcs);
+		intbox.setWidth("100px");
+		intbox.setParent(lc);
+		intbox.addEventListener(Events.ON_CHANGE, new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				Listcell lc;
+				Doublebox doublebox;
+				Intbox intbox;
+				double qtyPcs, rpPcs, subtotal;
+				intbox = (Intbox) event.getTarget();
+				qtyPcs = intbox.getValue();
+				log.info("calc Jumlah - qty:"+qtyPcs);
+				// get the Prc
+				lc = (Listcell) activeItem.getChildren().get(3);
+				doublebox = (Doublebox) lc.getFirstChild();
+				rpPcs = doublebox.getValue();
+				log.info("calc Jumlah - Rp:"+rpPcs);
+				// calc
+				subtotal = rpPcs * qtyPcs;
+				log.info("calc Jumlah:"+subtotal);
+				// jumlah
+				lc = (Listcell) activeItem.getChildren().get(4);				
+				doublebox = (Doublebox) lc.getFirstChild();
+				doublebox.setValue(subtotal);
+				
+			}
+		});
+	}
+
+	protected double getPalletPrc(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		
+		Doublebox doublebox = (Doublebox) lc.getFirstChild();
+		
+		return doublebox.getValue();
+	}
+
+	protected void setPalletPrc(Listitem activeItem, double pallet_price) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		lc.setLabel("");
+		Doublebox doublebox = new Doublebox();
+		doublebox.setValue(pallet_price);
+		doublebox.setWidth("100px");
+		doublebox.setParent(lc);
+		doublebox.addEventListener(Events.ON_CHANGE, new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				Listcell lc;
+				Doublebox doublebox;
+				Intbox intbox;
+				double qtyPcs, rpPcs, subtotal;
+				doublebox = (Doublebox) event.getTarget();
+				rpPcs = doublebox.getValue();
+				log.info("calc Jumlah - Rp:"+rpPcs);
+				// get the Pcs
+				lc = (Listcell) activeItem.getChildren().get(2);
+				intbox = (Intbox) lc.getFirstChild();
+				qtyPcs = intbox.getValue();
+				log.info("calc Jumlah - Pcs:"+qtyPcs);
+				// calc
+				subtotal = rpPcs * qtyPcs;
+				log.info("calc Jumlah:"+subtotal);
+				// jumlah
+				lc = (Listcell) activeItem.getChildren().get(4);				
+				doublebox = (Doublebox) lc.getFirstChild();
+				doublebox.setValue(subtotal);
+			}
+		});
+	}
+	
+	protected double getPltJumlah(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		
+		Doublebox doublebox = (Doublebox) lc.getFirstChild();
+		
+		return doublebox.getValue();
+	}
+
+	protected void setPltJumlah(Listitem activeItem, double pallet_subtotal) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		lc.setLabel("");
+		Doublebox doublebox = new Doublebox();
+		doublebox.setValue(pallet_subtotal);
+		doublebox.setWidth("100px");
+		doublebox.setParent(lc);
+	}
+	
+	
 	public void onClick$cancelAddPltButton(Event event) throws Exception {
 		log.info("cancelAddPltButton click");
 		
@@ -1043,10 +1310,22 @@ public class InvoiceController extends GFCBaseController {
 		getInvoiceDao().update(activeInvoice);
 		// re-render
 		palletList = activeInvoice.getInvoicePallet();
+		// make sure it's non-edit
+		palletList.forEach(p -> p.setEditInProgress(false));
 		renderPalletListbox();
 
 		cancelAddPltButton.setVisible(false);
 		saveAddPltButton.setVisible(false);
+	}
+	
+	public void onClick$editPltButton(Event event) throws Exception {
+		log.info("editPltButton click");
+		palletList.forEach(p -> p.setEditInProgress(true));
+		// render
+		renderPalletListbox();
+		// allow user to cancel or save
+		cancelAddPltButton.setVisible(true);
+		saveAddPltButton.setVisible(true);
 	}
 	
 	protected void modifToSave(Button button) {

@@ -83,13 +83,13 @@ public class Ent_Invoice extends IdBasedObject {
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Ent_InvoiceKwitansi jasaKwitansi;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Ent_InvoiceKwitansi bahanKwitansi;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
 	private Ent_InvoiceFaktur jasaFaktur;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Ent_InvoiceFaktur bahanFaktur;
 	
 	@Transient

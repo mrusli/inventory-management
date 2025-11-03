@@ -4,6 +4,7 @@ import java.util.TimeZone;
 
 import org.zkoss.util.Locales;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.Include;
 
@@ -59,55 +60,73 @@ public class MainController extends GFCBaseController {
 	
 	public void onPenerimaanCoilMenuClick(Event event) {
 		log.info("onPenerimaanCoilMenuClick...");
-		
+		// change page title
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Penerimaan");
+		// load page
 		mainInclude.setSrc("~./src/info_penerimaancoil.zul");
 	}
 	
 	public void onProsesCoilMenuClick(Event event) {
 		log.info("onProsesCoilMenuClick...");
-		
+		// change page title
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Proses");
+		// load page		
 		mainInclude.setSrc("~./src/info_processcoil.zul");		
 	}
 	
 	public void onProdukMenuClick(Event event) {
 		log.info("onProdukMenuClick...");
-		
+		// change page title
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Produk");
+		// load page		
 		mainInclude.setSrc("~./src/info_produk.zul");		
 	}
 	
 	public void onSuratjalanCoilMenuClick(Event event) {
 		log.info("onSuratjalanCoilMenuClick...");
-		
+		// change page title
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("SuratJalan");
+		// load page		
 		mainInclude.setSrc("~./src/info_suratjalan.zul");		
 	}
 	
 	public void onTagihanCoilMenuClick(Event event) {
 		log.info("onTagihanCoilMenuClick...");
-		
+		// change page title
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Tagihan");
+		// load page		
 		mainInclude.setSrc("~./src/info_tagihan.zul");		
 	}
 	
 	public void onCustomerCoilMenuClick(Event event) {
 		log.info("onCustomerCoilMenuClick...");
-		
+		// change page title
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Customer");
+		// load page
 		mainInclude.setSrc("~./src/info_customer.zul");		
 	}
 
 	public void onClickInventoryTypeMenu(Event event) {
 		log.info("inventoryTypeMenuitem click...");
-		
+		// change page title
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Tipe & Kode");
+		// load page		
 		mainInclude.setSrc("~./src/info_inventory_type.zul");		
 	}
 	
 	public void onClickInventoryCodeMenu(Event event) {
 		log.info("inventoryCodeMenuitem click...");
-		
+		// change page title
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Tabel");
+		// load page
 		mainInclude.setSrc("~./src/info_inventory_table.zul");		
 	}	
 	
 	public void onClickCompanyMenu(Event event) {
 		log.info("companyMenuitem click...");
-		
+		// change page title
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Company");
+		// load page
 		mainInclude.setSrc("~./src/info_company.zul");				
 	}
 	
