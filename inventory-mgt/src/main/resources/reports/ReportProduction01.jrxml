@@ -1,0 +1,67 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="ReportProduction" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ca8039b2-2418-41d8-9319-bb890961caed">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="customerName" class="java.lang.String"/>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="marking" class="java.lang.String"/>
+	<field name="jenisCoil" class="java.lang.String"/>
+	<field name="qtyKg" class="java.lang.String"/>
+	<field name="spek" class="java.lang.String"/>
+	<background splitType="Stretch"/>
+	<title height="75" splitType="Stretch">
+		<element kind="rectangle" uuid="4b67bd85-57d2-4f67-a99d-6b34f6be117e" mode="Transparent" x="280" y="20" width="521" height="21"/>
+		<element kind="rectangle" uuid="bf3550e2-aa88-4767-bf3f-396c39fe7967" mode="Transparent" x="0" y="0" width="801" height="63"/>
+		<element kind="staticText" uuid="a0e0ecd5-13ba-4278-9514-cc2af4310a8c" x="0" y="0" width="219" height="19">
+			<text><![CDATA[PT.WAJASENTOSA METALINDO]]></text>
+		</element>
+		<element kind="staticText" uuid="0a8149d2-446f-465e-aa38-ce09a1e69f6c" x="280" y="0" width="140" height="19">
+			<text><![CDATA[PRODUCTION REPORT NO]]></text>
+		</element>
+		<element kind="staticText" uuid="0e1b90e6-a464-4174-a266-eda5be5704c7" x="280" y="20" width="60" height="20">
+			<text><![CDATA[Customer:]]></text>
+		</element>
+		<element kind="staticText" uuid="5fa37725-fb96-42cb-aa24-28a0b5bc994b" x="480" y="20" width="70" height="20">
+			<text><![CDATA[Process Date:]]></text>
+		</element>
+		<element kind="staticText" uuid="3a21c2dc-5c1d-4f55-9b84-6ac25b69123a" x="620" y="20" width="60" height="20">
+			<text><![CDATA[Report By:]]></text>
+		</element>
+		<element kind="rectangle" uuid="03526936-306a-4f66-8c34-b64cf27f63e3" mode="Transparent" x="280" y="0" width="521" height="20"/>
+		<element kind="staticText" uuid="81d6b812-cba9-4a7f-bd38-e0a0b1c881c6" x="0" y="20" width="219" height="43" fontSize="24.0" hTextAlign="Left">
+			<text><![CDATA[Production Report]]></text>
+		</element>
+		<element kind="textField" uuid="fb315749-19ae-466a-9b03-7c1da4eb9b24" x="350" y="22" width="120" height="30">
+			<expression><![CDATA[]]></expression>
+		</element>
+	</title>
+	<pageHeader height="35" splitType="Stretch"/>
+	<columnHeader height="61" splitType="Stretch"/>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<element kind="textField" uuid="4eda1469-3887-43ed-9d2d-0d59314ecd3c" x="0" y="10" width="100" height="30">
+				<expression><![CDATA[$F{marking}]]></expression>
+			</element>
+			<element kind="textField" uuid="37061202-4af7-4bab-85fa-79c558cf6ea9" x="130" y="10" width="100" height="30">
+				<expression><![CDATA[$F{jenisCoil}]]></expression>
+			</element>
+			<element kind="textField" uuid="e2b3f7bb-99b7-45ed-9c10-7b417d600de0" x="260" y="10" width="100" height="30">
+				<expression><![CDATA[$F{qtyKg}]]></expression>
+			</element>
+			<element kind="textField" uuid="428d382c-784e-44f1-9dfe-fbeaf218fd4c" x="390" y="10" width="100" height="30">
+				<expression><![CDATA[$F{spek}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>

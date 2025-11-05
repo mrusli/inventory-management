@@ -115,7 +115,8 @@
 			<n:div sclass="mt-3">
 <!-- 				<button id="processEditButton" label="Ubah" visible="false" iconSclass="z-icon-pencil" sclass="compButton" style="background-color: var()"></button> -->
 				<button id="processSaveButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-o" sclass="compButton" style="background-color: var(--bs-primary)"></button>
-				<button id="printReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton"></button>
+				<button id="printReportButton" label="Print" visible="false" iconSclass="z-icon-print" sclass="compButton"></button>
+				<button id="printJasperReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton"></button>
 				<button id="cancelAddProcessButton" label="Batal" visible="false" iconSclass="z-icon-xmark" sclass="compButton" style="background-color: var(--bs-warning)"></button>
 			</n:div>
 		</n:div>	

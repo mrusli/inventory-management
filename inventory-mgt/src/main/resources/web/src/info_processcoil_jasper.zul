@@ -1,0 +1,13 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="productionReportPrintWin" title="Production Report" border="normal"
+	apply="${productionReportPrintControl}"
+	width="1150px" height="720px" closable="true" sizable="true"
+	action="show: slideDown;hide: slideUp">
+
+	<vlayout>
+		<iframe id="iframe" width="100%" height="650px"></iframe>
+	</vlayout>
+
+</window>
+</zk>

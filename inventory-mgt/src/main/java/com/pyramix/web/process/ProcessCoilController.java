@@ -1148,6 +1148,15 @@ public class ProcessCoilController extends GFCBaseController {
 //	}	
 //	
 	
+	public void onClick$printJasperReportButton(Event event) throws Exception {
+		log.info("printJasperReportButton click");
+		
+		Window productionReportPrintWin =
+				(Window) Executions.createComponents("~./src/info_processcoil_jasper.zul", null, null);
+		
+		productionReportPrintWin.doModal();
+	}
+	
 	public void onClick$printReportButton(Event event) throws Exception {
 		log.info("printReportButton click...");
 		
