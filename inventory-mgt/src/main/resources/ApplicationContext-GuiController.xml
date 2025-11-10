@@ -51,6 +51,7 @@
     
     <bean id="productionReportPrintControl" class="com.pyramix.web.process.ProcessCoilJasperController" scope="prototype" parent="basisController">
     	<property name="jasperReportUtil" ref="jasperReportUtil"></property>
+    	<property name="inventoryProcessDao" ref="inventoryProcessDao"></property>
     </bean>
     
     <bean id="infoProductController" class="com.pyramix.web.product.ProductController" scope="prototype" parent="basisController">
