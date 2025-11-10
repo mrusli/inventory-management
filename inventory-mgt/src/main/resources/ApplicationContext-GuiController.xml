@@ -43,6 +43,7 @@
     
     <bean id="processcoildReportWinController" class="com.pyramix.web.process.ProcessCoilReportController" scope="prototype" parent="basisController">
     	<property name="pdfpReportUtility" ref="pdfpReportUtility"></property>
+    	
     </bean>
     
     <bean id="jasperReportUtil" class="com.pyramix.web.common.JasperReportsUtil">
