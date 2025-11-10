@@ -332,12 +332,14 @@
 								sclass="compButton"
 								style="background-color:var(--bs-primary)">
 							</button>
-							<button id="printJasperReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton"></button>
 						</n:div>
 					</n:div>				
 				</tabpanel>
 			</tabpanels>
-		</tabbox>												
+		</tabbox>
+		<div sclass="mt-3">
+			<button id="printJasperReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton"></button>
+		</div>												
 
 	</n:div>	
 </div>
