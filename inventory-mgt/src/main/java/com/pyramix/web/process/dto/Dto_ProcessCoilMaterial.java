@@ -1,8 +1,13 @@
-package com.pyramix.web.process;
+package com.pyramix.web.process.dto;
 
 import java.util.List;
 
-public class ProcessCoilDto {
+import lombok.Data;
+
+@Data
+public class Dto_ProcessCoilMaterial {
+	
+	private String seq;
 
 	private String marking;
 	
@@ -12,45 +17,5 @@ public class ProcessCoilDto {
 	
 	private String spek;
 	
-	private List<ProcessCoilProductDto> processCoilProducts;
-
-	public String getMarking() {
-		return marking;
-	}
-
-	public void setMarking(String marking) {
-		this.marking = marking;
-	}
-
-	public String getJenisCoil() {
-		return jenisCoil;
-	}
-
-	public void setJenisCoil(String jenisCoil) {
-		this.jenisCoil = jenisCoil;
-	}
-
-	public String getQtyKg() {
-		return qtyKg;
-	}
-
-	public void setQtyKg(String qtyKg) {
-		this.qtyKg = qtyKg;
-	}
-
-	public String getSpek() {
-		return spek;
-	}
-
-	public void setSpek(String spek) {
-		this.spek = spek;
-	}
-
-	public List<ProcessCoilProductDto> getProcessCoilProducts() {
-		return processCoilProducts;
-	}
-
-	public void setProcessCoilProducts(List<ProcessCoilProductDto> processCoilProducts) {
-		this.processCoilProducts = processCoilProducts;
-	}
+	private List<Dto_ProcessCoilProduct> processCoilProducts;
 }

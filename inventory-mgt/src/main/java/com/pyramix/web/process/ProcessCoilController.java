@@ -1151,8 +1151,13 @@ public class ProcessCoilController extends GFCBaseController {
 	public void onClick$printJasperReportButton(Event event) throws Exception {
 		log.info("printJasperReportButton click");
 		
+		log.info(selInventoryProcess.toString());
+		
+		Map<String, Ent_InventoryProcess> arg =
+				Collections.singletonMap("selInventoryProcess", selInventoryProcess);
+		
 		Window productionReportPrintWin =
-				(Window) Executions.createComponents("~./src/info_processcoil_jasper.zul", null, null);
+				(Window) Executions.createComponents("~./src/info_processcoil_jasper.zul", null, arg);
 		
 		productionReportPrintWin.doModal();
 	}
