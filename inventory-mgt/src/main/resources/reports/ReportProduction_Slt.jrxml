@@ -1,0 +1,250 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="ReportProduction_Slt" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e783681f-535a-426a-bd1f-3191b73cdeb8">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="customerName" class="java.lang.String"/>
+	<parameter name="prdReportNumber" class="java.lang.String"/>
+	<parameter name="prdReportDate" class="java.lang.String"/>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="seq" class="java.lang.String"/>
+	<field name="coilNo" class="java.lang.String"/>
+	<field name="spec" class="java.lang.String"/>
+	<field name="weigth" class="java.lang.String"/>
+	<field name="materialSize" class="java.lang.String"/>
+	<field name="slittingSize" class="java.lang.String"/>
+	<field name="slitQty" class="java.lang.String"/>
+	<background splitType="Stretch"/>
+	<title height="67" splitType="Stretch">
+		<element kind="rectangle" uuid="03526936-306a-4f66-8c34-b64cf27f63e3" mode="Transparent" x="280" y="0" width="521" height="20"/>
+		<element kind="rectangle" uuid="4b67bd85-57d2-4f67-a99d-6b34f6be117e" mode="Transparent" x="280" y="20" width="521" height="21"/>
+		<element kind="rectangle" uuid="bf3550e2-aa88-4767-bf3f-396c39fe7967" mode="Transparent" x="0" y="0" width="801" height="63"/>
+		<element kind="staticText" uuid="a0e0ecd5-13ba-4278-9514-cc2af4310a8c" x="2" y="0" width="219" height="19" vTextAlign="Middle">
+			<text><![CDATA[PT.WAJASENTOSA METALINDO]]></text>
+		</element>
+		<element kind="staticText" uuid="0a8149d2-446f-465e-aa38-ce09a1e69f6c" x="290" y="0" width="140" height="19" vTextAlign="Middle">
+			<text><![CDATA[PRODUCTION REPORT NO:]]></text>
+		</element>
+		<element kind="staticText" uuid="0e1b90e6-a464-4174-a266-eda5be5704c7" x="290" y="20" width="60" height="20" vTextAlign="Middle">
+			<text><![CDATA[Customer:]]></text>
+		</element>
+		<element kind="staticText" uuid="5fa37725-fb96-42cb-aa24-28a0b5bc994b" x="611" y="0" width="70" height="20" vTextAlign="Middle">
+			<text><![CDATA[Process Date:]]></text>
+		</element>
+		<element kind="staticText" uuid="3a21c2dc-5c1d-4f55-9b84-6ac25b69123a" x="610" y="20" width="71" height="20" vTextAlign="Middle">
+			<text><![CDATA[Report By:]]></text>
+		</element>
+		<element kind="staticText" uuid="81d6b812-cba9-4a7f-bd38-e0a0b1c881c6" x="2" y="20" width="219" height="43" fontSize="24.0" hTextAlign="Left">
+			<text><![CDATA[Production Report]]></text>
+		</element>
+		<element kind="textField" uuid="88cd4168-8a1d-4fa4-9d9e-54cb887faecb" x="342" y="22" width="258" height="16" vTextAlign="Middle">
+			<expression><![CDATA[$P{customerName}]]></expression>
+		</element>
+		<element kind="textField" uuid="b7959773-d573-4965-bdb7-30f0baf15ded" x="433" y="1" width="147" height="18" vTextAlign="Middle">
+			<expression><![CDATA[$P{prdReportNumber}]]></expression>
+		</element>
+		<element kind="textField" uuid="0ba4732e-c0de-49e4-a476-9aa7a5684148" x="683" y="1" width="100" height="18" vTextAlign="Middle">
+			<expression><![CDATA[$P{prdReportDate}]]></expression>
+		</element>
+	</title>
+	<columnHeader height="45" splitType="Stretch">
+		<element kind="rectangle" uuid="3a4f7ecf-e175-4cf5-b575-71bfdcea78e2" x="0" y="3" width="801" height="41"/>
+		<element kind="staticText" uuid="2049e7b5-9058-4a4e-a537-f102112311ce" x="0" y="4" width="20" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[No.]]></text>
+		</element>
+		<element kind="staticText" uuid="22f52434-d292-4202-ad8f-797efaa7ffd9" x="20" y="4" width="50" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Coil No.]]></text>
+		</element>
+		<element kind="staticText" uuid="e6060086-efa7-45a8-b681-dbcd57046cce" x="70" y="4" width="50" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Spec]]></text>
+		</element>
+		<element kind="staticText" uuid="3bcba47c-d1c9-4f26-9817-3409d0b57a06" x="120" y="4" width="50" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Weight]]></text>
+		</element>
+		<element kind="staticText" uuid="0ca893fd-d85d-4451-9353-3efdf482afad" x="170" y="21" width="130" height="23" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Size]]></text>
+		</element>
+		<element kind="staticText" uuid="487f6c07-4294-4f39-b385-8188a39ad873" x="300" y="21" width="80" height="23" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Check]]></text>
+		</element>
+		<element kind="staticText" uuid="ee124b6b-3abd-4277-824a-4b002d50bd9d" x="170" y="4" width="210" height="17" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Material]]></text>
+		</element>
+		<element kind="staticText" uuid="fd03982e-b581-4bab-b04e-5f49d2a7d4d2" x="380" y="4" width="50" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Slitting Size]]></text>
+		</element>
+		<element kind="staticText" uuid="2c17e0bf-b311-477e-8cbb-fdd84c2b5484" x="430" y="4" width="30" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Qty]]></text>
+		</element>
+		<element kind="staticText" uuid="197ed372-3064-4af5-bb3b-2bf337b54760" x="460" y="4" width="40" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Male Knife]]></text>
+		</element>
+		<element kind="staticText" uuid="a8e026df-08bb-4932-8883-8eb0102df21b" x="500" y="4" width="80" height="17" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Round Bar]]></text>
+		</element>
+		<element kind="staticText" uuid="4f39ed4f-118b-4776-897c-839340267afd" x="500" y="21" width="30" height="23" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Top]]></text>
+		</element>
+		<element kind="staticText" uuid="7a4e178c-1824-4e89-b0fb-bff31bef3213" x="580" y="4" width="60" height="17" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Separator]]></text>
+		</element>
+		<element kind="staticText" uuid="07d4fce9-ea68-4b9f-9446-cdf591c46cd4" x="580" y="21" width="30" height="23" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[I + II]]></text>
+		</element>
+		<element kind="staticText" uuid="8d3034dd-886a-4e0b-a83a-b8cccf160b7e" x="610" y="21" width="30" height="23" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[III]]></text>
+		</element>
+		<element kind="staticText" uuid="eb4aa6ad-7452-47ba-a31a-bee28e99ee92" x="640" y="4" width="161" height="17" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Coil Cut]]></text>
+		</element>
+		<element kind="staticText" uuid="92ab169d-a9ce-48f4-8afe-695b10534e89" x="640" y="21" width="30" height="23" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Qty]]></text>
+		</element>
+		<element kind="staticText" uuid="322e6d06-2161-4fe6-905c-118005d43b82" x="670" y="21" width="50" height="23" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Length]]></text>
+		</element>
+		<element kind="staticText" uuid="714c7517-d93b-4dd3-a740-d848aca73211" x="720" y="21" width="81" height="23" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Weight]]></text>
+		</element>
+		<element kind="staticText" uuid="56fc12ef-339e-4949-9c5d-41b67ba587e4" x="530" y="21" width="50" height="23" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Bottom]]></text>
+		</element>
+		<element kind="line" uuid="74082070-4467-4039-96ef-9c2c8b0c91a8" x="20" y="4" width="1" height="40">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="eefdaee9-c069-4e03-a2c5-8db5d9a6eeb0" x="70" y="4" width="1" height="40">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="358605bd-17db-4a81-b004-315e685f142e" x="120" y="4" width="1" height="40">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="d56ff955-d9fe-4459-a3fd-b4f030813f46" x="170" y="3" width="1" height="40">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="260a5948-d1ed-4aa7-b3bb-96d443adc1df" x="380" y="4" width="1" height="40">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="b851b5a2-a35e-4398-945b-c18cdba48358" x="430" y="4" width="1" height="40">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="a37a6e36-bc9a-4585-ac33-9887ab9dec3d" x="460" y="4" width="1" height="40">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="3900daaf-c1f6-40e4-8a0b-66a84ff6c160" x="500" y="3" width="1" height="40">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="66f8d19b-0e07-40c7-8a7c-84dc56491e93" x="580" y="3" width="1" height="40">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="8684bd1d-0497-468b-8acb-5b9803249fec" x="639" y="3" width="1" height="40">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="2e4cde20-e3eb-4c32-bcc8-af31f6f71a89" x="300" y="21" width="1" height="23">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="57d44872-c2c6-48b8-9295-78f1ee91dac9" x="530" y="21" width="1" height="23">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="3dda1a54-0cd6-47ab-854e-626bb798d68e" x="610" y="21" width="1" height="23">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="1c6e53ba-f1af-4b16-a15e-76a206db7127" x="670" y="21" width="1" height="23">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="ed652911-3d46-4da7-80e2-aaf6161a12cc" x="719" y="21" width="1" height="23">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="4d5fa579-9909-412f-8bbd-9e48b060e7a2" x="170" y="20" width="209" height="1">
+			<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="line" uuid="4c41ca79-b5dd-4904-b6f3-5dc48d1b0ff8" x="500" y="20" width="301" height="1">
+			<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="80" splitType="Stretch">
+			<element kind="rectangle" uuid="021ab055-79f1-4751-933a-f13e6d3fb653" x="0" y="0" width="800" height="76">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="textField" uuid="3f1ce515-46b4-4323-bc26-d21a3529ff9f" x="0" y="0" width="20" height="76" hTextAlign="Center">
+				<expression><![CDATA[$F{seq}]]></expression>
+			</element>
+			<element kind="textField" uuid="ffde2e3b-b5cc-4ff7-a223-2069fad99765" x="30" y="0" width="40" height="19">
+				<expression><![CDATA[$F{coilNo}]]></expression>
+			</element>
+			<element kind="textField" uuid="5342be0c-68fc-4b2c-bd18-bd2f4c5aeba1" x="80" y="0" width="38" height="18">
+				<expression><![CDATA[$F{spec}]]></expression>
+			</element>
+			<element kind="textField" uuid="2080ae3c-bc70-4367-8226-53fa546629f4" x="130" y="0" width="40" height="18">
+				<expression><![CDATA[$F{weigth}]]></expression>
+			</element>
+			<element kind="textField" uuid="4b60bf35-2bd7-4152-b9e7-6dd64475ca30" x="180" y="0" width="120" height="18">
+				<expression><![CDATA[$F{materialSize}]]></expression>
+			</element>
+			<element kind="staticText" uuid="9ad8f16b-bcb6-43f3-b489-52e74f24eb8e" x="300" y="0" width="80" height="18">
+				<text><![CDATA[___ x ___ x Coil]]></text>
+			</element>
+			<element kind="textField" uuid="1c15b8f9-34ed-4060-bcce-97ff2c45f91f" x="390" y="0" width="40" height="18">
+				<expression><![CDATA[$F{slittingSize}]]></expression>
+			</element>
+			<element kind="textField" uuid="b2ae8eaf-4a4d-458a-bfe8-584bc2bc54dc" x="440" y="0" width="20" height="18">
+				<expression><![CDATA[$F{slitQty}]]></expression>
+			</element>
+			<element kind="rectangle" uuid="d04f045d-f296-4176-9b7f-9e2ddcbf0381" x="461" y="0" width="340" height="19">
+				<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="rectangle" uuid="ccea305c-2a6e-470c-9853-a76101d402f7" x="461" y="19" width="340" height="19">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="rectangle" uuid="fe480d59-e51a-45db-bd45-542b31908711" x="461" y="38" width="340" height="19"/>
+			<element kind="rectangle" uuid="471d7d49-6c28-45ac-97bb-1c7cb945e935" x="461" y="57" width="340" height="19"/>
+			<element kind="line" uuid="2d9c10f3-7ff1-47c7-8fcc-8600465985c2" x="20" y="18" width="441" height="1">
+				<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="line" uuid="a9465c78-091c-4cbd-8498-64443bdcd383" x="20" y="0" width="1" height="76">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="bd71b8ac-d99a-46ef-88a3-d55d178581b7" x="500" y="0" width="1" height="76">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="9eb46adf-e449-4b1c-befc-251781acdf92" x="530" y="0" width="1" height="76">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="029590c8-af6e-4f78-8de5-5abf9e69ba89" x="580" y="0" width="1" height="76">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="ea8c8f47-3740-4bde-8516-2b7621c7fd73" x="610" y="0" width="1" height="76">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="d1b1fb2c-34ed-4eff-9b78-fa5e7c64ff4f" x="640" y="0" width="1" height="76">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="2dd20131-242b-43e9-8fcf-1f29459c7b50" x="670" y="0" width="1" height="76">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="e817d4ac-26e2-48ae-8f56-effc3d0f979f" x="720" y="0" width="1" height="76">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="0a17cb8e-7f71-45f2-a50f-a5f031d8df86" x="70" y="0" width="1" height="18">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="a50fd02d-721a-46b7-b526-5a4fa7fe0c09" x="120" y="0" width="1" height="18">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="35005a93-0964-42a1-8f1f-f0d5ed2c01a3" x="170" y="0" width="1" height="18">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="f501f306-7862-4467-a586-602d8403bca6" x="300" y="0" width="1" height="18">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="032a3bc6-a608-45fa-a1fc-7d62d8e0ce54" x="380" y="0" width="1" height="18">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+			<element kind="line" uuid="df7ed96b-f125-4671-8f49-0436cffaac2d" x="430" y="0" width="1" height="18">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			</element>
+		</band>
+	</detail>
+</jasperReport>

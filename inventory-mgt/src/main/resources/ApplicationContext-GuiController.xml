@@ -19,6 +19,10 @@
 	
 	</bean>
 	
+	<bean id="numToWordsConverter" class="com.pyramix.web.common.NumToWordsConverter">
+	
+	</bean>
+	
 	<bean id="serialNumberGenerator" class="com.pyramix.web.common.SerialNumberGenerator" scope="prototype" parent="basisController">
     	<property name="serialDao" ref="serialDao"></property>	
 	</bean>
@@ -43,6 +47,7 @@
     
     <bean id="processcoildReportWinController" class="com.pyramix.web.process.ProcessCoilReportController" scope="prototype" parent="basisController">
     	<property name="pdfpReportUtility" ref="pdfpReportUtility"></property>
+    	
     </bean>
     
     <bean id="jasperReportUtil" class="com.pyramix.web.common.JasperReportsUtil">
@@ -51,6 +56,7 @@
     
     <bean id="productionReportPrintControl" class="com.pyramix.web.process.ProcessCoilJasperController" scope="prototype" parent="basisController">
     	<property name="jasperReportUtil" ref="jasperReportUtil"></property>
+    	<property name="inventoryProcessDao" ref="inventoryProcessDao"></property>
     </bean>
     
     <bean id="infoProductController" class="com.pyramix.web.product.ProductController" scope="prototype" parent="basisController">
@@ -77,6 +83,7 @@
     	<property name="serialNumberGenerator" ref="serialNumberGenerator"></property>
     	<property name="companyDao" ref="companyDao"></property>
     	<property name="suratjalanDao" ref="suratjalanDao"></property>
+    	<property name="numToWordsConverter" ref="numToWordsConverter"></property>
     </bean>
     
     <bean id="infoCustomerController" class="com.pyramix.web.customer.CustomerController" scope="prototype" parent="basisController">

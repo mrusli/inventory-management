@@ -1,0 +1,257 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="ReportProduction_01" language="java" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a2190db0-23ae-4902-ab65-27f23aa58732">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="customerName" class="java.lang.String"/>
+	<parameter name="prdReportNumber" class="java.lang.String"/>
+	<parameter name="prdReportDate" class="java.lang.String"/>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="seq" class="java.lang.String"/>
+	<field name="coilNo" class="java.lang.String"/>
+	<field name="spec" class="java.lang.String"/>
+	<field name="weigth" class="java.lang.String"/>
+	<field name="shearingSize" class="java.lang.String"/>
+	<field name="sheet" class="java.lang.String"/>
+	<field name="weigthPcs" class="java.lang.String"/>
+	<background splitType="Stretch"/>
+	<title height="68" splitType="Stretch">
+		<element kind="rectangle" uuid="03526936-306a-4f66-8c34-b64cf27f63e3" mode="Transparent" x="280" y="0" width="521" height="20"/>
+		<element kind="rectangle" uuid="4b67bd85-57d2-4f67-a99d-6b34f6be117e" mode="Transparent" x="280" y="20" width="521" height="21"/>
+		<element kind="rectangle" uuid="bf3550e2-aa88-4767-bf3f-396c39fe7967" mode="Transparent" x="-10" y="0" width="811" height="63"/>
+		<element kind="staticText" uuid="a0e0ecd5-13ba-4278-9514-cc2af4310a8c" x="0" y="0" width="219" height="19" vTextAlign="Middle">
+			<text><![CDATA[PT.WAJASENTOSA METALINDO]]></text>
+		</element>
+		<element kind="staticText" uuid="0a8149d2-446f-465e-aa38-ce09a1e69f6c" x="290" y="0" width="140" height="19" vTextAlign="Middle">
+			<text><![CDATA[PRODUCTION REPORT NO:]]></text>
+		</element>
+		<element kind="staticText" uuid="0e1b90e6-a464-4174-a266-eda5be5704c7" x="290" y="20" width="60" height="20" vTextAlign="Middle">
+			<text><![CDATA[Customer:]]></text>
+		</element>
+		<element kind="staticText" uuid="5fa37725-fb96-42cb-aa24-28a0b5bc994b" x="611" y="0" width="70" height="20" vTextAlign="Middle">
+			<text><![CDATA[Process Date:]]></text>
+		</element>
+		<element kind="staticText" uuid="3a21c2dc-5c1d-4f55-9b84-6ac25b69123a" x="610" y="20" width="71" height="20" vTextAlign="Middle">
+			<text><![CDATA[Report By:]]></text>
+		</element>
+		<element kind="staticText" uuid="81d6b812-cba9-4a7f-bd38-e0a0b1c881c6" x="0" y="20" width="219" height="43" fontSize="24.0" hTextAlign="Left">
+			<text><![CDATA[Production Report]]></text>
+		</element>
+		<element kind="textField" uuid="88cd4168-8a1d-4fa4-9d9e-54cb887faecb" x="342" y="22" width="258" height="16" vTextAlign="Middle">
+			<expression><![CDATA[$P{customerName}]]></expression>
+		</element>
+		<element kind="textField" uuid="b7959773-d573-4965-bdb7-30f0baf15ded" x="433" y="1" width="147" height="18" vTextAlign="Middle">
+			<expression><![CDATA[$P{prdReportNumber}]]></expression>
+		</element>
+		<element kind="textField" uuid="0ba4732e-c0de-49e4-a476-9aa7a5684148" x="683" y="1" width="100" height="18" vTextAlign="Middle">
+			<expression><![CDATA[$P{prdReportDate}]]></expression>
+		</element>
+	</title>
+	<columnHeader height="49" splitType="Stretch">
+		<element kind="rectangle" uuid="f8dc6b77-ba83-4048-88aa-60d7a690458c" x="-10" y="2" width="811" height="42"/>
+		<element kind="staticText" uuid="b1611124-845d-4967-854d-d89eb70c1295" x="370" y="4" width="120" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Pieces]]></text>
+		</element>
+		<element kind="staticText" uuid="3bcba47c-d1c9-4f26-9817-3409d0b57a06" x="150" y="4" width="50" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Weight]]></text>
+		</element>
+		<element kind="staticText" uuid="f36174ae-1913-42ea-b43f-1cd6959ced35" x="340" y="24" width="20" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[W]]></text>
+		</element>
+		<element kind="staticText" uuid="bc72311c-7aba-40db-9de3-815d529fc8c1" x="210" y="4" width="90" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Shearing Size]]></text>
+		</element>
+		<element kind="staticText" uuid="2049e7b5-9058-4a4e-a537-f102112311ce" x="-10" y="4" width="30" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[No.]]></text>
+		</element>
+		<element kind="staticText" uuid="91471e3c-5f4f-4497-b2e6-665f9cc268a0" x="310" y="24" width="20" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[T]]></text>
+		</element>
+		<element kind="staticText" uuid="e6060086-efa7-45a8-b681-dbcd57046cce" x="90" y="4" width="50" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Spec]]></text>
+		</element>
+		<element kind="staticText" uuid="22f52434-d292-4202-ad8f-797efaa7ffd9" x="30" y="4" width="50" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Coil No.]]></text>
+		</element>
+		<element kind="staticText" uuid="e7789e99-4939-4015-8234-393809ba092f" x="310" y="4" width="50" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Check]]></text>
+		</element>
+		<element kind="staticText" uuid="5d2a56ea-4145-4092-9494-1f8beb065600" x="370" y="24" width="80" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Pallet]]></text>
+		</element>
+		<element kind="staticText" uuid="1cd8a1d5-d0fc-4db3-af0d-83a49635308c" x="450" y="24" width="40" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[TOTAL]]></text>
+		</element>
+		<element kind="staticText" uuid="b143d073-6df5-4159-bacd-8df8931cacba" x="500" y="4" width="108" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Weight]]></text>
+		</element>
+		<element kind="staticText" uuid="705749ab-068d-466d-9a0a-5465f2bb57de" x="500" y="24" width="30" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Pcs]]></text>
+		</element>
+		<element kind="staticText" uuid="06a0873b-8274-481a-809d-34e59f94288c" x="530" y="24" width="80" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Pallet]]></text>
+		</element>
+		<element kind="staticText" uuid="b3cfff4b-b468-4031-a9e4-72f3acc0560e" x="620" y="4" width="180" height="40" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[Remarks]]></text>
+		</element>
+		<element kind="line" uuid="d833d5a1-adee-4e7c-ad63-966101fa5827" x="610" y="2" width="1" height="40" direction="BottomUp">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<pen lineWidth="1.0"/>
+		</element>
+		<element kind="line" uuid="6c56905e-9a2e-4cd1-8514-25279b7f5368" x="490" y="3" width="1" height="40" direction="BottomUp">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<pen lineWidth="1.0"/>
+		</element>
+		<element kind="line" uuid="ce3d3a9e-4a7c-4846-8756-41b814274ffd" x="360" y="3" width="1" height="40" direction="BottomUp">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<pen lineWidth="1.0"/>
+		</element>
+		<element kind="line" uuid="ab4f1faf-3f87-472c-a957-dd0d33e31c33" x="300" y="3" width="1" height="40" direction="BottomUp">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<pen lineWidth="1.0"/>
+		</element>
+		<element kind="line" uuid="68a7f0c6-bd9e-41a0-a86b-f8b5bf952632" x="200" y="3" width="1" height="40" direction="BottomUp">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<pen lineWidth="1.0"/>
+		</element>
+		<element kind="line" uuid="3ff5d113-0b9c-445d-a6db-c05b3c2aea3a" x="140" y="3" width="1" height="40" direction="BottomUp">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<pen lineWidth="1.0"/>
+		</element>
+		<element kind="line" uuid="cb7b74e5-d525-4b6d-a8c6-64ec18d8c4a0" x="80" y="3" width="1" height="40" direction="BottomUp">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<pen lineWidth="1.0"/>
+		</element>
+		<element kind="line" uuid="48b715c5-dc65-40ba-af3c-ee5344a9e718" x="20" y="2" width="1" height="40" direction="BottomUp">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<pen lineWidth="1.0"/>
+		</element>
+		<element kind="line" uuid="b31708a5-6fe1-424e-aa86-f61568550264" x="330" y="24" width="1" height="20" direction="BottomUp">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<pen lineWidth="1.0"/>
+		</element>
+		<element kind="line" uuid="38931c74-0360-4915-bf63-d0a06ecd468a" x="450" y="24" width="1" height="20" direction="BottomUp">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<pen lineWidth="1.0"/>
+		</element>
+		<element kind="line" uuid="ad6342cb-36da-4da7-985f-219c863c9334" x="530" y="24" width="1" height="20" direction="BottomUp">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<pen lineWidth="1.0"/>
+		</element>
+		<element kind="line" uuid="897f45e5-5d28-4160-86f5-464e1f5b503d" x="300" y="24" width="189" height="1">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="line" uuid="de044939-bec0-43f5-be86-7b42cc826848" x="491" y="24" width="119" height="1">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="62" splitType="Stretch">
+			<element kind="rectangle" uuid="4b124416-e982-4066-a102-aa20b4100379" x="-10" y="0" width="811" height="60"/>
+			<element kind="line" uuid="f9ca1a6b-3288-4ff7-9324-55732b3fef09" x="21" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="f7791579-4ff4-42c5-847a-b735fd21fe8d" x="80" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="eac3e182-beda-446f-907a-b4478f525919" x="140" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="d0a84466-cf54-455f-91c1-9984683d606f" x="200" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="c256a1f3-32b3-42c0-905d-d3e0a501a650" x="300" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="4c0f018e-84d4-4240-9b47-61ef839e0daf" x="330" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="2f2b293b-08a8-4923-81a7-31f18421fcdf" x="360" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="0580e62f-b660-4d50-b57b-fd8e48685c38" x="390" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="83ff6e58-71e2-4685-9104-4ce8e66d407d" x="410" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="744f61fa-d3f0-4249-8d98-a676dc1c0595" x="430" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="0b5bff45-d19c-400c-a8d7-ee7c01b36f02" x="450" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="d7814c41-8a18-4174-9d47-fed23ecd172c" x="490" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="7a77ff40-22fa-4327-8b6f-1c1c8ac90648" x="530" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="d2d71993-1a07-4f8b-b69d-ba56f1b11afa" x="550" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="99b3bf9a-9821-4040-af90-f81b22fd701b" x="570" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="29081b58-4050-4c29-a84d-e8e5bd743f7e" x="590" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="22b1c49f-4e2b-4ddf-89b0-b93d91d86c64" x="610" y="0" width="1" height="60" direction="BottomUp">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<pen lineWidth="1.0"/>
+			</element>
+			<element kind="line" uuid="057245ac-b795-4f86-afc7-c0b2218af47c" x="361" y="30" width="89" height="1">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="line" uuid="d4434705-a66e-4d43-b5ff-c147f2cb1c5f" x="531" y="30" width="79" height="1">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="textField" uuid="aadd005e-c50f-4120-b804-8d49502bda2c" x="-10" y="10" width="30" height="30" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{seq}]]></expression>
+			</element>
+			<element kind="textField" uuid="0f630cfe-4dd7-4480-8253-418a86020024" x="26" y="10" width="54" height="30" vTextAlign="Middle">
+				<expression><![CDATA[$F{coilNo}]]></expression>
+			</element>
+			<element kind="textField" uuid="f9abb8d7-7ae9-4888-a804-0c32551e76c8" x="85" y="9" width="55" height="30" vTextAlign="Middle">
+				<expression><![CDATA[$F{spec}]]></expression>
+			</element>
+			<element kind="textField" uuid="88d6ff4c-5b7e-4a1b-85e0-8636aaeaf5f8" x="150" y="10" width="50" height="30" vTextAlign="Middle">
+				<expression><![CDATA[$F{weigth}]]></expression>
+			</element>
+			<element kind="textField" uuid="e1e3a48b-4381-4476-ab0f-7efee21eaa68" x="210" y="10" width="90" height="30" vTextAlign="Middle">
+				<expression><![CDATA[$F{shearingSize}]]></expression>
+			</element>
+			<element kind="textField" uuid="b8f6f6a2-2390-49d1-b285-dc00b4ace485" x="370" y="0" width="21" height="30" vTextAlign="Middle">
+				<expression><![CDATA[$F{sheet}]]></expression>
+			</element>
+			<element kind="textField" uuid="76967236-00d6-4924-863c-f9213a729cc5" x="500" y="0" width="31" height="30" vTextAlign="Middle">
+				<expression><![CDATA[$F{weigthPcs}]]></expression>
+			</element>
+		</band>
+	</detail>
+</jasperReport>

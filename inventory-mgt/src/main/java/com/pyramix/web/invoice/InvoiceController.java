@@ -44,6 +44,7 @@ import com.pyramix.persistence.customer.dao.CustomerDao;
 import com.pyramix.persistence.invoice.dao.InvoiceDao;
 import com.pyramix.persistence.suratjalan.dao.SuratJalanDao;
 import com.pyramix.web.common.GFCBaseController;
+import com.pyramix.web.common.NumToWordsConverter;
 import com.pyramix.web.common.SerialNumberGenerator;
 
 import lombok.extern.slf4j.Slf4j;
@@ -61,6 +62,7 @@ public class InvoiceController extends GFCBaseController {
 	private SerialNumberGenerator serialNumberGenerator;
 	private CompanyDao companyDao;
 	private SuratJalanDao suratjalanDao;
+	private NumToWordsConverter numToWordsConverter;
 	
 	private Combobox customerCombobox, suratjalanCombobox;
 	private Listbox invoiceListbox, invoiceProductListbox, palletListbox;
@@ -1328,6 +1330,11 @@ public class InvoiceController extends GFCBaseController {
 		saveAddPltButton.setVisible(true);
 	}
 	
+	@SuppressWarnings("static-access")
+	public void onClick$printJasperReportButton(Event event) throws Exception {
+		log.info(getNumToWordsConverter().angkaToTerbilang((long) 11223993));
+	}
+	
 	protected void modifToSave(Button button) {
 		button.setIconSclass("z-icon-floppy-disk");
 		button.setStyle("background-color:var(--bs-primary);");
@@ -1376,6 +1383,14 @@ public class InvoiceController extends GFCBaseController {
 
 	public void setSuratjalanDao(SuratJalanDao suratjalanDao) {
 		this.suratjalanDao = suratjalanDao;
+	}
+
+	public NumToWordsConverter getNumToWordsConverter() {
+		return numToWordsConverter;
+	}
+
+	public void setNumToWordsConverter(NumToWordsConverter numToWordsConverter) {
+		this.numToWordsConverter = numToWordsConverter;
 	}
 	
 }
