@@ -327,7 +327,12 @@
 								sclass="compButton"
 								style="background-color:var(--bs-primary)">
 							</button>
-
+							<button id="printButton" label="Simpan"
+								visible="false" iconSclass="z-icon-floppy-disk"
+								sclass="compButton"
+								style="background-color:var(--bs-primary)">
+							</button>
+							<button id="printJasperReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton"></button>
 						</n:div>
 					</n:div>				
 				</tabpanel>
