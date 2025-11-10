@@ -1,0 +1,184 @@
+<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<jasperReport name="SuratJalan-KRG" language="java" columnCount="1" pageWidth="595" pageHeight="842" orientation="Landscape" columnWidth="565" leftMargin="15" rightMargin="15" topMargin="20" bottomMargin="20" uuid="de854a8a-87cb-4ac6-bc93-0d1fb3c54210">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="SuratJalanNo" class="java.lang.String"/>
+	<parameter name="SuratJalanTgl" class="java.lang.String"/>
+	<parameter name="CustomerName" class="java.lang.String"/>
+	<parameter name="CustomerAddr01" class="java.lang.String"/>
+	<parameter name="CustomerAddr02" class="java.lang.String"/>
+	<parameter name="NoPolisi" class="java.lang.String"/>
+	<parameter name="NoPesanan" class="java.lang.String"/>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="noCoil" class="java.lang.String"/>
+	<field name="spec" class="java.lang.String"/>
+	<field name="ukuran" class="java.lang.String"/>
+	<field name="beratKg" class="java.lang.String"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<background splitType="Stretch"/>
+	<title height="112" splitType="Stretch">
+		<element kind="staticText" uuid="2d496d28-95ef-4cb5-83aa-7656aae6124f" x="0" y="0" width="230" height="20" fontSize="14.0" vTextAlign="Middle">
+			<text><![CDATA[PT.WAJASENTOSA METALINDO]]></text>
+		</element>
+		<element kind="staticText" uuid="900d0fed-7983-4006-acb4-0a8778f872ed" x="0" y="20" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Jl. Permata Raya Kav. C-2B, Kawasan Industri KIIC]]></text>
+		</element>
+		<element kind="staticText" uuid="9659281f-fd8e-4841-b56d-c50e33411be9" x="0" y="30" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Jalan Tol Jakarta - Cikampek Km.47, Karawang Barat]]></text>
+		</element>
+		<element kind="staticText" uuid="299b6f58-a4fa-4cfd-9fe3-43fc6ba1c644" x="0" y="40" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Karawang 41361, Jawa Barat, Indonesia]]></text>
+		</element>
+		<element kind="staticText" uuid="f495a937-036e-4195-a6d3-a4864f87a237" x="0" y="50" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Telp.021-890 2556, 890 2557, 0267-644 879 Fax.0267-644 881]]></text>
+		</element>
+		<element kind="staticText" uuid="a1f1f204-9257-49a2-ba7e-a433fd85c211" x="0" y="60" width="100" height="20" bold="true" vTextAlign="Middle">
+			<text><![CDATA[SURAT JALAN NO.:]]></text>
+		</element>
+		<element kind="textField" uuid="ce8551ee-39e4-42c2-a825-abf9d4153429" x="100" y="60" width="90" height="20" bold="true" vTextAlign="Middle">
+			<expression><![CDATA[$P{SuratJalanNo}]]></expression>
+		</element>
+		<element kind="staticText" uuid="5e98ec8e-d1f9-4330-a047-58db2d3656ce" x="260" y="0" width="60" height="20">
+			<text><![CDATA[Karawang, ]]></text>
+		</element>
+		<element kind="textField" uuid="f74b21d4-2538-4817-bfb1-26143a72e55f" x="320" y="0" width="230" height="20">
+			<expression><![CDATA[$P{SuratJalanTgl}]]></expression>
+		</element>
+		<element kind="staticText" uuid="01376ef9-9784-4c2c-93ed-ba9c8c151bee" x="260" y="20" width="60" height="20">
+			<text><![CDATA[Kepada Yth.:]]></text>
+		</element>
+		<element kind="textField" uuid="d1e9a478-d1f3-44a3-aee3-7905eeef70b3" x="320" y="20" width="230" height="20">
+			<expression><![CDATA[$P{CustomerName}]]></expression>
+		</element>
+		<element kind="textField" uuid="7708be76-4ea8-4c83-9f14-f9ac8f75ceb6" x="320" y="40" width="230" height="20">
+			<expression><![CDATA[$P{CustomerAddr01}]]></expression>
+		</element>
+		<element kind="textField" uuid="2da0c498-f01a-426b-931b-78ef21a207f4" x="320" y="60" width="230" height="20">
+			<expression><![CDATA[$P{CustomerAddr02}]]></expression>
+		</element>
+		<element kind="staticText" uuid="17675ae3-55db-402a-9c71-ee30158345ec" x="0" y="90" width="200" height="20" fontSize="8.0">
+			<text><![CDATA[Bersama ini kami kirimkan dengan kendaraan No.Pol:]]></text>
+		</element>
+		<element kind="textField" uuid="d940be37-7a18-4d02-ad4f-f2355157723c" x="200" y="90" width="100" height="20" fontSize="8.0">
+			<expression><![CDATA[$P{NoPolisi}]]></expression>
+		</element>
+		<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+	</title>
+	<columnHeader height="22" splitType="Stretch">
+		<element kind="rectangle" uuid="5a8d5d38-41fa-417c-8752-e482e4c509f3" x="1" y="0" width="549" height="20" backcolor="#E6E6E6"/>
+		<element kind="staticText" uuid="bf8a59e4-e2dd-44dc-ba1f-fda60727fe90" x="10" y="0" width="50" height="20" vTextAlign="Middle">
+			<text><![CDATA[NO.COIL]]></text>
+		</element>
+		<element kind="staticText" uuid="1e744745-addb-44ee-a0f7-5206a848fe30" x="65" y="0" width="94" height="20" vTextAlign="Middle">
+			<text><![CDATA[SPEC]]></text>
+		</element>
+		<element kind="staticText" uuid="b6d41f33-30ba-4a9b-b1e1-696e53438897" x="170" y="0" width="150" height="20" vTextAlign="Middle">
+			<text><![CDATA[UKURAN]]></text>
+		</element>
+		<element kind="staticText" uuid="0f1267e5-d0e4-47f2-97b5-4f0ef6f6e7af" x="340" y="0" width="100" height="20" vTextAlign="Middle">
+			<text><![CDATA[JUMLAH]]></text>
+		</element>
+		<element kind="staticText" uuid="eb263a5d-c5ae-4a85-b6f3-d2c0a4fab501" x="450" y="1" width="100" height="20" vTextAlign="Middle">
+			<text><![CDATA[KET.]]></text>
+		</element>
+		<element kind="line" uuid="f67f85b6-f202-486b-88e9-683988ca1e5d" x="439" y="1" width="1" height="19">
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="line" uuid="8f739b10-0c29-4ece-958f-2da213408e25" x="329" y="1" width="1" height="18">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="d43024d7-8d72-4d95-9b55-aaf305d42aa1" x="160" y="1" width="1" height="18">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+		<element kind="line" uuid="ef5c9c40-fa0a-4273-8a22-43bd8ce5dc6f" x="60" y="1" width="1" height="18">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.width" value="px"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<element kind="textField" uuid="4dd2460d-cf83-4202-9691-1af565be7983" x="10" y="0" width="50" height="20">
+				<expression><![CDATA[$F{noCoil}]]></expression>
+			</element>
+			<element kind="textField" uuid="967c8157-db09-4104-b74a-b24f59c662e1" x="65" y="0" width="94" height="20">
+				<expression><![CDATA[$F{spec}]]></expression>
+			</element>
+			<element kind="textField" uuid="68a69cfb-43a6-4a8c-a678-00e1f368fbb8" x="170" y="0" width="150" height="20">
+				<expression><![CDATA[$F{ukuran}]]></expression>
+			</element>
+			<element kind="textField" uuid="2c690248-5324-4250-841b-92be34936e6f" x="340" y="-1" width="90" height="20">
+				<expression><![CDATA[$F{beratKg}]]></expression>
+			</element>
+			<element kind="line" uuid="b08b5fad-6464-4d5a-a718-0be3f1707ab5" x="0" y="20" width="550" height="1">
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="line" uuid="10f7a26c-d25d-424d-96d7-918b2f242d80" x="0" y="0" width="1" height="20">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="line" uuid="040a914e-12b3-4c39-9d4f-fe4f660fc864" x="549" y="1" width="1" height="19">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="textField" uuid="ef6df978-402a-4050-b863-3fcb692119dc" x="450" y="0" width="94" height="21">
+				<expression><![CDATA[$F{keterangan}]]></expression>
+			</element>
+			<element kind="line" uuid="ee6052b6-3e39-4a2e-8d01-c07e20f22d89" x="60" y="0" width="1" height="19">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="line" uuid="e8ae7f4b-235a-4d94-b8d3-84fdaea409c3" x="160" y="0" width="1" height="19">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="line" uuid="6c2748d2-2b70-4591-a70f-279ffce0875f" x="329" y="0" width="1" height="19">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+			<element kind="line" uuid="75ba0f37-4060-4bf1-b721-6d045eb5cc5d" x="439" y="0" width="1" height="19">
+				<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			</element>
+		</band>
+	</detail>
+	<summary height="102" splitType="Stretch">
+		<element kind="staticText" uuid="20895be5-bff1-421d-a2dc-d8ae6785eb00" x="0" y="2" width="180" height="30">
+			<text><![CDATA[Sesuai dengan pesanan / DO No.:]]></text>
+		</element>
+		<element kind="textField" uuid="373b062a-12d2-4d3a-9ad4-b73b5afa9d2b" x="180" y="2" width="100" height="30">
+			<expression><![CDATA[$P{NoPesanan}]]></expression>
+		</element>
+		<element kind="staticText" uuid="1357458d-1b0e-4623-acb5-0ed31b481fb5" x="0" y="30" width="110" height="10" fontSize="6.0" hTextAlign="Center">
+			<text><![CDATA[Barang-barang telah diterima]]></text>
+		</element>
+		<element kind="staticText" uuid="d82525cd-206c-4e35-94e6-844ac2b7fa76" x="0" y="40" width="110" height="10" fontSize="6.0" hTextAlign="Center">
+			<text><![CDATA[dalam keadaan baik dan benar]]></text>
+		</element>
+		<element kind="staticText" uuid="e294c0c0-99ca-42c2-8442-f25018770c1f" x="0" y="80" width="110" height="22" hTextAlign="Center">
+			<text><![CDATA[(.................................)]]></text>
+		</element>
+		<element kind="staticText" uuid="0ea84aa4-2a3f-429e-acc9-5ee847538d0d" x="210" y="51" width="130" height="10" fontSize="6.0" hTextAlign="Center">
+			<text><![CDATA[BARANG YANG TELAH DIAMBIL/DIKIRIM]]></text>
+		</element>
+		<element kind="staticText" uuid="05adc904-7a66-4f53-a824-fe4053471bba" x="210" y="61" width="130" height="10" fontSize="6.0" hTextAlign="Center">
+			<text><![CDATA[TIDAK DAPAT DITUKAR/DIKEMBALIKAN !!!]]></text>
+		</element>
+		<element kind="staticText" uuid="b74545fe-0b53-4053-ae8e-d021a43525df" x="391" y="31" width="110" height="10" fontSize="6.0" hTextAlign="Center">
+			<text><![CDATA[Hormat Kami,]]></text>
+		</element>
+		<element kind="staticText" uuid="efef2005-04e5-478d-8ed7-a1c8114861c6" x="380" y="41" width="130" height="20" fontSize="8.0" bold="true" hTextAlign="Center">
+			<text><![CDATA[PT. WAJASENTOSA METALINDO]]></text>
+		</element>
+	</summary>
+</jasperReport>

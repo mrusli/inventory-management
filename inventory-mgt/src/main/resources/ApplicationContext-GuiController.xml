@@ -66,6 +66,11 @@
     	<property name="suratjalanDao" ref="suratjalanDao"></property>
     </bean>
     
+    <bean id="suratjalanPrintControl" class="com.pyramix.web.suratjalan.SuratJalanPrintController" scope="prototype" parent="basisController">
+    	<property name="jasperReportUtil" ref="jasperReportUtil"></property>
+    
+    </bean>
+    
     <bean id="infoInvoiceController" class="com.pyramix.web.invoice.InvoiceController" scope="prototype" parent="basisController">
     	<property name="invoiceDao" ref="invoiceDao"></property>
     	<property name="customerDao" ref="customerDao"></property>

@@ -3,8 +3,11 @@ package com.pyramix.web.suratjalan;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -21,6 +24,7 @@ import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
 
 import com.pyramix.domain.entity.Enm_StatusDocument;
 import com.pyramix.domain.entity.Enm_StatusProcess;
@@ -619,6 +623,19 @@ public class SuratJalanController extends GFCBaseController {
 		saveAddButton.setVisible(true);
 		
 		displaySuratJalan();
+	}
+	
+	public void onClick$printJasperReportButton(Event event) throws Exception {
+		log.info("printJasperReportButton aclick");
+		
+		Map<String, Ent_SuratJalan> arg = 
+				Collections.singletonMap("currSuratJalan", currSuratJalan);
+		
+		Window suratjalanReportPrintWin =
+				(Window) Executions.createComponents(
+						"~./src/info_suratjalan_jasper.zul", null, arg);
+		
+		suratjalanReportPrintWin.doModal();		
 	}
 	
 	protected void modifToSave(Button button) {

@@ -70,6 +70,7 @@
 					</listhead>
 				</listbox>
 				<n:div sclass="mt-3">
+					<button id="printJasperReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton"></button>
 					<button id="cancelAddButton" label="Batal" visible="false" iconSclass="z-icon-trash" sclass="compButton" style="background-color:var(--bs-warning)"></button>
 					<button id="saveAddButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-disk" sclass="compButton" style="background-color:var(--bs-primary)"></button>				
 				</n:div>
