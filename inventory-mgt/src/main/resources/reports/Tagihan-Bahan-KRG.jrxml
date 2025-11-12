@@ -1,0 +1,110 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="Tagihan-KRG" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f754e02a-a6de-4ede-9f92-f3d17b6452ec">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<parameter name="InvoiceNo" class="java.lang.String"/>
+	<parameter name="InvoiceTgl" class="java.lang.String"/>
+	<parameter name="CustomerName" class="java.lang.String"/>
+	<parameter name="CustomerAddr1" class="java.lang.String"/>
+	<parameter name="CustomerAddr2" class="java.lang.String"/>
+	<query language="sql"><![CDATA[]]></query>
+	<field name="suratJalanNo" class="java.lang.String"/>
+	<field name="suratJalanTgl" class="java.lang.String"/>
+	<field name="keterangan" class="java.lang.String"/>
+	<field name="pcs" class="java.lang.String"/>
+	<field name="rpPallet" class="java.lang.String"/>
+	<field name="jumlah" class="java.lang.String"/>
+	<field name="marking" class="java.lang.String"/>
+	<background splitType="Stretch"/>
+	<title height="99" splitType="Stretch">
+		<element kind="staticText" uuid="2d496d28-95ef-4cb5-83aa-7656aae6124f" x="0" y="0" width="190" height="20" fontSize="12.0" vTextAlign="Middle">
+			<text><![CDATA[PT.WAJASENTOSA METALINDO]]></text>
+		</element>
+		<element kind="staticText" uuid="900d0fed-7983-4006-acb4-0a8778f872ed" x="0" y="20" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Jl. Permata Raya Kav. C-2B, Kawasan Industri KIIC]]></text>
+		</element>
+		<element kind="staticText" uuid="9659281f-fd8e-4841-b56d-c50e33411be9" x="0" y="30" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Jalan Tol Jakarta - Cikampek Km.47, Karawang Barat]]></text>
+		</element>
+		<element kind="staticText" uuid="299b6f58-a4fa-4cfd-9fe3-43fc6ba1c644" x="0" y="40" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Karawang 41361, Jawa Barat, Indonesia]]></text>
+		</element>
+		<element kind="staticText" uuid="f495a937-036e-4195-a6d3-a4864f87a237" x="0" y="50" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Telp.021-890 2556, 890 2557, 0267-644 879 Fax.0267-644 881]]></text>
+		</element>
+		<element kind="staticText" uuid="a1f1f204-9257-49a2-ba7e-a433fd85c211" x="0" y="60" width="100" height="20" bold="true" vTextAlign="Middle">
+			<text><![CDATA[INVOICE NO.:]]></text>
+		</element>
+		<element kind="staticText" uuid="5e98ec8e-d1f9-4330-a047-58db2d3656ce" x="280" y="0" width="60" height="20">
+			<text><![CDATA[Karawang, ]]></text>
+		</element>
+		<element kind="staticText" uuid="01376ef9-9784-4c2c-93ed-ba9c8c151bee" x="280" y="20" width="60" height="20">
+			<text><![CDATA[Kepada Yth.:]]></text>
+		</element>
+		<element kind="textField" uuid="7fe53d0f-dcef-446a-b324-9e2840e0a8cd" x="100" y="60" width="90" height="20" vTextAlign="Middle">
+			<expression><![CDATA[$P{InvoiceNo}]]></expression>
+		</element>
+		<element kind="textField" uuid="dbfa0062-7db4-43a4-b204-c526455c35f8" x="340" y="0" width="100" height="20">
+			<expression><![CDATA[$P{InvoiceTgl}]]></expression>
+		</element>
+		<element kind="textField" uuid="4fc71c3e-a93f-405e-bcdc-06661f418dea" x="340" y="20" width="210" height="20">
+			<expression><![CDATA[$P{CustomerName}]]></expression>
+		</element>
+		<element kind="textField" uuid="e7acc3f6-b0f7-4315-ad74-884735c59633" x="340" y="40" width="210" height="20">
+			<expression><![CDATA[$P{CustomerAddr1}]]></expression>
+		</element>
+		<element kind="textField" uuid="6ec0423b-b00b-419e-8ab8-2666f89842f6" x="340" y="60" width="210" height="20">
+			<expression><![CDATA[$P{CustomerAddr2}]]></expression>
+		</element>
+	</title>
+	<columnHeader height="38" splitType="Stretch">
+		<element kind="staticText" uuid="b04e4916-6850-490d-8053-3835cbaadeed" x="402" y="4" width="50" height="30">
+			<text><![CDATA[Rp/Pallet]]></text>
+		</element>
+		<element kind="staticText" uuid="fbc0e092-9ada-43ad-907a-57c33c3d5292" x="142" y="4" width="60" height="30">
+			<text><![CDATA[No.Coil]]></text>
+		</element>
+		<element kind="staticText" uuid="73c9c43f-afca-4f72-ac67-51ba3af7f164" x="210" y="4" width="142" height="30">
+			<text><![CDATA[Keterangan]]></text>
+		</element>
+		<element kind="staticText" uuid="57289889-219b-4c34-b741-88152b924dc1" x="82" y="4" width="60" height="30">
+			<text><![CDATA[Tgl]]></text>
+		</element>
+		<element kind="staticText" uuid="f550828f-3f8e-4d57-9f4f-517a96d3db97" x="0" y="4" width="80" height="30">
+			<text><![CDATA[Surat-Jalan]]></text>
+		</element>
+		<element kind="staticText" uuid="459b7ac7-7f90-4b99-85ee-3bd8dff1a999" x="352" y="4" width="50" height="30">
+			<text><![CDATA[Pcs]]></text>
+		</element>
+		<element kind="staticText" uuid="196a1940-bee5-49bd-a129-319e8a42d13f" x="460" y="4" width="70" height="30">
+			<text><![CDATA[Jumlah]]></text>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="41" splitType="Stretch">
+			<element kind="textField" uuid="a9c0ff9b-dec1-45c0-9171-247cbb257551" x="0" y="0" width="80" height="30">
+				<expression><![CDATA[$F{suratJalanNo}]]></expression>
+			</element>
+			<element kind="textField" uuid="dad0c590-31ed-4374-8944-85e6ee47538d" x="80" y="0" width="60" height="30">
+				<expression><![CDATA[$F{suratJalanTgl}]]></expression>
+			</element>
+			<element kind="textField" uuid="84f83662-07f2-415c-aa48-f200ed49b4dc" x="210" y="0" width="143" height="30">
+				<expression><![CDATA[$F{keterangan}]]></expression>
+			</element>
+			<element kind="textField" uuid="3c46df8a-dbd8-4e06-a919-73958385a5f8" x="353" y="0" width="50" height="30">
+				<expression><![CDATA[$F{pcs}]]></expression>
+			</element>
+			<element kind="textField" uuid="bf36ea37-4340-43ae-8efa-f5a9ef622dc9" x="403" y="0" width="50" height="30" hTextAlign="Right">
+				<expression><![CDATA[$F{rpPallet}]]></expression>
+			</element>
+			<element kind="textField" uuid="fe50bdd0-1e91-4c14-8371-bcab0ca415b5" x="453" y="0" width="77" height="30" hTextAlign="Right">
+				<expression><![CDATA[$F{jumlah}]]></expression>
+			</element>
+			<element kind="textField" uuid="4e05d214-be3e-4825-99c0-30cf574268ac" x="140" y="0" width="63" height="30">
+				<expression><![CDATA[$F{marking}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="45" splitType="Stretch"/>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="42" splitType="Stretch"/>
+</jasperReport>

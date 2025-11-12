@@ -1,0 +1,77 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="Kwitansi-KRG" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="266efeeb-e10e-4396-9840-a05026e11a8d">
+	<parameter name="kwitansiNo" class="java.lang.String"/>
+	<parameter name="customerName" class="java.lang.String"/>
+	<parameter name="jumlahEjakan" class="java.lang.String"/>
+	<parameter name="untukPembayaran" class="java.lang.String"/>
+	<parameter name="sejumlah" class="java.lang.String"/>
+	<parameter name="kwitansiTgl" class="java.lang.String"/>
+	<query language="sql"><![CDATA[]]></query>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="staticText" uuid="2d496d28-95ef-4cb5-83aa-7656aae6124f" x="0" y="0" width="190" height="20" fontSize="12.0" vTextAlign="Middle">
+			<text><![CDATA[PT.WAJASENTOSA METALINDO]]></text>
+		</element>
+		<element kind="staticText" uuid="900d0fed-7983-4006-acb4-0a8778f872ed" x="0" y="20" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Jl. Permata Raya Kav. C-2B, Kawasan Industri KIIC]]></text>
+		</element>
+		<element kind="staticText" uuid="9659281f-fd8e-4841-b56d-c50e33411be9" x="0" y="30" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Jalan Tol Jakarta - Cikampek Km.47, Karawang Barat]]></text>
+		</element>
+		<element kind="staticText" uuid="299b6f58-a4fa-4cfd-9fe3-43fc6ba1c644" x="0" y="40" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Karawang 41361, Jawa Barat, Indonesia]]></text>
+		</element>
+		<element kind="staticText" uuid="f495a937-036e-4195-a6d3-a4864f87a237" x="0" y="50" width="190" height="10" fontSize="6.0">
+			<text><![CDATA[Telp.021-890 2556, 890 2557, 0267-644 879 Fax.0267-644 881]]></text>
+		</element>
+		<element kind="staticText" uuid="a1f1f204-9257-49a2-ba7e-a433fd85c211" x="280" y="10" width="100" height="20" fontSize="12.0" bold="true" vTextAlign="Middle">
+			<text><![CDATA[KWITANSI NO.:]]></text>
+		</element>
+		<element kind="textField" uuid="beae48db-65e8-4ea1-a67a-193ac1eed63e" x="380" y="10" width="140" height="20" vTextAlign="Middle">
+			<expression><![CDATA[$P{kwitansiNo}]]></expression>
+		</element>
+	</title>
+	<columnHeader height="254" splitType="Stretch">
+		<element kind="rectangle" uuid="2d82a186-cf45-4c3d-a8a5-f3c7fdd6a012" x="0" y="11" width="551" height="51"/>
+		<element kind="staticText" uuid="197eb1ad-a218-432e-b44c-9a1f4a9186d7" x="10" y="20" width="130" height="30" fontSize="14.0" vTextAlign="Middle">
+			<text><![CDATA[Sudah terima dari]]></text>
+		</element>
+		<element kind="staticText" uuid="343eecb6-7aa6-46f2-b004-3c8fc6271069" x="10" y="70" width="130" height="30" fontSize="14.0" italic="true">
+			<text><![CDATA[Uang sejumlah]]></text>
+		</element>
+		<element kind="staticText" uuid="d7ffdcf2-5e9c-4506-a9a3-7e85d05df5c1" x="10" y="120" width="130" height="30" fontSize="14.0">
+			<text><![CDATA[Untuk Pembayaran]]></text>
+		</element>
+		<element kind="staticText" uuid="d1858648-ccdc-470d-b3ff-293ba4ccea89" x="140" y="20" width="50" height="30" fontSize="14.0" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[:]]></text>
+		</element>
+		<element kind="staticText" uuid="af323fd1-c4d4-4699-9fbd-671e234e11e2" x="140" y="70" width="50" height="30" fontSize="14.0" hTextAlign="Center">
+			<text><![CDATA[:]]></text>
+		</element>
+		<element kind="staticText" uuid="99effcb5-353e-4075-8fcb-9c4963614147" x="140" y="120" width="50" height="30" fontSize="14.0" hTextAlign="Center">
+			<text><![CDATA[:]]></text>
+		</element>
+		<element kind="textField" uuid="2d879cef-0bc5-4416-95e2-0f353d56d757" x="190" y="20" width="340" height="30" fontSize="14.0" vTextAlign="Middle">
+			<expression><![CDATA[$P{customerName}]]></expression>
+		</element>
+		<element kind="textField" uuid="b3582a99-a025-48ee-a8fe-30c53c306c1c" positionType="Float" x="190" y="70" width="340" height="50" fontSize="14.0" italic="true">
+			<expression><![CDATA[$P{jumlahEjakan}]]></expression>
+		</element>
+		<element kind="textField" uuid="5436ba19-624a-4f39-a1f1-231fdf872360" positionType="Float" x="190" y="120" width="340" height="50" fontSize="14.0">
+			<expression><![CDATA[$P{untukPembayaran}]]></expression>
+		</element>
+		<element kind="staticText" uuid="312e26dc-650d-4c0a-95ab-2fcb65fb5fdb" x="390" y="184" width="60" height="20">
+			<text><![CDATA[Karawang, ]]></text>
+		</element>
+		<element kind="textField" uuid="e5d9b86a-312c-4516-9f90-54cf700abeae" x="450" y="184" width="100" height="20">
+			<expression><![CDATA[$P{kwitansiTgl}]]></expression>
+		</element>
+		<element kind="rectangle" uuid="29e3ceb7-facb-4a59-a87c-bbc2a2c0a445" x="10" y="190" width="240" height="51"/>
+		<element kind="staticText" uuid="17cbdf53-405c-418f-b467-81278db13e30" x="20" y="200" width="40" height="30" fontSize="16.0">
+			<text><![CDATA[Rp.]]></text>
+		</element>
+		<element kind="textField" uuid="7d7dad8b-b739-4299-b4d7-8d7085b9f855" x="60" y="200" width="180" height="30" fontSize="16.0">
+			<expression><![CDATA[$P{sejumlah}]]></expression>
+		</element>
+	</columnHeader>
+</jasperReport>

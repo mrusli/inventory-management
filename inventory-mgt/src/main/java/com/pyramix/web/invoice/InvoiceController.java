@@ -3,8 +3,11 @@ package com.pyramix.web.invoice;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -24,6 +27,7 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Tabbox;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
 
 import com.pyramix.domain.entity.Enm_StatusDocument;
 import com.pyramix.domain.entity.Enm_TypeDocument;
@@ -256,7 +260,6 @@ public class InvoiceController extends GFCBaseController {
 			fakturNumberPltTextbox.setValue("");
 			fakturNumberPltTextbox.setVisible(true);
 		}
-		
 	}
 	
 	@SuppressWarnings("rawtypes")
@@ -1330,9 +1333,46 @@ public class InvoiceController extends GFCBaseController {
 		saveAddPltButton.setVisible(true);
 	}
 	
-	@SuppressWarnings("static-access")
-	public void onClick$printJasperReportButton(Event event) throws Exception {
-		log.info(getNumToWordsConverter().angkaToTerbilang((long) 11223993));
+	public void onClick$printTagihanJasperReportButton(Event event) throws Exception {
+		log.info("printTagihanJasperReportButton click");
+		
+		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
+				
+		Window tagihanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_jasper.zul", null, arg);
+		
+		tagihanPrintWin.doModal();
+	}
+	
+	public void onClick$printKwitansiTagihanJasperReportButton(Event event) throws Exception {
+		log.info("printKwitansiJasperReportButton click");
+		
+		
+		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
+		
+		Window kwitansiPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_kwitansi_jasper.zul", null, arg);
+		
+		kwitansiPrintWin.doModal();
+	}
+	
+	public void onClick$printTagihanBahanJasperReportButton(Event event) throws Exception {
+		log.info("printTagihanBahanJasperReportButton click");
+		
+		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
+		
+		Window tagihanBahanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_bahan_jasper.zul", null, arg);
+		
+		tagihanBahanPrintWin.doModal();
+	}
+	
+	public void onClick$printKwitansiBahanJasperReportButton(Event event) throws Exception {
+		log.info("printKwitansiBahanJasperReportButton click");
+
+		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
+		
+		Window kwitansiPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_bahan_kwitansi_jasper.zul", null, arg);
+		
+		kwitansiPrintWin.doModal();
+	
 	}
 	
 	protected void modifToSave(Button button) {

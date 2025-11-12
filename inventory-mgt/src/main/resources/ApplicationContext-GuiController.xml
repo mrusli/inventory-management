@@ -86,6 +86,25 @@
     	<property name="numToWordsConverter" ref="numToWordsConverter"></property>
     </bean>
     
+    <bean id="invoicePrintControl" class="com.pyramix.web.invoice.InvoicePrintController" scope="prototype" parent="basisController">
+    	<property name="jasperReportUtil" ref="jasperReportUtil"></property>
+    	
+    </bean>
+    
+    <bean id="invoiceBahanPrintControl" class="com.pyramix.web.invoice.InvoiceBahanPrintController" scope="prototype" parent="basisController">
+    	<property name="jasperReportUtil" ref="jasperReportUtil"></property>
+    </bean>
+    
+    <bean id="kwitansiPrintControl" class="com.pyramix.web.invoice.KwitansiPrintController" scope="prototype" parent="basisController">
+    	<property name="jasperReportUtil" ref="jasperReportUtil"></property>
+    	<property name="numToWordsConverter" ref="numToWordsConverter"></property>
+    </bean>
+    
+    <bean id="kwitansiBahanPrintControl" class="com.pyramix.web.invoice.KwitansiBahanPrintController" scope="prototype" parent="basisController">
+    	<property name="jasperReportUtil" ref="jasperReportUtil"></property>
+    	<property name="numToWordsConverter" ref="numToWordsConverter"></property>
+    </bean>
+    
     <bean id="infoCustomerController" class="com.pyramix.web.customer.CustomerController" scope="prototype" parent="basisController">
     	<property name="customerDao" ref="customerDao"></property>
     </bean>        

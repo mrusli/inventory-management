@@ -1,0 +1,11 @@
+<?page title="kwitansi" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="kwitansiBahanReportPrintWin" title="Kwitansi" border="normal"
+	apply="${kwitansiBahanPrintControl}"
+	width="1150px" height="720px" closable="true" sizable="true"
+	action="show: slideDown;hide: slideUp">
+
+	<iframe id="iframe" width="100%" height="100%"></iframe>
+
+</window>
+</zk>
