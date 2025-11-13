@@ -40,6 +40,13 @@ public class InvoiceBahanPrintController extends GFCBaseController {
 	private Iframe iframe;
 	
 	private Ent_Invoice activeInvoice;
+	private double subtotal01, subtotal02;
+	private double ppnAmount;
+	private double totalAmount;
+	private double pphAmount;
+	
+	private static final Double PPN = 11.0;
+	private static final Double PPH = 2.0;
 	
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
@@ -54,9 +61,8 @@ public class InvoiceBahanPrintController extends GFCBaseController {
 		JasperReport jasperReport = getJasperReportUtil().loadJasperReport("reports/Tagihan-Bahan-KRG.jrxml");
 		jasperReport.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
 		
-		Map<String, Object> parameters = getInvoiceParameters();
-		
 		JRDataSource dataSource = new JRBeanCollectionDataSource(getInvoiceDataSource());
+		Map<String, Object> parameters = getInvoiceParameters();		
 
 		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
 
@@ -68,7 +74,12 @@ public class InvoiceBahanPrintController extends GFCBaseController {
 		
 	}
 
-	private Map<String, Object> getInvoiceParameters() {
+	private Map<String, Object> getInvoiceParameters() throws Exception {
+		ppnAmount = subtotal01 * PPN / 100;
+		subtotal02 = subtotal01 + ppnAmount;
+		pphAmount = 0;
+		totalAmount = 0;
+		
 		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put("InvoiceNo", activeInvoice.getInvc_ser().getSerialComp()+"B");
 		parameters.put("InvoiceTgl", dateToStringDisplay(activeInvoice.getInvc_date(), getLongDateFormat(), getLocale()));
@@ -76,22 +87,28 @@ public class InvoiceBahanPrintController extends GFCBaseController {
 				activeInvoice.getInvc_customer().getCompanyLegalName());
 		parameters.put("CustomerAddr1", activeInvoice.getInvc_customer().getAddress01());
 		parameters.put("CustomerAddr2", activeInvoice.getInvc_customer().getAddress02());
-		
+		parameters.put("subtotal01", toDecimalFormat(new BigDecimal(subtotal01), getLocale(), getDecimalFormat()));
+		parameters.put("subtotal02", toDecimalFormat(new BigDecimal(subtotal02), getLocale(), getDecimalFormat()));
+		parameters.put("ppnAmount", toDecimalFormat(new BigDecimal(ppnAmount), getLocale(), getDecimalFormat()));
+		parameters.put("pphAmount", toDecimalFormat(new BigDecimal(pphAmount), getLocale(), getDecimalFormat()));
+		parameters.put("totalAmount", toDecimalFormat(new BigDecimal(totalAmount), getLocale(), getDecimalFormat()));
+
 		return parameters;
 	}
 
 	private List<Dto_InvoiceBahan> getInvoiceDataSource() throws Exception {
 		List<Dto_InvoiceBahan> invcList = new ArrayList<Dto_InvoiceBahan>();
-		
+		subtotal01 = 0;
 		for(Ent_InvoicePallet pallet : activeInvoice.getInvoicePallet()) {
 			Dto_InvoiceBahan bahan = new Dto_InvoiceBahan();
 			bahan.setSuratJalanNo(pallet.getRef_suratjalan().getSuratjalanSerial().getSerialComp());
 			bahan.setSuratJalanTgl(dateToStringDisplay(pallet.getRef_suratjalan().getSuratjalanDate(), getShortDateFormat(), getLocale()));
 			bahan.setMarking(pallet.getMarking());
-			bahan.setKeterangan("");
+			bahan.setKeterangan(pallet.getKeterangan());
 			bahan.setPcs(getFormatedInteger(pallet.getQty_pcs()));
 			bahan.setRpPallet(toDecimalFormat(new BigDecimal(pallet.getPallet_price()), getLocale(), getDecimalFormat()));
 			bahan.setJumlah(toDecimalFormat(new BigDecimal(pallet.getPallet_subtotal()), getLocale(), getDecimalFormat()));
+			subtotal01 = subtotal01 + pallet.getPallet_subtotal();
 			
 			invcList.add(bahan);
 		}

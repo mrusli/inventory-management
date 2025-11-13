@@ -20,6 +20,8 @@ public class Ent_InvoicePallet extends IdBasedObject {
 	
 	private String marking;
 	
+	private String keterangan;
+	
 	private int qty_pcs;
 	
 	private double pallet_price;

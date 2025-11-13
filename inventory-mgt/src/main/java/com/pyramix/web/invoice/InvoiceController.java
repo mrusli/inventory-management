@@ -78,7 +78,7 @@ public class InvoiceController extends GFCBaseController {
 	private Tabbox invoiceTabbox;
 	private Grid suratjalanGrid;
 	private Button cancelAddButton, saveAddButton, cancelAddPltButton, saveAddPltButton,
-		createKwitansiButton, editButton, createKwitansiPltButton;
+		createKwitansiButton, editButton, createKwitansiPltButton, editPltButton;
 	private Textbox fakturNumberTextbox, fakturNumberPltTextbox;
 	
 	private Ent_Customer selCustomer;
@@ -686,8 +686,10 @@ public class InvoiceController extends GFCBaseController {
 
 	private double calcJumlahJasa() {
 		double jumlah = 0;
-		for(Ent_InvoiceProduct invcProd : activeInvoice.getInvoiceProducts()) {
-			jumlah = jumlah + invcProd.getSub_total();
+		if (activeInvoice.getInvoiceProducts()!=null) {
+			for(Ent_InvoiceProduct invcProd : activeInvoice.getInvoiceProducts()) {
+				jumlah = jumlah + invcProd.getSub_total();
+			}			
 		}
 		return jumlah;
 	}
@@ -1061,6 +1063,7 @@ public class InvoiceController extends GFCBaseController {
 			if (p.isUse_pallet()) {
 				Ent_InvoicePallet pallet = new Ent_InvoicePallet();
 				pallet.setMarking(p.getMarking());
+				pallet.setKeterangan("Biaya Pallet");
 				pallet.setPallet_price(0.0);
 				pallet.setPallet_subtotal(0.0);
 				pallet.setQty_pcs(0);
@@ -1096,6 +1099,10 @@ public class InvoiceController extends GFCBaseController {
 				
 				// No.Coil
 				lc = new Listcell(pallet.getMarking());
+				lc.setParent(item);
+				
+				// Keterangan
+				lc = new Listcell(pallet.getKeterangan());
 				lc.setParent(item);
 				
 				// Pcs
@@ -1162,6 +1169,7 @@ public class InvoiceController extends GFCBaseController {
 					pallet.setEditInProgress(false);
 					// set columns to edit
 					setMarking(activeItem, pallet.getMarking(),1);
+					setKeterangan(activeItem, pallet.getKeterangan());
 					setPltPcs(activeItem, pallet.getQty_pcs());
 					setPalletPrc(activeItem, pallet.getPallet_price());
 					setPltJumlah(activeItem, pallet.getPallet_subtotal());
@@ -1174,6 +1182,7 @@ public class InvoiceController extends GFCBaseController {
 					pallet.setEditInProgress(true);
 					// get edited invoice pallet
 					pallet.setMarking(getMarking(activeItem,1));
+					pallet.setKeterangan(getKeterangan(activeItem));
 					pallet.setQty_pcs(getPltPcs(activeItem));
 					pallet.setPallet_price(getPalletPrc(activeItem));
 					pallet.setPallet_subtotal(getPltJumlah(activeItem));
@@ -1184,11 +1193,29 @@ public class InvoiceController extends GFCBaseController {
 					modifToEdit(button);
 				}
 			}
+
 		};
 	}
+	
+	protected String getKeterangan(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		
+		Textbox textbox = (Textbox) lc.getFirstChild();
+
+		return textbox.getValue();
+	}
+	
+	private void setKeterangan(Listitem activeItem, String keterangan) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		lc.setLabel("");
+		Textbox textbox = new Textbox();
+		textbox.setValue(keterangan);
+		textbox.setWidth("150px");
+		textbox.setParent(lc);
+	}	
 
 	protected int getPltPcs(Listitem activeItem) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
 		
 		Intbox intbox = (Intbox) lc.getFirstChild();
 		
@@ -1196,7 +1223,7 @@ public class InvoiceController extends GFCBaseController {
 	}
 
 	protected void setPltPcs(Listitem activeItem, int qty_pcs) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
 		lc.setLabel("");
 		Intbox intbox = new Intbox();
 		intbox.setValue(qty_pcs);
@@ -1214,7 +1241,7 @@ public class InvoiceController extends GFCBaseController {
 				qtyPcs = intbox.getValue();
 				log.info("calc Jumlah - qty:"+qtyPcs);
 				// get the Prc
-				lc = (Listcell) activeItem.getChildren().get(3);
+				lc = (Listcell) activeItem.getChildren().get(4);
 				doublebox = (Doublebox) lc.getFirstChild();
 				rpPcs = doublebox.getValue();
 				log.info("calc Jumlah - Rp:"+rpPcs);
@@ -1222,7 +1249,7 @@ public class InvoiceController extends GFCBaseController {
 				subtotal = rpPcs * qtyPcs;
 				log.info("calc Jumlah:"+subtotal);
 				// jumlah
-				lc = (Listcell) activeItem.getChildren().get(4);				
+				lc = (Listcell) activeItem.getChildren().get(5);				
 				doublebox = (Doublebox) lc.getFirstChild();
 				doublebox.setValue(subtotal);
 				
@@ -1231,7 +1258,7 @@ public class InvoiceController extends GFCBaseController {
 	}
 
 	protected double getPalletPrc(Listitem activeItem) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
 		
 		Doublebox doublebox = (Doublebox) lc.getFirstChild();
 		
@@ -1239,7 +1266,7 @@ public class InvoiceController extends GFCBaseController {
 	}
 
 	protected void setPalletPrc(Listitem activeItem, double pallet_price) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
 		lc.setLabel("");
 		Doublebox doublebox = new Doublebox();
 		doublebox.setValue(pallet_price);
@@ -1257,7 +1284,7 @@ public class InvoiceController extends GFCBaseController {
 				rpPcs = doublebox.getValue();
 				log.info("calc Jumlah - Rp:"+rpPcs);
 				// get the Pcs
-				lc = (Listcell) activeItem.getChildren().get(2);
+				lc = (Listcell) activeItem.getChildren().get(4);
 				intbox = (Intbox) lc.getFirstChild();
 				qtyPcs = intbox.getValue();
 				log.info("calc Jumlah - Pcs:"+qtyPcs);
@@ -1265,7 +1292,7 @@ public class InvoiceController extends GFCBaseController {
 				subtotal = rpPcs * qtyPcs;
 				log.info("calc Jumlah:"+subtotal);
 				// jumlah
-				lc = (Listcell) activeItem.getChildren().get(4);				
+				lc = (Listcell) activeItem.getChildren().get(5);				
 				doublebox = (Doublebox) lc.getFirstChild();
 				doublebox.setValue(subtotal);
 			}
@@ -1273,7 +1300,7 @@ public class InvoiceController extends GFCBaseController {
 	}
 	
 	protected double getPltJumlah(Listitem activeItem) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		Listcell lc = (Listcell) activeItem.getChildren().get(5);
 		
 		Doublebox doublebox = (Doublebox) lc.getFirstChild();
 		
@@ -1281,7 +1308,7 @@ public class InvoiceController extends GFCBaseController {
 	}
 
 	protected void setPltJumlah(Listitem activeItem, double pallet_subtotal) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		Listcell lc = (Listcell) activeItem.getChildren().get(5);
 		lc.setLabel("");
 		Doublebox doublebox = new Doublebox();
 		doublebox.setValue(pallet_subtotal);
@@ -1292,15 +1319,27 @@ public class InvoiceController extends GFCBaseController {
 	
 	public void onClick$cancelAddPltButton(Event event) throws Exception {
 		log.info("cancelAddPltButton click");
-		
+		// activeInvoice.getInvoicePallet().forEach(p -> log.info(p.toString()));
+		if (activeInvoice.getInvoicePallet().isEmpty()) {
+			palletList.clear();
+			renderPalletListbox();			
+		} else {
+			// palletList.forEach(p -> log.info(p.toString()));
+			palletList.forEach(p -> p.setEditInProgress(false));
+			renderPalletListbox();
+		}
 		// create empty pallet list
 		// List<Ent_InvoicePallet> palletList = new ArrayList<Ent_InvoicePallet>();
-		palletList.clear();
-		// render
-		renderPalletListbox();
+		// re-render
+		// palletList = activeInvoice.getInvoicePallet();
+		// palletList.forEach(p -> log.info(p.toString()));
+		// make sure it's non-edit
+		// palletList.forEach(p -> p.setEditInProgress(false));
 		
 		cancelAddPltButton.setVisible(false);
 		saveAddPltButton.setVisible(false);
+		// show edit button
+		editPltButton.setVisible(true);
 	}
 	
 	public void onClick$saveAddPltButton(Event event) throws Exception {
@@ -1331,6 +1370,8 @@ public class InvoiceController extends GFCBaseController {
 		// allow user to cancel or save
 		cancelAddPltButton.setVisible(true);
 		saveAddPltButton.setVisible(true);
+		// hide edit button
+		editPltButton.setVisible(false);
 	}
 	
 	public void onClick$printTagihanJasperReportButton(Event event) throws Exception {
@@ -1345,7 +1386,6 @@ public class InvoiceController extends GFCBaseController {
 	
 	public void onClick$printKwitansiTagihanJasperReportButton(Event event) throws Exception {
 		log.info("printKwitansiJasperReportButton click");
-		
 		
 		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
 		

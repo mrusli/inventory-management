@@ -313,6 +313,7 @@
 							<listhead>
 								<listheader label="SJ" width="120px" />
 								<listheader label="No.Coil" width="120px" />
+								<listheader label="Keterangan" width="160px"/>
 								<listheader label="Pcs" width="120px"/>
 								<listheader label="Pallet" width="120px"/>
 								<listheader label="Jumlah" width="120px"/>

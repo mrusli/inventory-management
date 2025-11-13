@@ -6,6 +6,11 @@
 	<parameter name="CustomerName" class="java.lang.String"/>
 	<parameter name="CustomerAddr1" class="java.lang.String"/>
 	<parameter name="CustomerAddr2" class="java.lang.String"/>
+	<parameter name="subtotal01" class="java.lang.String"/>
+	<parameter name="ppnAmount" class="java.lang.String"/>
+	<parameter name="subtotal02" class="java.lang.String"/>
+	<parameter name="pphAmount" class="java.lang.String"/>
+	<parameter name="totalAmount" class="java.lang.String"/>
 	<query language="sql"><![CDATA[]]></query>
 	<field name="suratJalanNo" class="java.lang.String"/>
 	<field name="suratJalanTgl" class="java.lang.String"/>
@@ -57,61 +62,128 @@
 			<expression><![CDATA[$P{CustomerAddr2}]]></expression>
 		</element>
 	</title>
-	<columnHeader height="38" splitType="Stretch">
-		<element kind="staticText" uuid="b04e4916-6850-490d-8053-3835cbaadeed" x="402" y="4" width="50" height="30">
+	<columnHeader height="22" splitType="Stretch">
+		<element kind="staticText" uuid="b04e4916-6850-490d-8053-3835cbaadeed" x="423" y="4" width="50" height="16">
 			<text><![CDATA[Rp/Kg]]></text>
 		</element>
-		<element kind="staticText" uuid="fbc0e092-9ada-43ad-907a-57c33c3d5292" x="142" y="4" width="60" height="30">
+		<element kind="staticText" uuid="fbc0e092-9ada-43ad-907a-57c33c3d5292" x="142" y="4" width="60" height="16">
 			<text><![CDATA[No.Coil]]></text>
 		</element>
-		<element kind="staticText" uuid="73c9c43f-afca-4f72-ac67-51ba3af7f164" x="252" y="4" width="100" height="30">
+		<element kind="staticText" uuid="73c9c43f-afca-4f72-ac67-51ba3af7f164" x="273" y="4" width="100" height="16">
 			<text><![CDATA[SIZE]]></text>
 		</element>
-		<element kind="staticText" uuid="57289889-219b-4c34-b741-88152b924dc1" x="82" y="4" width="60" height="30">
+		<element kind="staticText" uuid="57289889-219b-4c34-b741-88152b924dc1" x="82" y="4" width="60" height="16">
 			<text><![CDATA[Tgl]]></text>
 		</element>
-		<element kind="staticText" uuid="f550828f-3f8e-4d57-9f4f-517a96d3db97" x="0" y="4" width="80" height="30">
+		<element kind="staticText" uuid="f550828f-3f8e-4d57-9f4f-517a96d3db97" x="0" y="4" width="80" height="16">
 			<text><![CDATA[Surat-Jalan]]></text>
 		</element>
-		<element kind="staticText" uuid="dfe36bb0-55bd-49b4-9f09-7e0ad6cec6c5" x="202" y="4" width="50" height="30">
+		<element kind="staticText" uuid="dfe36bb0-55bd-49b4-9f09-7e0ad6cec6c5" x="202" y="4" width="68" height="16">
 			<text><![CDATA[PO]]></text>
 		</element>
-		<element kind="staticText" uuid="459b7ac7-7f90-4b99-85ee-3bd8dff1a999" x="352" y="4" width="50" height="30">
+		<element kind="staticText" uuid="459b7ac7-7f90-4b99-85ee-3bd8dff1a999" x="373" y="4" width="50" height="16">
 			<text><![CDATA[Berat]]></text>
 		</element>
-		<element kind="staticText" uuid="196a1940-bee5-49bd-a129-319e8a42d13f" x="460" y="4" width="70" height="30">
+		<element kind="staticText" uuid="196a1940-bee5-49bd-a129-319e8a42d13f" x="473" y="4" width="77" height="16">
 			<text><![CDATA[Jumlah]]></text>
+		</element>
+		<element kind="line" uuid="bedd8c15-7cd5-4d06-8252-14d1d05fb7da" x="0" y="20" width="550" height="1">
+			<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 	</columnHeader>
 	<detail>
-		<band height="41" splitType="Stretch">
-			<element kind="textField" uuid="a9c0ff9b-dec1-45c0-9171-247cbb257551" x="0" y="0" width="80" height="30">
+		<band height="21" splitType="Stretch">
+			<element kind="textField" uuid="a9c0ff9b-dec1-45c0-9171-247cbb257551" x="0" y="0" width="80" height="20">
 				<expression><![CDATA[$F{suratJalanNo}]]></expression>
 			</element>
-			<element kind="textField" uuid="dad0c590-31ed-4374-8944-85e6ee47538d" x="80" y="0" width="60" height="30">
+			<element kind="textField" uuid="dad0c590-31ed-4374-8944-85e6ee47538d" x="80" y="0" width="60" height="20">
 				<expression><![CDATA[$F{suratJalanTgl}]]></expression>
 			</element>
-			<element kind="textField" uuid="2dc85b33-a668-433e-9927-33faa310f83a" x="203" y="0" width="50" height="30">
+			<element kind="textField" uuid="2dc85b33-a668-433e-9927-33faa310f83a" x="203" y="0" width="67" height="20">
 				<expression><![CDATA[$F{refPO}]]></expression>
 			</element>
-			<element kind="textField" uuid="84f83662-07f2-415c-aa48-f200ed49b4dc" x="253" y="0" width="100" height="30">
+			<element kind="textField" uuid="84f83662-07f2-415c-aa48-f200ed49b4dc" x="273" y="0" width="100" height="20">
 				<expression><![CDATA[$F{size}]]></expression>
 			</element>
-			<element kind="textField" uuid="3c46df8a-dbd8-4e06-a919-73958385a5f8" x="353" y="0" width="50" height="30">
+			<element kind="textField" uuid="3c46df8a-dbd8-4e06-a919-73958385a5f8" x="373" y="0" width="50" height="20">
 				<expression><![CDATA[$F{berat}]]></expression>
 			</element>
-			<element kind="textField" uuid="bf36ea37-4340-43ae-8efa-f5a9ef622dc9" x="403" y="0" width="50" height="30" hTextAlign="Right">
+			<element kind="textField" uuid="bf36ea37-4340-43ae-8efa-f5a9ef622dc9" x="423" y="0" width="50" height="20" hTextAlign="Right">
 				<expression><![CDATA[$F{rpKg}]]></expression>
 			</element>
-			<element kind="textField" uuid="fe50bdd0-1e91-4c14-8371-bcab0ca415b5" x="453" y="0" width="77" height="30" hTextAlign="Right">
+			<element kind="textField" uuid="fe50bdd0-1e91-4c14-8371-bcab0ca415b5" x="473" y="0" width="77" height="20" hTextAlign="Right">
 				<expression><![CDATA[$F{jumlah}]]></expression>
 			</element>
-			<element kind="textField" uuid="4e05d214-be3e-4825-99c0-30cf574268ac" x="140" y="0" width="63" height="30">
+			<element kind="textField" uuid="4e05d214-be3e-4825-99c0-30cf574268ac" x="140" y="0" width="63" height="20">
 				<expression><![CDATA[$F{marking}]]></expression>
 			</element>
 		</band>
 	</detail>
-	<columnFooter height="45" splitType="Stretch"/>
+	<columnFooter height="126" splitType="Stretch">
+		<element kind="staticText" uuid="bbee980b-acb7-474f-a41b-0782acb663a1" x="373" y="6" width="77" height="20">
+			<text><![CDATA[Jumlah]]></text>
+		</element>
+		<element kind="textField" uuid="8a5323c6-1aab-4a42-b9db-527de901430a" x="473" y="6" width="77" height="20" hTextAlign="Right">
+			<expression><![CDATA[$P{subtotal01}]]></expression>
+		</element>
+		<element kind="staticText" uuid="4a46d351-080d-4b17-884f-a18a267b6ba7" x="373" y="26" width="77" height="20">
+			<text><![CDATA[PPN 11%]]></text>
+		</element>
+		<element kind="textField" uuid="4b3efca5-a8ea-4e94-b3ff-fd5df7fd5f11" x="473" y="26" width="77" height="20" hTextAlign="Right">
+			<expression><![CDATA[$P{ppnAmount}]]></expression>
+		</element>
+		<element kind="line" uuid="e87443ff-f6f6-4ccb-8ee4-5639ca347888" x="373" y="46" width="177" height="1">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="textField" uuid="73e4f68c-4990-4718-8253-41d682eec3c3" x="473" y="47" width="77" height="19" hTextAlign="Right">
+			<expression><![CDATA[$P{subtotal02}]]></expression>
+		</element>
+		<element kind="staticText" uuid="898ea440-e390-4b05-bad6-6ae088b790ad" x="373" y="66" width="77" height="20">
+			<text><![CDATA[PPH 23]]></text>
+		</element>
+		<element kind="textField" uuid="1b2fe7af-aa9e-46cf-8be1-243ac4b6b2a8" x="473" y="66" width="77" height="20" hTextAlign="Right">
+			<expression><![CDATA[$P{pphAmount}]]></expression>
+		</element>
+		<element kind="line" uuid="4ce4a54d-c37d-4f8b-97ba-8a6071b6c1f2" x="373" y="86" width="177" height="1">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="staticText" uuid="6f940963-0b72-4208-89a3-97f71220f8d8" x="373" y="86" width="77" height="20">
+			<text><![CDATA[TOTAL]]></text>
+		</element>
+		<element kind="staticText" uuid="cd86d642-5eae-43f4-abbb-7030113e63de" x="450" y="6" width="23" height="20">
+			<text><![CDATA[Rp]]></text>
+		</element>
+		<element kind="staticText" uuid="c4465f69-928b-4edc-a203-a193c4cd850e" x="450" y="26" width="23" height="20">
+			<text><![CDATA[Rp]]></text>
+		</element>
+		<element kind="staticText" uuid="ed333497-c912-4cec-89b6-3085766aac56" x="450" y="46" width="23" height="20">
+			<text><![CDATA[Rp]]></text>
+		</element>
+		<element kind="staticText" uuid="c2079e26-7f86-4284-a19f-3278680934c5" x="450" y="66" width="23" height="20">
+			<text><![CDATA[Rp]]></text>
+		</element>
+		<element kind="staticText" uuid="c01a2b58-e60f-435d-96a9-41009d738ec7" x="450" y="86" width="23" height="20">
+			<text><![CDATA[Rp]]></text>
+		</element>
+		<element kind="textField" uuid="ec018dff-10df-4b15-948b-fd6b2b2c8207" x="473" y="86" width="77" height="20" hTextAlign="Right">
+			<expression><![CDATA[$P{totalAmount}]]></expression>
+		</element>
+		<element kind="rectangle" uuid="7f9c568f-0006-49fd-9717-4f1bf2c250ff" x="10" y="17" width="240" height="89"/>
+		<element kind="staticText" uuid="224fdc8d-7895-4f89-8479-00d9e375ff21" x="20" y="20" width="219" height="79">
+			<text><![CDATA[Pembayaran Jasa Potong harap di transfer ke:
+
+BANK BCA, cabang P.Jayakarta
+
+a/n PT. WAJASENTOSA METALINDO
+
+a/c 083 3009793]]></text>
+		</element>
+		<element kind="line" uuid="7b6b7e0e-21d3-47a3-8da7-4d67b9193047" x="0" y="0" width="550" height="1">
+			<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+	</columnFooter>
 	<pageFooter height="54" splitType="Stretch"/>
 	<summary height="42" splitType="Stretch"/>
 </jasperReport>
