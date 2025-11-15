@@ -1207,10 +1207,10 @@ public class InvoiceController extends GFCBaseController {
 	
 	private void setKeterangan(Listitem activeItem, String keterangan) {
 		Listcell lc = (Listcell) activeItem.getChildren().get(2);
-		lc.setLabel("");
+		lc.setLabel(" ");
 		Textbox textbox = new Textbox();
 		textbox.setValue(keterangan);
-		textbox.setWidth("150px");
+		textbox.setWidth("140px");
 		textbox.setParent(lc);
 	}	
 
@@ -1284,7 +1284,7 @@ public class InvoiceController extends GFCBaseController {
 				rpPcs = doublebox.getValue();
 				log.info("calc Jumlah - Rp:"+rpPcs);
 				// get the Pcs
-				lc = (Listcell) activeItem.getChildren().get(4);
+				lc = (Listcell) activeItem.getChildren().get(3);
 				intbox = (Intbox) lc.getFirstChild();
 				qtyPcs = intbox.getValue();
 				log.info("calc Jumlah - Pcs:"+qtyPcs);
