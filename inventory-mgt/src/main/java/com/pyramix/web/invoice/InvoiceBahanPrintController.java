@@ -46,7 +46,7 @@ public class InvoiceBahanPrintController extends GFCBaseController {
 	private double pphAmount;
 	
 	private static final Double PPN = 11.0;
-	private static final Double PPH = 2.0;
+//	private static final Double PPH = 2.0;
 	
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
