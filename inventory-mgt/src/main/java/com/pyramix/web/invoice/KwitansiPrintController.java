@@ -88,7 +88,7 @@ public class KwitansiPrintController extends GFCBaseController {
 		parameters.put("customerName", activeInvoice.getInvc_customer().getCompanyType()+"."+
 				activeInvoice.getInvc_customer().getCompanyLegalName());
 		parameters.put("jumlahEjakan", jumlahEjakan+" Rupiah");
-		parameters.put("untukPembayaran", "");
+		parameters.put("untukPembayaran", "Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN dan pemotongan PPh23. Perincian Terlampir.");
 		parameters.put("sejumlah", toDecimalFormat(new BigDecimal(jumlahTotalJasaDecPph), getLocale(), getDecimalFormat()));
 		parameters.put("kwitansiTgl", dateToStringDisplay(activeInvoice.getJasaKwitansi().getKwitansi_date(), getLongDateFormat(), getLocale()));
 		
