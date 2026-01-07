@@ -45,7 +45,7 @@ public class MainController extends GFCBaseController {
 		
 		// log.info("Pref Locale: "+Library.getProperty(Attributes.PREFERRED_LOCALE));
 		
-		mainInclude.setSrc("~./src/info_dashboard.zul");
+		// mainInclude.setSrc("~./src/info_dashboard.zul");
 		// mainInclude.setSrc("~./src/info_tagihan.zul");
 		// mainInclude.setSrc("~./src/info_suratjalan.zul");
 		// mainInclude.setSrc("~./src/info_produk.zul");
