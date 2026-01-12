@@ -686,11 +686,11 @@ public class InvoiceController extends GFCBaseController {
 
 	private double calcJumlahJasa() {
 		double jumlah = 0;
-		if (activeInvoice.getInvoiceProducts()!=null) {
-			for(Ent_InvoiceProduct invcProd : activeInvoice.getInvoiceProducts()) {
-				jumlah = jumlah + invcProd.getSub_total();
-			}			
-		}
+//		if (activeInvoice.getInvoiceProducts()!=null) {
+//			for(Ent_InvoiceProduct invcProd : activeInvoice.getInvoiceProducts()) {
+//				jumlah = jumlah + invcProd.getSub_total();
+//			}			
+//		}
 		return jumlah;
 	}
 	

@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.pyramix</groupId>
 	<artifactId>inventory-mgt</artifactId>
-	<version>0.2</version>
+	<version>1.0</version>
 	<name>inventory-mgt</name>
 	<description>Inventory management - Incoming to Process to Outgoing</description>
 	<url/>

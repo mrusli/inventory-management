@@ -5,12 +5,12 @@
 	<div sclass="row mt-3">
 		<n:div sclass="col-12">
 			<n:div sclass="mt-3">
+				Customer:
+				<combobox id="customerCombobox" width="180px" visible="true"></combobox>
 				Dari:
 				<datebox id="recvFromDatebox" width="190px"></datebox>
 				<label value=" s/d "></label>
 				<datebox id="recvToDatebox" width="190px"></datebox>
-				Customer:
-				<combobox id="customerCombobox" width="180px" visible="true"></combobox>
 				<button id="recvFilterButton" label="Filter" visible="true" iconSclass="z-icon-search" sclass="compButton"></button>
 				<button id="coilAddButton" label="Tambah" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>				
 			</n:div>

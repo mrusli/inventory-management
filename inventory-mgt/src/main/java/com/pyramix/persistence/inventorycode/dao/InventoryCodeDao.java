@@ -15,5 +15,7 @@ public interface InventoryCodeDao {
 	public void update(Ent_InventoryCode inventoryCode) throws Exception;
 	
 	public void delete(Ent_InventoryCode inventoryCode) throws Exception;
+
+	public List<Ent_InventoryCode> findAllInventoryCodesSorted() throws Exception;
 	
 }
