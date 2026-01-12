@@ -1,0 +1,17 @@
+<div xmlns:n="native" id="infoMainPanel" apply="${infoMainPanelController}">
+	<n:div sclass="mt-3">
+		<space orient="horizontal"/>	
+	</n:div>
+	<div sclass="row mt-3">
+		<n:div sclass="col-12">
+			<n:div sclass="mt-3">
+				<space orient="horizontal"/>	
+				<space orient="horizontal"/>	
+				<space orient="horizontal"/>						
+				<space orient="horizontal"/>	
+				<space orient="horizontal"/>	
+				<space orient="horizontal"/>
+			</n:div>			
+		</n:div>
+	</div>	
+</div>

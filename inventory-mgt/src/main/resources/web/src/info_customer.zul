@@ -11,8 +11,9 @@
 			</n:div>
 			<listbox sclass="mt-3" id="customerListbox" mold="paging" height="400px" pageSize="16">
 				<listhead>
-		 			<listheader label="Nama Customer" width="360px"/>
-		 			<listheader label="Contact"/>
+		 			<listheader label="Nama Customer" width="320px"/>
+		 			<listheader label="Contact" width="220px"/>
+		 			<listheader label=""/>
 				</listhead>
 			</listbox>												
 		</n:div>
@@ -41,6 +42,14 @@
 							<textbox id="emailTextbox" visible="false" width="500px"></textbox>
 						</cell>
 					</row>
+					<row>
+						<cell>
+							Status:
+						</cell>
+						<cell>
+							<checkbox id="statusCheckbox" label="Non-Aktif"></checkbox>
+						</cell>
+					</row>
 				</rows>
 			</grid>
 			<n:h5>Alamat Pengiriman:</n:h5>
@@ -63,6 +72,7 @@
 			<n:div sclass="mt-3">
 				<button id="customerEditButton" label="Ubah" visible="true" iconSclass="z-icon-pencil" sclass="compButton" style="background-color: var(--bs-warning)"></button>
 				<button id="customerSaveButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-o" sclass="compButton" style="background-color: var(--bs-primary)"></button>
+				<button id="customerCancelButton" label="Batal" visible="false" iconSclass="z-icon-ban" sclass="compButton" style="background-color: var(--bs-primary)"></button>
 			</n:div>
 		</n:div>
 	</div>	

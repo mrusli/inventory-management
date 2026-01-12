@@ -28,9 +28,9 @@ public class MainController extends GFCBaseController {
 	public void onCreate$mainWindow(Event event) throws Exception {
 		log.info("mainWindow created");
 
-		log.info("Version: "+getSettingsUtility().getWebAppProperties("build.version"));
-		log.info("Build No: "+getSettingsUtility().getWebAppProperties("build.timestamp"));
-		log.info("Name: "+getSettingsUtility().getWebAppProperties("build.name"));
+		log.info("Version	: {}", getSettingsUtility().getWebAppProperties("build.version"));
+		log.info("Build No	: {}", getSettingsUtility().getWebAppProperties("build.timestamp"));
+		log.info("Build Name: {}", getSettingsUtility().getWebAppProperties("build.name"));
 		
 		// log.info("Locale: "+getLocale().toString());
 		// log.info("Language: "+getLocale().getLanguage());
@@ -38,13 +38,15 @@ public class MainController extends GFCBaseController {
 		// log.info("Display Name: "+getLocale().getDisplayName());
 		// log.info("Zone Id: "+getZoneId().toString());
 		
-		log.info("Locale: "+Locales.getCurrent());
-		log.info("Label: "+Labels.getLabel("language"));
-		log.info("Timezone: "+TimeZone.getDefault().getID());
-		log.info("Check DateTime: "+getLocalDateTime(getZoneId()));
+		log.info("Locale	: {}", Locales.getCurrent());
+		log.info("Language	: {}", Labels.getLabel("language"));
+		log.info("Timezone	: {}", TimeZone.getDefault().getID());
+		log.info("DateTime	: {}", getLocalDateTime(getZoneId()));
 		
 		// log.info("Pref Locale: "+Library.getProperty(Attributes.PREFERRED_LOCALE));
-		
+
+		mainInclude.setSrc("~./src/info_panel_main.zul");
+
 		// mainInclude.setSrc("~./src/info_dashboard.zul");
 		// mainInclude.setSrc("~./src/info_tagihan.zul");
 		// mainInclude.setSrc("~./src/info_suratjalan.zul");
@@ -61,7 +63,7 @@ public class MainController extends GFCBaseController {
 	public void onPenerimaanCoilMenuClick(Event event) {
 		log.info("onPenerimaanCoilMenuClick...");
 		// change page title
-		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Penerimaan");
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-Penerimaan");
 		// load page
 		mainInclude.setSrc("~./src/info_penerimaancoil.zul");
 	}
@@ -69,7 +71,7 @@ public class MainController extends GFCBaseController {
 	public void onProsesCoilMenuClick(Event event) {
 		log.info("onProsesCoilMenuClick...");
 		// change page title
-		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Proses");
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-Proses");
 		// load page		
 		mainInclude.setSrc("~./src/info_processcoil.zul");		
 	}
@@ -77,7 +79,7 @@ public class MainController extends GFCBaseController {
 	public void onProdukMenuClick(Event event) {
 		log.info("onProdukMenuClick...");
 		// change page title
-		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Produk");
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-Produk");
 		// load page		
 		mainInclude.setSrc("~./src/info_produk.zul");		
 	}
@@ -85,7 +87,7 @@ public class MainController extends GFCBaseController {
 	public void onSuratjalanCoilMenuClick(Event event) {
 		log.info("onSuratjalanCoilMenuClick...");
 		// change page title
-		Executions.getCurrent().getDesktop().getFirstPage().setTitle("SuratJalan");
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-SuratJalan");
 		// load page		
 		mainInclude.setSrc("~./src/info_suratjalan.zul");		
 	}
@@ -93,7 +95,7 @@ public class MainController extends GFCBaseController {
 	public void onTagihanCoilMenuClick(Event event) {
 		log.info("onTagihanCoilMenuClick...");
 		// change page title
-		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Tagihan");
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-Tagihan");
 		// load page		
 		mainInclude.setSrc("~./src/info_tagihan.zul");		
 	}
@@ -101,7 +103,7 @@ public class MainController extends GFCBaseController {
 	public void onCustomerCoilMenuClick(Event event) {
 		log.info("onCustomerCoilMenuClick...");
 		// change page title
-		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Customer");
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-Customer");
 		// load page
 		mainInclude.setSrc("~./src/info_customer.zul");		
 	}
@@ -109,7 +111,7 @@ public class MainController extends GFCBaseController {
 	public void onClickInventoryTypeMenu(Event event) {
 		log.info("inventoryTypeMenuitem click...");
 		// change page title
-		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Tipe & Kode");
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-Tipe & Kode");
 		// load page		
 		mainInclude.setSrc("~./src/info_inventory_type.zul");		
 	}
@@ -117,7 +119,7 @@ public class MainController extends GFCBaseController {
 	public void onClickInventoryCodeMenu(Event event) {
 		log.info("inventoryCodeMenuitem click...");
 		// change page title
-		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Tabel");
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-Tabel");
 		// load page
 		mainInclude.setSrc("~./src/info_inventory_table.zul");		
 	}	
@@ -125,7 +127,7 @@ public class MainController extends GFCBaseController {
 	public void onClickCompanyMenu(Event event) {
 		log.info("companyMenuitem click...");
 		// change page title
-		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Company");
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-Company");
 		// load page
 		mainInclude.setSrc("~./src/info_company.zul");				
 	}

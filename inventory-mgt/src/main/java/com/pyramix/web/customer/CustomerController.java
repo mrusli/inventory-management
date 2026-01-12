@@ -3,7 +3,9 @@ package com.pyramix.web.customer;
 import java.util.List;
 
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Label;
@@ -37,7 +39,8 @@ public class CustomerController extends GFCBaseController {
 		address01Textbox, address02Textbox, emailTextbox;
 	private Combobox companyTypeCombobox;
 	private Listbox customerListbox;
-	private Button customerEditButton, customerSaveButton;
+	private Button customerEditButton, customerSaveButton, customerCancelButton;
+	private Checkbox statusCheckbox;
 	
 	private ListModelList<Ent_Customer> customerModelList = null;
 	private Ent_Customer selCustomer = null;
@@ -75,7 +78,7 @@ public class CustomerController extends GFCBaseController {
 	}
 
 	private void loadCustomerList() throws Exception {
-		List<Ent_Customer> customerList = getCustomerDao().findAllCustomer();
+		List<Ent_Customer> customerList = getCustomerDao().findAllCustomerSorted();
 		
 		customerModelList = 
 				new ListModelList<Ent_Customer>(customerList);
@@ -98,14 +101,22 @@ public class CustomerController extends GFCBaseController {
 				String namaCustomer = cust.getCompanyType().toString()+" "+
 						cust.getCompanyLegalName();
 				lc = new Listcell(namaCustomer);
+				lc.setStyle("white-space: nowrap;");
 				lc.setParent(item);
 				
 				// contact
 				String contact = cust.getContactPerson()+" "+
 						cust.getPhone();
 				lc = new Listcell(contact);
+				lc.setStyle("white-space: nowrap;");
 				lc.setParent(item);
 
+				// status
+				lc = new Listcell();
+				lc.setIconSclass(cust.isActive() ? "z-icon-circle-check"
+						: "z-icon-circle-xmark");
+				lc.setParent(item);
+				
 				item.setValue(cust);
 			}
 		};
@@ -123,6 +134,8 @@ public class CustomerController extends GFCBaseController {
 		contactNameLabel.setValue(selCustomer.getContactPerson());
 		contactNumberLabel.setValue(selCustomer.getPhone());
 		emailLabel.setValue(selCustomer.getEmail());
+		statusCheckbox.setChecked(selCustomer.isActive());
+		statusCheckbox.setLabel(selCustomer.isActive() ? "Aktif" : "Non-Aktif");
 		address01Label.setValue(selCustomer.getAddress01());
 		address02Label.setValue(selCustomer.getAddress02());
 	}
@@ -132,6 +145,7 @@ public class CustomerController extends GFCBaseController {
 				
 		// create a new company
 		selCustomer = new Ent_Customer();
+		log.info("New Customer Id: {}",String.valueOf(selCustomer.getId()));
 		// add in progress
 		selCustomer.setAddInProgress(true);
 
@@ -157,37 +171,72 @@ public class CustomerController extends GFCBaseController {
 		customerNameLabel.setVisible(false);
 		customerNameTextbox.setVisible(true);
 		customerNameTextbox.setValue(selCustomer.isAddInProgress() ? 
-				" " : selCustomer.getCompanyLegalName());
+				"" : selCustomer.getCompanyLegalName());
 		
 		contactNameLabel.setVisible(false);
 		contactNameTextbox.setVisible(true);
 		contactNameTextbox.setValue(selCustomer.isAddInProgress() ?
-				" " : selCustomer.getContactPerson());
+				"" : selCustomer.getContactPerson());
 		
 		contactNumberLabel.setVisible(false);
 		contactNumberTextbox.setVisible(true);
 		contactNumberTextbox.setValue(selCustomer.isAddInProgress() ?
-				" " : selCustomer.getPhone());
+				"" : selCustomer.getPhone());
 		
 		emailLabel.setVisible(false);
 		emailTextbox.setVisible(true);
 		emailTextbox.setValue(selCustomer.isAddInProgress() ? 
-				" " : selCustomer.getEmail());
+				"" : selCustomer.getEmail());
+		
+		statusCheckbox.setChecked(false);
+		statusCheckbox.setLabel("Non-Aktif");
 		
 		address01Label.setVisible(false);
 		address01Textbox.setVisible(true);
 		address01Textbox.setValue(selCustomer.isAddInProgress() ?
-				" " : selCustomer.getAddress01());
+				"" : selCustomer.getAddress01());
 
 		address02Label.setVisible(false);
 		address02Textbox.setVisible(true);
 		address02Textbox.setValue(selCustomer.isAddInProgress() ?
-				" " : selCustomer.getAddress02());
+				"" : selCustomer.getAddress02());
 
 		// hide edit button
 		customerEditButton.setVisible(false);
 		// show save button
 		customerSaveButton.setVisible(true);
+		// show cancel button
+		customerCancelButton.setVisible(true);
+	}
+	
+	public void onCheck$statusCheckbox(Event event) throws Exception {
+		log.info("statusCheckbox click");
+		
+		statusCheckbox.setLabel(statusCheckbox.isChecked() ? "Aktif" : "Non-Aktif");
+		
+		if (selCustomer.isAddInProgress()) {
+			log.info("No SAVE / UPDATE require.  Will let the user click save.");
+		} else {
+			log.info("Update rite away");
+			// set active / non-active
+			selCustomer.setActive(statusCheckbox.isChecked());
+			// update
+			Ent_Customer customer = getCustomerDao().update(selCustomer);
+			Clients.showNotification((customer.isActive() ?
+					   "Status Customer sudah diaktifkan." : "Status Customer sudah di non-aktifkan"),
+							"info", null, "bottom_left", 10000);
+			// re-load
+			loadCustomerList();
+			
+			// re-display
+			displayCustomerList();
+
+			// locate
+			locateCustomerData(customer);
+			
+			// display
+			displayCustomerInfo();
+		}
 	}
 	
 	public void onClick$customerSaveButton(Event event) throws Exception {
@@ -199,7 +248,10 @@ public class CustomerController extends GFCBaseController {
 		// update
 		Ent_Customer activeCust = 
 				getCustomerDao().update(getUpdatedCustomer());
-		
+		Clients.showNotification((selCustomer.getId()==0 ?
+				   "Penambahan Customer sudah disimpan." : "Perubahan Customer sudah disimpan"),
+						"info", null, "bottom_left", 10000);
+
 		// re-load
 		loadCustomerList();
 		
@@ -214,6 +266,37 @@ public class CustomerController extends GFCBaseController {
 		
 		// display
 		displayCustomerInfo();
+	}
+	
+	public void onClick$customerCancelButton(Event event) throws Exception {
+		log.info("customerCancelButton click");
+		
+		// display customer info
+		setToDisplayInfo(); 
+		
+		// re-load
+		loadCustomerList();
+		
+		// re-display
+		displayCustomerList();
+		
+		if (selCustomer.getId()==0) {
+			if (!customerModelList.isEmpty()) {
+				selCustomer =
+						customerModelList.get(0);
+				// display
+				displayCustomerInfo();
+			}			
+		} else {
+			// locate
+			locateCustomerData(selCustomer);
+			
+			// not edit / create anymore
+			selCustomer.setAddInProgress(false);
+			
+			// display
+			displayCustomerInfo();
+		}
 	}
 
 	private void setToDisplayInfo() {
@@ -241,6 +324,8 @@ public class CustomerController extends GFCBaseController {
 		customerEditButton.setVisible(true);
 		// hide save button
 		customerSaveButton.setVisible(false);
+		// hide cancel button
+		customerCancelButton.setVisible(false);
 	}
 
 	public void onClick$customerEditButton(Event event) throws Exception {
@@ -256,6 +341,7 @@ public class CustomerController extends GFCBaseController {
 		selCustomer.setContactPerson(contactNameTextbox.getValue());
 		selCustomer.setPhone(contactNumberTextbox.getValue());
 		selCustomer.setEmail(emailTextbox.getValue());
+		selCustomer.setActive(statusCheckbox.isChecked());
 		selCustomer.setAddress01(address01Textbox.getValue());
 		selCustomer.setAddress02(address02Textbox.getValue());
 		

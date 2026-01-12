@@ -124,5 +124,9 @@
 	
 	<bean id="infoDashboardController" class="com.pyramix.web.dashboard.DashboardController" scope="prototype" parent="basisController">
 	
+	</bean>
+	
+	<bean id="infoMainPanelController" class="com.pyramix.web.main.panel.InfoMainPanelController" scope="prototype" parent="basisController">
+	
 	</bean>    
 </beans>
