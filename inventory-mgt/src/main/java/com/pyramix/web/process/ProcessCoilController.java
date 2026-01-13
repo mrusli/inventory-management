@@ -23,6 +23,7 @@ import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
+import org.zkoss.zul.Listheader;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Messagebox;
@@ -66,10 +67,12 @@ public class ProcessCoilController extends GFCBaseController {
 	private Listbox processListbox, materialListbox, productListbox;
 	private Label customerNameLabel, processDateLabel, processNumberLabel, statusLabel,
 		processTypeLabel, materialToProductLabel;
-	private Combobox customerNameCombobox, processTypeCombobox, customerProcessCombobox;
+	private Combobox processTypeCombobox, customerProcessCombobox, customerNameCombobox;
+	// 
 	private Datebox processDatebox;
 	private Button addMaterialButton, addProductButton, processSaveButton,
-		printReportButton, cancelProcessButton, cancelAddProcessButton;
+		printJasperReportButton, cancelProcessButton, cancelAddProcessButton;
+	private Listheader productQtyListheader;
 	
 	private List<Ent_Customer> customerList = null;
 	private ListModelList<Ent_InventoryProcess> processModelList = null;
@@ -103,12 +106,19 @@ public class ProcessCoilController extends GFCBaseController {
 		if (!processModelList.isEmpty()) {
 			selInventoryProcess =
 					processModelList.get(0);
-			
+			// set column title according to the process type
+			setProductProcessColumnTitle();
 			// display
 			displayDetailInventoryProcessInfo();	
 		} else {
 			// cleanup
 			resetDetailInventoryProcessInfo();
+			// customer never process any coils
+			// just displayed the customer name
+			Ent_Customer custProc = 
+					customerProcessCombobox.getSelectedItem().getValue();
+			customerNameLabel.setValue(custProc.getCompanyType()+"."+
+					custProc.getCompanyLegalName());			
 		}		
 	}
 
@@ -139,12 +149,20 @@ public class ProcessCoilController extends GFCBaseController {
 		// select to display details
 		if (!processModelList.isEmpty()) {
 			selInventoryProcess =
-					processModelList.get(0);	
+					processModelList.get(0);
+			// set column title according to the process type
+			setProductProcessColumnTitle();
 			// display
 			displayDetailInventoryProcessInfo();	
 		} else {
 			// cleanup
-			resetDetailInventoryProcessInfo();			
+			resetDetailInventoryProcessInfo();
+			// customer never process any coils
+			// just displayed the customer name
+			Ent_Customer custProc = 
+					customerProcessCombobox.getSelectedItem().getValue();
+			customerNameLabel.setValue(custProc.getCompanyType()+"."+
+					custProc.getCompanyLegalName());
 		}
 	}
 	
@@ -297,14 +315,18 @@ public class ProcessCoilController extends GFCBaseController {
 								
 								selInventoryProcess = item.getValue();
 								
+								// set column title according to the process type
+								setProductProcessColumnTitle();
 								// display
 								displayDetailInventoryProcessInfo();
 								// hide add material button
 								addMaterialButton.setVisible(false);
 								// allow user to cancel
-								cancelProcessButton.setVisible(true);
+								// cancelProcessButton.setVisible(true);
 								// hide the cancel add process button
 								cancelAddProcessButton.setVisible(false);
+								// allow user to print
+								printJasperReportButton.setVisible(true);
 							} else {
 								log.info("cancel add process...");
 							}
@@ -315,11 +337,24 @@ public class ProcessCoilController extends GFCBaseController {
 			
 			selInventoryProcess = item.getValue();
 			
+			// set column title according to the process type
+			setProductProcessColumnTitle();
+			
 			// display
 			displayDetailInventoryProcessInfo();			
 		}
 		
 
+	}
+
+	private void setProductProcessColumnTitle() {
+		if (selInventoryProcess.getProcessType().equals(Enm_TypeProcess.Shearing)) {
+			log.info("change product listbox Qty() to Qty(Lbr)");
+			productQtyListheader.setLabel("Qty(Lbr)");
+		} else {
+			log.info("change product listbox Qty() to Qty(Brs)");
+			productQtyListheader.setLabel("Qty(Brs)");
+		}
 	}
 	
 	public void onClick$addProcessButton(Event event) throws Exception {
@@ -342,17 +377,18 @@ public class ProcessCoilController extends GFCBaseController {
 		// allow to add material
 		addMaterialButton.setVisible(true);
 		// hide the edit and print button
-		printReportButton.setVisible(false);
+		printJasperReportButton.setVisible(false);
 		// hide the cancel process button
-		cancelProcessButton.setVisible(false);
+		// cancelProcessButton.setVisible(false);
 		// allow user to cancell add process coil
 		cancelAddProcessButton.setVisible(true);
 	}
 	
 	private void setToAllowEditInfo() {
-		customerNameLabel.setVisible(false);
-		customerNameLabel.setValue(" ");
-		customerNameCombobox.setVisible(true);
+		// customerNameLabel.setVisible(false);
+		// customerNameLabel.setValue(" ");
+		customerNameCombobox.setVisible(false);
+				//true);
 
 		processDateLabel.setVisible(false);
 		processDatebox.setVisible(true);
@@ -470,7 +506,8 @@ public class ProcessCoilController extends GFCBaseController {
 	private Set<Ent_InventoryCode> getInventoryCodeSet() throws Exception {
 		// get the selected customer
 		Ent_Customer selCustomer =
-				customerNameCombobox.getSelectedItem().getValue();
+				customerProcessCombobox.getSelectedItem().getValue();
+				// customerNameCombobox.getSelectedItem().getValue();
 		
 		// find inventory with selected customer
 		List<Ent_Inventory> inventoryList = 
@@ -550,11 +587,22 @@ public class ProcessCoilController extends GFCBaseController {
 				Combobox combobox = (Combobox) event.getTarget();
 				Ent_InventoryCode invtCode = combobox.getSelectedItem().getValue();
 				// log.info(invtCode.toString());
-				// find inventory with invtCode
+				Ent_Customer custProc = 
+						customerProcessCombobox.getSelectedItem().getValue();
+				// find inventory with invtCode and custProc
 				List<Ent_Inventory> inventoryList =
-						getInventoryDao().findInventoryByInventoryCode(invtCode);
+						getInventoryDao().findInventoryByCustomer_InventoryCode(custProc, invtCode);
 				// inventoryList.forEach(i -> log.info(i.toString()));
 				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
+				// clear all lc
+				Listcell lc;
+				lc = (Listcell) activeItem.getChildren().get(1);
+				lc.getChildren().clear();
+				lc = (Listcell) activeItem.getChildren().get(2);
+				lc.setLabel("");
+				lc = (Listcell) activeItem.getChildren().get(3);
+				lc.setLabel("");
+
 				setupMaterialSpek(activeItem, inventoryList);
 				
 			}
@@ -573,7 +621,10 @@ public class ProcessCoilController extends GFCBaseController {
 	}
 
 	private void setupMaterialSpek(Listitem activeItem, List<Ent_Inventory> inventoryList) throws Exception {
-		Listcell lc = (Listcell) activeItem.getChildren().get(1);
+		Listcell lc;
+		
+		// start with index#1
+		lc = (Listcell) activeItem.getChildren().get(1);
 		lc.setLabel(" ");
 		Combobox combobox = new Combobox();
 		combobox.setWidth("160px");
@@ -688,7 +739,16 @@ public class ProcessCoilController extends GFCBaseController {
 				Button button = (Button) event.getTarget();
 				// get the current listitem
 				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
-				
+				// save the active item index;
+				int activeItemIndex = activeItem.getIndex();
+				// disable other listitems' buttons
+				Listcell lc;
+				Button nonActiveButton;
+				for(Listitem listitem : productListbox.getItems()) {
+					lc = (Listcell) listitem.getChildren().get(4);
+					nonActiveButton = (Button) lc.getFirstChild();
+					nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
+				}
 				if (product.isEditInProgress()) {
 					// to update / save
 					log.info("to update or save");
@@ -929,7 +989,7 @@ public class ProcessCoilController extends GFCBaseController {
 		// hide save button
 		processSaveButton.setVisible(false);
 		// allow user to print
-		printReportButton.setVisible(true);
+		printJasperReportButton.setVisible(true);
 		// hide cancel add process coil button
 		cancelAddProcessButton.setVisible(false);
 		
@@ -965,7 +1025,8 @@ public class ProcessCoilController extends GFCBaseController {
 						processDatebox.getValueInLocalDate()));
 		selInventoryProcess.setProcessStatus(Enm_StatusProcess.Proses);
 		selInventoryProcess.setProcessType(processTypeCombobox.getSelectedItem().getValue());
-		selInventoryProcess.setCustomer(customerNameCombobox.getSelectedItem().getValue());
+		selInventoryProcess.setCustomer(customerProcessCombobox.getSelectedItem().getValue());
+				// customerNameCombobox.getSelectedItem().getValue());
 		// selInventoryProcess.setProcessMaterials(getProcessMaterials(selInventoryProcess.getProcessMaterials()));
 		
 		// get the last material to assign products
@@ -1085,10 +1146,16 @@ public class ProcessCoilController extends GFCBaseController {
 			// hide add material button
 			addMaterialButton.setVisible(false);
 			// allow user to cancel the process
-			cancelProcessButton.setVisible(true);
+			// cancelProcessButton.setVisible(true);
 		} else {
 			// cleanup
-			resetDetailInventoryProcessInfo();			
+			resetDetailInventoryProcessInfo();
+			// customer never process any coils
+			// just displayed the customer name
+			Ent_Customer custProc = 
+					customerProcessCombobox.getSelectedItem().getValue();
+			customerNameLabel.setValue(custProc.getCompanyType()+"."+
+					custProc.getCompanyLegalName());			
 		}
 		
 //		if (!processListbox.getItems().isEmpty()) {
@@ -1162,18 +1229,18 @@ public class ProcessCoilController extends GFCBaseController {
 		productionReportPrintWin.doModal();
 	}
 	
-	public void onClick$printReportButton(Event event) throws Exception {
-		log.info("printReportButton click...");
-		
-		LocalDate reportDate = getLocalDate(getZoneId());
-		ProcessCoilReportData reportData = new ProcessCoilReportData(
-				reportDate, selInventoryProcess);
-		
-		Map<String, ProcessCoilReportData> arg =
-				Collections.singletonMap("reportData", reportData);
-		Window processCoilReportWin = (Window) Executions.createComponents("~./src/info_processcoil_report.zul", null, arg);
-		processCoilReportWin.doModal();
-	}
+//	public void onClick$printReportButton(Event event) throws Exception {
+//		log.info("printReportButton click...");
+//		
+//		LocalDate reportDate = getLocalDate(getZoneId());
+//		ProcessCoilReportData reportData = new ProcessCoilReportData(
+//				reportDate, selInventoryProcess);
+//		
+//		Map<String, ProcessCoilReportData> arg =
+//				Collections.singletonMap("reportData", reportData);
+//		Window processCoilReportWin = (Window) Executions.createComponents("~./src/info_processcoil_report.zul", null, arg);
+//		processCoilReportWin.doModal();
+//	}
 	
 	protected void modifToSave(Button button) {
 		button.setIconSclass("z-icon-floppy-o");

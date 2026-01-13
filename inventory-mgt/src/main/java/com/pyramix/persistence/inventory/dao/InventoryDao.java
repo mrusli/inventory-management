@@ -26,5 +26,8 @@ public interface InventoryDao {
 	public List<Ent_Inventory> findInventoryByCustomer(Ent_Customer customer) throws Exception;
 
 	public List<Ent_Inventory> findInventoryByInventoryCode(Ent_InventoryCode inventoryCode) throws Exception;
+
+	public List<Ent_Inventory> findInventoryByCustomer_InventoryCode(Ent_Customer customer, 
+			Ent_InventoryCode inventoryCode) throws Exception;
 	
 }

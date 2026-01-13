@@ -28,8 +28,8 @@
 				</listhead>
 			</listbox>												
 			<n:div sclass="mt-3">
-				<button id="saveButton" label="Simpan" visible="false" iconSclass="z-icon-check" sclass="compButton" style="background-color: var(--bs-primary)" autodisable="self"></button>
 				<button id="refreshButton" label="Refresh" visible="true" iconSclass="z-icon-refresh" sclass="compButton" style="background-color: var(--bs-success)"></button>
+				<button id="saveButton" label="Simpan" visible="false" iconSclass="z-icon-check" sclass="compButton" style="background-color: var(--bs-primary)" autodisable="self"></button>
 								
 			</n:div>
 		</n:div>

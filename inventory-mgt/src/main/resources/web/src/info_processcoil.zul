@@ -29,7 +29,7 @@
 				</listhead>
 			</listbox>
 			<n:div sclass="mt-3">
-				<button id="cancelProcessButton" label="Batal" visible="true" iconSclass="z-icon-ban" sclass="compButton" style="background-color: var(--bs-danger)"></button>				
+				<button id="cancelProcessButton" label="Batal" visible="false" iconSclass="z-icon-ban" sclass="compButton" style="background-color: var(--bs-danger)"></button>				
 			</n:div>												
 		</n:div>
 		<n:div sclass="col-8">
@@ -107,7 +107,7 @@
 						<listheader label="Marking" width="120px"/>
 						<listheader label="Spek" width="260px"/>
 						<listheader label="Qty(Kg)" width="120px"/>
-						<listheader label="Qty(Lbr)" width="120px"/>
+						<listheader id="productQtyListheader" label="Qty(Lbr)" width="120px"/>
 						<listheader/>
 					</listhead>
 				</listbox>				
@@ -115,9 +115,9 @@
 			<n:div sclass="mt-3">
 <!-- 				<button id="processEditButton" label="Ubah" visible="false" iconSclass="z-icon-pencil" sclass="compButton" style="background-color: var()"></button> -->
 				<button id="processSaveButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-o" sclass="compButton" style="background-color: var(--bs-primary)"></button>
-				<button id="printReportButton" label="Print" visible="false" iconSclass="z-icon-print" sclass="compButton"></button>
-				<button id="printJasperReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton"></button>
-				<button id="cancelAddProcessButton" label="Batal" visible="false" iconSclass="z-icon-xmark" sclass="compButton" style="background-color: var(--bs-warning)"></button>
+<!-- 				<button id="printReportButton" label="Print" visible="false" iconSclass="z-icon-print" sclass="compButton"></button> -->
+				<button id="printJasperReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton" ></button>
+				<button id="cancelAddProcessButton" label="Cancel" visible="false" iconSclass="z-icon-xmark" sclass="compButton" style="background-color: var(--bs-warning)"></button>
 			</n:div>
 		</n:div>	
 	</div>	
