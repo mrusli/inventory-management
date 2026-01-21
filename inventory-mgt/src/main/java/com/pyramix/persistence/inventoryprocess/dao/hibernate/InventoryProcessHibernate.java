@@ -129,6 +129,8 @@ public class InventoryProcessHibernate extends DaoHibernate implements Inventory
 		criteriaQuery.select(root).where(
 				criteriaBuilder.equal(root.get("customer"), customer),
 				criteriaBuilder.equal(root.get("processStatus"), statusProses));
+		criteriaQuery.orderBy(
+				criteriaBuilder.asc(root.get("orderDate")));
 		
 		try {
 			

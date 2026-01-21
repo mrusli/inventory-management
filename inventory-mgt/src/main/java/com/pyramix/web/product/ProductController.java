@@ -1,6 +1,7 @@
 package com.pyramix.web.product;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -67,6 +68,7 @@ public class ProductController extends GFCBaseController {
 		
 		// get all the customers from inventoryProcess
 		Set<Ent_Customer> customerSet = inventoryProcessCustomers();
+		
 		// load customer
 		loadCustomerCombobox(customerSet);
 		// select
@@ -91,8 +93,17 @@ public class ProductController extends GFCBaseController {
 	}
 
 	private void loadCustomerCombobox(Set<Ent_Customer> customerSet) {
+		// convert to list for sorting
+		List<Ent_Customer> customerList = new ArrayList<>(customerSet);
+		customerList.forEach(c -> log.info(c.getCompanyLegalName()));
+		// sort
+		customerList.sort((n1,n2) -> {
+			return n1.getCompanyLegalName().compareTo(n2.getCompanyLegalName());
+		});
+		customerList.forEach(c -> log.info(c.getCompanyLegalName()));
+		
 		Comboitem comboitem;
-		for(Ent_Customer cust : customerSet) {
+		for(Ent_Customer cust : customerList) {
 			comboitem = new Comboitem();
 			comboitem.setLabel(cust.getCompanyType().toString()+"."+
 					cust.getCompanyLegalName());

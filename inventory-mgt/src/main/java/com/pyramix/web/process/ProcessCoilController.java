@@ -153,7 +153,9 @@ public class ProcessCoilController extends GFCBaseController {
 			// set column title according to the process type
 			setProductProcessColumnTitle();
 			// display
-			displayDetailInventoryProcessInfo();	
+			displayDetailInventoryProcessInfo();
+			// make visible
+			// printJasperReportButton.setVisible(true);
 		} else {
 			// cleanup
 			resetDetailInventoryProcessInfo();
@@ -163,6 +165,8 @@ public class ProcessCoilController extends GFCBaseController {
 					customerProcessCombobox.getSelectedItem().getValue();
 			customerNameLabel.setValue(custProc.getCompanyType()+"."+
 					custProc.getCompanyLegalName());
+			// hide
+			// printJasperReportButton.setVisible(false);
 		}
 	}
 	
@@ -175,6 +179,18 @@ public class ProcessCoilController extends GFCBaseController {
 			comboitem.setParent(processTypeCombobox);
 		}
 	}	
+	
+	public void onSelect$processTypeCombobox(Event event) throws Exception {
+		log.info("processTypeCombobox: "+processTypeCombobox.getSelectedItem().getLabel());
+		
+		if (processTypeCombobox.getSelectedItem().getValue().equals(Enm_TypeProcess.Shearing)) {
+			log.info("change product listbox Qty() to Qty(Lbr)");
+			productQtyListheader.setLabel("Qty(Lbr)");
+		} else {
+			log.info("change product listbox Qty() to Qty(Brs)");
+			productQtyListheader.setLabel("Qty(Brs)");
+		}		
+	}
 	
 	private void loadInventoryProcessList() throws Exception {
 		// get the selected customerProcessCombobox
@@ -302,7 +318,7 @@ public class ProcessCoilController extends GFCBaseController {
 			// ask confirmation to cancel
 			Messagebox.show("Batalkan penambahan proses?",
 				    "Confirmation", 
-				    Messagebox.OK | Messagebox.CANCEL,  
+				    Messagebox.OK,  
 				    Messagebox.QUESTION, new EventListener<Event>() {
 						
 						@Override
@@ -368,6 +384,8 @@ public class ProcessCoilController extends GFCBaseController {
 		
 		// allow user to enter new info
 		setToAllowEditInfo();
+		// default process is 'Shearing' and the produk qty is 'Lbr'
+		productQtyListheader.setLabel("Qty(Lbr)");
 		// render material list
 		renderInventoryProcessMaterial(selInventoryProcess.getProcessMaterials());
 		materialToProductLabel.setValue("");
@@ -501,6 +519,8 @@ public class ProcessCoilController extends GFCBaseController {
 				new ArrayList<Ent_InventoryProcessProduct>());
 		
 		renderInventoryProcessProduct(processMaterial.getProcessProducts());
+		// hide material button - only allowed one material coil per process
+		addMaterialButton.setVisible(false);
 	}
 
 	private Set<Ent_InventoryCode> getInventoryCodeSet() throws Exception {
@@ -984,8 +1004,8 @@ public class ProcessCoilController extends GFCBaseController {
 		displayDetailInventoryProcessInfo();
 		// hide product button
 		addProductButton.setVisible(false);
-		// hide material button
-		addMaterialButton.setVisible(false);
+		// hide material button - already hidden when it's click (only allowed one material coil)
+		// addMaterialButton.setVisible(false);
 		// hide save button
 		processSaveButton.setVisible(false);
 		// allow user to print
