@@ -1,6 +1,7 @@
 package com.pyramix.web.suratjalan;
 
 import java.io.ByteArrayOutputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,11 @@ public class SuratJalanPrintController extends GFCBaseController {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		JasperExportManager.exportReportToPdfStream(jasperPrint, baos);
 
-		AMedia amedia = new AMedia("testReport", "pdf", "application/pdf", baos.toByteArray());
+		String rtNoSuratJalan = currSuratJalan.getSuratjalanSerial().getSerialComp();
+		LocalDateTime currDatetime = getLocalDateTime(getZoneId());
+		String rtTimestamp = datetimeToStringDisplay(currDatetime, getShortDateTimeFormat(), getLocale());
+		
+		AMedia amedia = new AMedia(rtNoSuratJalan+"_"+rtTimestamp+".pdf", "pdf", "application/pdf", baos.toByteArray());
 		iframe.setContent(amedia);		
 	}
 

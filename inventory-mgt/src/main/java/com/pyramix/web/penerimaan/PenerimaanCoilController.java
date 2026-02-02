@@ -49,7 +49,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 	
 	private Listbox receiveCoilListbox;
 	private Button saveButton;
-	private Combobox customerCombobox;
+	private Combobox customerCombobox, jenisCoilCombobox;
 	
 	private ListModelList<Ent_Inventory> inventoryModelList = null;
 	private List<Ent_InventoryCode> inventoryCodeList = null;
@@ -68,9 +68,12 @@ public class PenerimaanCoilController extends GFCBaseController {
 		// load customer selection combobox 
 		// (only customers in the inventory list)
 		loadCustomerSelection();
+		// load inventory code
+		// (all codes)
+		loadJenisCoilCombobox();
 				
 		// load inventory (null -> all customers' inventory)
-		loadInventoryList(null);
+		loadInventoryList(null, null);
 		
 		// display
 		displayInventoryList();
@@ -88,7 +91,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 		});
 		uniqueCustList.forEach(c -> log.info(c.getCompanyLegalName()));
 		
-		// clearn combobox
+		// clear combobox
 		customerCombobox.getItems().clear();
 		
 		Comboitem comboitem;
@@ -101,6 +104,45 @@ public class PenerimaanCoilController extends GFCBaseController {
 		}
 	}
 
+	private void loadJenisCoilCombobox() throws Exception {
+		List<Ent_InventoryCode> inventoryCodeList =
+				getInventoryCodeDao().findAllInventoryCodesSorted();
+		
+		// clear combobox
+		jenisCoilCombobox.getItems().clear();
+		
+		Comboitem comboitem;
+		for(Ent_InventoryCode invtCode : inventoryCodeList) {
+			comboitem = new Comboitem();
+			comboitem.setLabel(invtCode.getProductCode());
+			comboitem.setValue(invtCode);
+			comboitem.setParent(jenisCoilCombobox);
+		}
+	}
+	
+	public void onSelect$jenisCoilCombobox(Event event) throws Exception {
+		Ent_InventoryCode selInvtCode = jenisCoilCombobox.getSelectedItem().getValue();
+		log.info("selected InvtCode: {}", selInvtCode.toString());
+		
+		if (customerCombobox.getSelectedItem()!=null) {
+			// use customer name also
+			Ent_Customer selCustomer =
+					customerCombobox.getSelectedItem().getValue();
+			// load inventory
+			loadInventoryList(selCustomer, selInvtCode);
+			
+			// display
+			displayInventoryList();			
+		} else {
+			// load inventory
+			loadInventoryList(null, selInvtCode);
+			
+			// display
+			displayInventoryList();				
+		}
+		
+	}
+	
 	private List<Ent_Customer> findUniqueCustomersFromInventoryList() throws Exception {
 		Set<Ent_Customer> customerSet = new HashSet<Ent_Customer>();
 		List<Ent_Inventory> inventoryList = 
@@ -118,20 +160,27 @@ public class PenerimaanCoilController extends GFCBaseController {
 		log.info("Selected Customer : {}", selCustomer.getCompanyLegalName());
 		
 		// load inventory
-		loadInventoryList(selCustomer);
+		loadInventoryList(selCustomer, null);
 		
 		// display
 		displayInventoryList();		
 	}
 
-	private void loadInventoryList(Ent_Customer customer) throws Exception {
+	private void loadInventoryList(Ent_Customer customer, Ent_InventoryCode invtCode) throws Exception {
 		List<Ent_Inventory> inventoryList = null;
-		if (customer==null) {
+		if (customer==null && invtCode==null) {
 			inventoryList = 
 					getInventoryDao().findAllInventory();			
-		} else {
+		} else if (customer!=null && invtCode==null) {
 			inventoryList =
 					getInventoryDao().findInventoryByCustomer(customer);
+			
+		} else if (customer==null && invtCode!=null) {
+			inventoryList =
+					getInventoryDao().findInventoryByInventoryCode(invtCode);
+		} else {
+			inventoryList =
+					getInventoryDao().findInventoryByCustomer_InventoryCode_NonStatus(customer, invtCode);
 		}
 		
 		inventoryModelList = new ListModelList<Ent_Inventory>(inventoryList);
@@ -196,6 +245,17 @@ public class PenerimaanCoilController extends GFCBaseController {
 				// Button
 				lc = new Listcell();
 				lc.setParent(item);
+				
+				// Status
+				lc = new Listcell();
+				lc.setParent(item);
+
+				if (inventory.getInventoryProcesses().isEmpty()) {
+					lc.setLabel("");
+				} else {
+					lc.setIconSclass("z-icon-code");
+				}
+				// inventory.getInventoryProcesses().forEach(p -> log.info(p.toString()));
 				
 				item.setValue(inventory);
 			}
@@ -847,8 +907,13 @@ public class PenerimaanCoilController extends GFCBaseController {
 		// load customer selection combobox 
 		// (only customers in the inventory list)
 		loadCustomerSelection();
+		customerCombobox.setValue("");
+		// load inventory code
+		// (all codes)
+		loadJenisCoilCombobox();
+		jenisCoilCombobox.setValue("");
 		// re-load (null -> all customers' inventory)
-		loadInventoryList(null);
+		loadInventoryList(null,null);
 		// re-render
 		displayInventoryList();
 		
@@ -862,6 +927,11 @@ public class PenerimaanCoilController extends GFCBaseController {
 					break;
 				}
 			}
+			// reset
+			invtToFind = null;
+		} else {
+			receiveCoilListbox.renderAll();
+			receiveCoilListbox.setActivePage(0);
 		}
 		
 		// hide save button

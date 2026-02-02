@@ -2,6 +2,8 @@ package com.pyramix.web.process;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -71,7 +73,7 @@ public class ProcessCoilController extends GFCBaseController {
 	// 
 	private Datebox processDatebox;
 	private Button addMaterialButton, addProductButton, processSaveButton,
-		printJasperReportButton, cancelProcessButton, cancelAddProcessButton;
+		printJasperReportButton, cancelAddProcessButton;
 	private Listheader productQtyListheader;
 	
 	private List<Ent_Customer> customerList = null;
@@ -109,7 +111,9 @@ public class ProcessCoilController extends GFCBaseController {
 			// set column title according to the process type
 			setProductProcessColumnTitle();
 			// display
-			displayDetailInventoryProcessInfo();	
+			displayDetailInventoryProcessInfo();
+			// make visible
+			printJasperReportButton.setVisible(true);
 		} else {
 			// cleanup
 			resetDetailInventoryProcessInfo();
@@ -118,7 +122,9 @@ public class ProcessCoilController extends GFCBaseController {
 			Ent_Customer custProc = 
 					customerProcessCombobox.getSelectedItem().getValue();
 			customerNameLabel.setValue(custProc.getCompanyType()+"."+
-					custProc.getCompanyLegalName());			
+					custProc.getCompanyLegalName());
+			// hide
+			printJasperReportButton.setVisible(false);
 		}		
 	}
 
@@ -155,7 +161,7 @@ public class ProcessCoilController extends GFCBaseController {
 			// display
 			displayDetailInventoryProcessInfo();
 			// make visible
-			// printJasperReportButton.setVisible(true);
+			printJasperReportButton.setVisible(true);
 		} else {
 			// cleanup
 			resetDetailInventoryProcessInfo();
@@ -166,7 +172,7 @@ public class ProcessCoilController extends GFCBaseController {
 			customerNameLabel.setValue(custProc.getCompanyType()+"."+
 					custProc.getCompanyLegalName());
 			// hide
-			// printJasperReportButton.setVisible(false);
+			printJasperReportButton.setVisible(false);
 		}
 	}
 	
@@ -396,8 +402,6 @@ public class ProcessCoilController extends GFCBaseController {
 		addMaterialButton.setVisible(true);
 		// hide the edit and print button
 		printJasperReportButton.setVisible(false);
-		// hide the cancel process button
-		// cancelProcessButton.setVisible(false);
 		// allow user to cancell add process coil
 		cancelAddProcessButton.setVisible(true);
 	}
@@ -422,24 +426,24 @@ public class ProcessCoilController extends GFCBaseController {
 		
 		customerNameCombobox.setSelectedIndex(selCustIdx);
 		processDatebox.setValue(asDate(getLocalDate(getZoneId()), getZoneId()));
-		Ent_Serial serial = getProcessNumberSerial(Enm_TypeDocument.PROCESS_ORDER, getLocalDate(getZoneId()));
+		Ent_Serial serial = getProcessNumberSerial(Enm_TypeDocument.PROCESS_ORDER, getLocalDateTime(getZoneId()));
 		processNumberLabel.setValue(serial.getSerialComp());
 		statusLabel.setValue(Enm_StatusProcess.Proses.toString());
 		// statusLabel.setAttribute("statusProcess", Enm_StatusProcess.Proses);
 		processTypeCombobox.setSelectedIndex(0);
 	}	
 
-	private Ent_Serial getProcessNumberSerial(Enm_TypeDocument processOrder, LocalDate localDate) {
+	private Ent_Serial getProcessNumberSerial(Enm_TypeDocument processOrder, LocalDateTime localDatetime) {
 		int serialNum = getSerialNumberGenerator()
-				.getSerialNumber(processOrder, localDate, defaultCompany);
+				.getSerialNumber(processOrder, localDatetime, defaultCompany);
 		
 		Ent_Serial serial = new Ent_Serial();
 		serial.setCompany(defaultCompany);
 		serial.setDocumentType(processOrder);
-		serial.setSerialDate(localDate);
+		serial.setSerialDatetime(localDatetime);
 		serial.setSerialNumber(serialNum);
 		serial.setSerialComp(
-				formatSerialComp(processOrder.toCode(processOrder.getValue()), localDate, serialNum));
+				formatSerialComp(processOrder.toCode(processOrder.getValue()), localDatetime, serialNum));
 		
 		return serial;
 	}
@@ -981,6 +985,20 @@ public class ProcessCoilController extends GFCBaseController {
 		if (listitem != null) {
 			Ent_InventoryProcessMaterial editedProcessMaterial =
 					getEditedProcessMaterial(listitem);
+			
+			Ent_Inventory selInventory =
+					editedProcessMaterial.getInventoryCoil();
+			log.info("-----> {}", selInventory.toString());
+			if (selInventory.getInventoryProcesses().isEmpty()) {
+				// create a new list
+				List<Ent_InventoryProcess> invtProcessList = new ArrayList<Ent_InventoryProcess>();
+				invtProcessList.add(selInventoryProcess);
+				
+				selInventory.setInventoryProcesses(invtProcessList);
+			} else {
+				selInventory.getInventoryProcesses().add(selInventoryProcess);
+			}
+			
 			selInventoryProcess.getProcessMaterials().add(editedProcessMaterial);
 		}
 		// get the process data before saving
@@ -992,6 +1010,7 @@ public class ProcessCoilController extends GFCBaseController {
 //				log.info(processProduct.toString());
 //			}
 //		}
+		
 		// update
 		selInventoryProcess = getInventoryProcessDao().update(selInventoryProcess);
 		// load
@@ -1040,9 +1059,10 @@ public class ProcessCoilController extends GFCBaseController {
 		selInventoryProcess.setOrderDate(processDatebox.getValueInLocalDate());
 		selInventoryProcess.setProcessedByCo(defaultCompany);
 		selInventoryProcess.setProcessedForCo(defaultCompany);
+		LocalDateTime currLocalDatetime = processDatebox.getValueInLocalDate().atTime(LocalTime.now());
 		selInventoryProcess.setProcessNumber(
 				getProcessNumberSerial(Enm_TypeDocument.PROCESS_ORDER, 
-						processDatebox.getValueInLocalDate()));
+						currLocalDatetime));
 		selInventoryProcess.setProcessStatus(Enm_StatusProcess.Proses);
 		selInventoryProcess.setProcessType(processTypeCombobox.getSelectedItem().getValue());
 		selInventoryProcess.setCustomer(customerProcessCombobox.getSelectedItem().getValue());

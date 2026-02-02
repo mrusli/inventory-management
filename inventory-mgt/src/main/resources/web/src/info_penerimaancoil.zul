@@ -6,12 +6,9 @@
 		<n:div sclass="col-12">
 			<n:div sclass="mt-3">
 				Customer:
-				<combobox id="customerCombobox" width="180px" visible="true"></combobox>
-				Dari:
-				<datebox id="recvFromDatebox" width="190px"></datebox>
-				<label value=" s/d "></label>
-				<datebox id="recvToDatebox" width="190px"></datebox>
-				<button id="recvFilterButton" label="Filter" visible="true" iconSclass="z-icon-search" sclass="compButton"></button>
+				<combobox id="customerCombobox" width="220px" visible="true"></combobox>
+				Jenis-Coil:
+				<combobox id="jenisCoilCombobox" width="180px" visible="true"></combobox>
 				<button id="coilAddButton" label="Tambah" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>				
 			</n:div>
 			<listbox sclass="mt-3" id="receiveCoilListbox" mold="paging" height="400px" pageSize="6">
@@ -23,6 +20,7 @@
 		 			<listheader label="Packing" width="120px"></listheader>
 		 			<listheader label="Jmlh/Kg" width="120px"></listheader>
 					<listheader label="No.Coil" width="120px"></listheader>
+					<listheader width="80px"/>
 					<listheader width="80px"/>
 					<listheader/>
 				</listhead>

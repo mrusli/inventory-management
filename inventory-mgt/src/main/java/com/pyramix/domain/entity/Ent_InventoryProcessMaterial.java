@@ -51,7 +51,7 @@ public class Ent_InventoryProcessMaterial extends IdBasedObject {
 	@ToString.Exclude
 	private List<Ent_InventoryProcessProduct> processProducts;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Ent_Inventory inventoryCoil;
 	
 	@Column(name = "cntrct")

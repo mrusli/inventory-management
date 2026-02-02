@@ -2,6 +2,7 @@ package com.pyramix.web.process;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -119,7 +120,12 @@ public class ProcessCoilJasperController extends GFCBaseController {
 //		exporter.setExporterOutput(new SimpleOutputStreamExporterOutput(baos));
 //		exporter.exportReport();
 		
-		AMedia amedia = new AMedia("testReport", "pdf", "application/pdf", baos.toByteArray());
+		// String rtNoSuratJalan = currSuratJalan.getSuratjalanSerial().getSerialComp();
+		String rtNoProcess = selInventoryProcess.getProcessNumber().getSerialComp();
+		LocalDateTime currDatetime = getLocalDateTime(getZoneId());
+		String rtTimestamp = datetimeToStringDisplay(currDatetime, getShortDateTimeFormat(), getLocale());
+
+		AMedia amedia = new AMedia(rtNoProcess+"_"+rtTimestamp+"pdf", "pdf", "application/pdf", baos.toByteArray());
 		iframe.setContent(amedia);
 	}
 

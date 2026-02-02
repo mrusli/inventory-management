@@ -1,6 +1,6 @@
 package com.pyramix.domain.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -24,8 +24,8 @@ public class Ent_Serial extends IdBasedObject {
 	@ToString.Exclude
 	private Ent_Company company;
 	
-	@Column(name = "ser_date")
-	private LocalDate serialDate;
+	@Column(name = "ser_date_time")
+	private LocalDateTime serialDatetime;
 	
 	@Column(name = "ser_num")
 	private int serialNumber;

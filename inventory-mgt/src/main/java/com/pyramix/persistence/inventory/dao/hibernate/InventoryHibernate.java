@@ -99,6 +99,30 @@ public class InventoryHibernate extends DaoHibernate implements InventoryDao {
 		Root<Ent_Inventory> root = criteriaQuery.from(Ent_Inventory.class);
 		criteriaQuery.select(root).where(
 				criteriaBuilder.equal(root.get("customer"), customer),
+				criteriaBuilder.equal(root.get("inventoryCode"), inventoryCode),
+				criteriaBuilder.isEmpty(root.get("inventoryProcesses")));
+		
+		try {
+			
+			return session.createQuery(criteriaQuery).getResultList();
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			session.close();
+		}
+	}
+
+	@Override
+	public List<Ent_Inventory> findInventoryByCustomer_InventoryCode_NonStatus(Ent_Customer customer,
+			Ent_InventoryCode inventoryCode) throws Exception {
+		Session session = super.getSessionFactory().openSession();
+		
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<Ent_Inventory> criteriaQuery = criteriaBuilder.createQuery(Ent_Inventory.class);
+		Root<Ent_Inventory> root = criteriaQuery.from(Ent_Inventory.class);
+		criteriaQuery.select(root).where(
+				criteriaBuilder.equal(root.get("customer"), customer),
 				criteriaBuilder.equal(root.get("inventoryCode"), inventoryCode));
 		
 		try {

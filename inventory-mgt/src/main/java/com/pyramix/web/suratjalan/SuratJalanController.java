@@ -2,6 +2,7 @@ package com.pyramix.web.suratjalan;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -266,27 +267,29 @@ public class SuratJalanController extends GFCBaseController {
 		suratjalan.setProcessedByCo(defaultCompany);
 		suratjalan.setRefDocument("");
 		suratjalan.setSuratjalanDate(getLocalDate(getZoneId()));
-		suratjalan.setSuratjalanSerial(getSuratJalanSerial(Enm_TypeDocument.SURATJALAN, getLocalDate(getZoneId())));
+		suratjalan.setSuratjalanSerial(getSuratJalanSerial(Enm_TypeDocument.SURATJALAN, getLocalDateTime(getZoneId())));
 		// productList to suratjalanProductList
 		suratjalan.setSuratjalanProducts(transformProductToSuratJalanProduct(productList));
 		suratjalan.setSuratjalanStatus(Enm_StatusDocument.Normal);
 		suratjalan.setNoPolisi("");
 		suratjalan.setAddInProgress(true);
 		
+		
+		
 		return suratjalan;
 	}	
 		
-	private Ent_Serial getSuratJalanSerial(Enm_TypeDocument typeDocument, LocalDate localdate) {
+	private Ent_Serial getSuratJalanSerial(Enm_TypeDocument typeDocument, LocalDateTime localdatetime) {
 		int serialNum = getSerialNumberGenerator()
-				.getSerialNumber(typeDocument, localdate, defaultCompany);
+				.getSerialNumber(typeDocument, localdatetime, defaultCompany);
 		
 		Ent_Serial serial = new Ent_Serial();
 		serial.setCompany(defaultCompany);
 		serial.setDocumentType(typeDocument);
-		serial.setSerialDate(localdate);
+		serial.setSerialDatetime(localdatetime);
 		serial.setSerialNumber(serialNum);
 		serial.setSerialComp(
-				formatSerialComp(typeDocument.toCode(typeDocument.getValue()),localdate,serialNum));
+				formatSerialComp(typeDocument.toCode(typeDocument.getValue()),localdatetime,serialNum));
 		
 		return serial;
 	}
@@ -431,7 +434,18 @@ public class SuratJalanController extends GFCBaseController {
 			@Override
 			public void onEvent(Event event) throws Exception {
 				Button button = (Button) event.getTarget();
+				// get the current listitem
 				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
+				// save the active item index;
+				int activeItemIndex = activeItem.getIndex();
+				// disable other listitems' buttons
+				Listcell lc;
+				Button nonActiveButton;
+				for(Listitem listitem : suratjalanProductListbox.getItems()) {
+					lc = (Listcell) listitem.getChildren().get(5);
+					nonActiveButton = (Button) lc.getFirstChild();
+					nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
+				}				
 				if (product.isEditInProgress()) {
 					log.info("to editSuratJalanProduct click");
 					// set to save
@@ -589,6 +603,12 @@ public class SuratJalanController extends GFCBaseController {
 		currSuratJalan.setNoPolisi(nopolTextbox.getValue());
 		currSuratJalan.setRefDocument(refdocTextbox.getValue());
 		
+		Ent_InventoryProcess selInvtProcess = 
+				processCombobox.getSelectedItem().getValue();
+		// set the selected inventoryProcess to this suratJalan
+		currSuratJalan.setInventoryProcess(selInvtProcess);
+		// set this suratJalan to the selected inventoryProcess
+		selInvtProcess.setSuratjalan(currSuratJalan);
 		
 		return currSuratJalan;
 	}

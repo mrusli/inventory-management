@@ -48,9 +48,9 @@ public class MainController extends GFCBaseController {
 		// mainInclude.setSrc("~./src/info_panel_main.zul");
 
 		// mainInclude.setSrc("~./src/info_dashboard.zul");
-		// mainInclude.setSrc("~./src/info_tagihan.zul");
+		mainInclude.setSrc("~./src/info_tagihan.zul");
 		// mainInclude.setSrc("~./src/info_suratjalan.zul");
-		mainInclude.setSrc("~./src/info_produk.zul");
+		// mainInclude.setSrc("~./src/info_produk.zul");
 		// mainInclude.setSrc("~./src/info_inventory_table.zul");
 		// mainInclude.setSrc("~./src/info_processcoil.zul");
 		// mainInclude.setSrc("~./src/info_company.zul");

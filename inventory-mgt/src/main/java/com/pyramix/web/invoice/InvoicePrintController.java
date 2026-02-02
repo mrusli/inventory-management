@@ -2,6 +2,7 @@ package com.pyramix.web.invoice;
 
 import java.io.ByteArrayOutputStream;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +70,11 @@ public class InvoicePrintController extends GFCBaseController {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		JasperExportManager.exportReportToPdfStream(jasperPrint, baos);
 
-		AMedia amedia = new AMedia("testReport", "pdf", "application/pdf", baos.toByteArray());
+		String rtNoInvoice = activeInvoice.getInvc_ser().getSerialComp();
+		LocalDateTime currDatetime = getLocalDateTime(getZoneId());
+		String rtTimestamp = datetimeToStringDisplay(currDatetime, getShortDateFormat(), getLocale());
+		
+		AMedia amedia = new AMedia(rtNoInvoice+"_"+rtTimestamp+".pdf", "pdf", "application/pdf", baos.toByteArray());
 		iframe.setContent(amedia);		
 		
 	}

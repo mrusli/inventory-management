@@ -1,6 +1,7 @@
 package com.pyramix.web.common;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.pyramix.domain.entity.Enm_TypeDocument;
 import com.pyramix.domain.entity.Ent_Company;
@@ -24,21 +25,21 @@ public class SerialNumberGenerator extends GFCBaseController {
 		log.info("SerialNumberGenerator created");
 	}
 
-	public int getSerialNumber(Enm_TypeDocument documentType, LocalDate currentDate, Ent_Company company) {
+	public int getSerialNumber(Enm_TypeDocument documentType, LocalDateTime currentDatetime, Ent_Company company) {
 		int serNum = 1;
 		
 		Ent_Serial serialNum =
 				getSerialDao().findLastByDocumentType(documentType, company);
 		
 		if (serialNum != null) {
-			LocalDate lastDate = serialNum.getSerialDate();
+			LocalDateTime lastDate = serialNum.getSerialDatetime();
 			
 			// compare year
-			int lastYearValue = getLocalDateYearValue(lastDate);
-			int currYearValue = getLocalDateYearValue(currentDate);
+			int lastYearValue = lastDate.getYear();
+			int currYearValue = currentDatetime.getYear();
 			// compare month
-			int lastMonthValue = getLocalDateMonthValue(lastDate);
-			int currMonthValue = getLocalDateMonthValue(currentDate);
+			int lastMonthValue = lastDate.getMonthValue();
+			int currMonthValue = currentDatetime.getMonthValue();
 			
 			if (lastYearValue==currYearValue) {
 				

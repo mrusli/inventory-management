@@ -325,7 +325,19 @@ public class ProductController extends GFCBaseController {
 				Button button = (Button) event.getTarget();
 				// get the current listitem
 				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
-				
+				// save the active item index;
+				int activeItemIndex = activeItem.getIndex();
+				// disable other listitems' buttons
+				Listcell lc;
+				Button nonActiveButton;
+				for(Listitem listitem : productListbox.getItems()) {
+					lc = (Listcell) listitem.getChildren().get(4);
+					nonActiveButton = (Button) lc.getFirstChild();
+					nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
+					lc = (Listcell) listitem.getChildren().get(5);
+					nonActiveButton = (Button) lc.getFirstChild();
+					nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
+				}				
 				if (product.isEditInProgress()) {
 					// to update / save
 					log.info("to update or save");
@@ -442,6 +454,20 @@ public class ProductController extends GFCBaseController {
 		setProductQtyKg(activeItem, processProduct.getWeightQuantity());
 		setProductQtyLbr(activeItem, processProduct.getSheetQuantity());
 		setEditToSaveButton(activeItem);
+		
+		// save the active item index;
+		int activeItemIndex = activeItem.getIndex();
+		// disable other listitems' buttons
+		Listcell lc;
+		Button nonActiveButton;
+		for(Listitem listitem : productListbox.getItems()) {
+			lc = (Listcell) listitem.getChildren().get(4);
+			nonActiveButton = (Button) lc.getFirstChild();
+			nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
+			lc = (Listcell) listitem.getChildren().get(5);
+			nonActiveButton = (Button) lc.getFirstChild();
+			nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
+		}
 
 	}
 
@@ -596,7 +622,9 @@ public class ProductController extends GFCBaseController {
 		// reload
 		onSelectCustomerProcessCombobox();
 		// reset checkbox
-		processCompletedCheckbox.setChecked(false);		
+		processCompletedCheckbox.setChecked(false);
+		// hide save button
+		saveProcButton.setVisible(false);
 	}
 	
 	protected void modifToSave(Button button) {

@@ -1,7 +1,8 @@
 package com.pyramix.web.invoice;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -232,8 +233,9 @@ public class InvoiceController extends GFCBaseController {
 		kwitansi.setKwitansi_date(activeInvoice.getInvc_date());
 		kwitansi.setKwitansi_for(activeInvoice.getInvc_customer().getCompanyType()+"."+
 				activeInvoice.getInvc_customer().getCompanyLegalName());
+		LocalDateTime currLocaldatetime = activeInvoice.getInvc_date().atTime(LocalTime.now());
 		kwitansi.setKwitansi_ser(getDocumentSerial(Enm_TypeDocument.KWITANSI, 
-				activeInvoice.getInvc_date()));
+				currLocaldatetime));
 
 		return kwitansi;
 	}
@@ -324,14 +326,22 @@ public class InvoiceController extends GFCBaseController {
 	}
 	
 	private void setActiveInvoice() throws Exception {
-		int latestInvc = invoiceModelList.getSize()-1;
-		if (latestInvc>=0) {
-			activeInvoice = invoiceModelList.get(latestInvc);
+		if (!invoiceModelList.isEmpty()) {
+			activeInvoice = invoiceModelList.get(0);
 			// init to load invoiceProduct
-			activeInvoice = getInvoiceDao().findInvoiceProductsByProxy(activeInvoice.getId());
+			activeInvoice = getInvoiceDao().findInvoiceProductsByProxy(activeInvoice.getId());			
 		} else {
 			activeInvoice = null;
 		}
+		
+//		int latestInvc = invoiceModelList.getSize()-1;
+//		if (latestInvc>=0) {
+//			activeInvoice = invoiceModelList.get(latestInvc);
+//			// init to load invoiceProduct
+//			activeInvoice = getInvoiceDao().findInvoiceProductsByProxy(activeInvoice.getId());
+//		} else {
+//			activeInvoice = null;
+//		}
 	}
 
 	private void loadCustomerCombobox() throws Exception {
@@ -485,21 +495,21 @@ public class InvoiceController extends GFCBaseController {
 		activeInvoice = new Ent_Invoice();
 		activeInvoice.setInvc_date(getLocalDate(getZoneId()));
 		activeInvoice.setInvc_ser(getDocumentSerial(Enm_TypeDocument.FAKTUR,
-				getLocalDate(getZoneId())));
+				getLocalDateTime(getZoneId())));
 		activeInvoice.setAddInProgress(true);		
 	}
 
-	private Ent_Serial getDocumentSerial(Enm_TypeDocument typeDocument, LocalDate localDate) {
+	private Ent_Serial getDocumentSerial(Enm_TypeDocument typeDocument, LocalDateTime localDatetime) {
 		int serialNum = getSerialNumberGenerator()
-				.getSerialNumber(typeDocument, localDate, defaultCompany);
+				.getSerialNumber(typeDocument, localDatetime, defaultCompany);
 		
 		Ent_Serial serial = new Ent_Serial();
 		serial.setCompany(defaultCompany);
 		serial.setDocumentType(typeDocument);
-		serial.setSerialDate(localDate);
+		serial.setSerialDatetime(localDatetime);;
 		serial.setSerialNumber(serialNum);
 		serial.setSerialComp(
-				formatSerialComp(typeDocument.toCode(typeDocument.getValue()),localDate,serialNum));
+				formatSerialComp(typeDocument.toCode(typeDocument.getValue()),localDatetime,serialNum));
 		
 		log.info(serial.toString());
 		
@@ -542,7 +552,6 @@ public class InvoiceController extends GFCBaseController {
 			loadSuratJalanCombobox();
 			// clear the combobox
 			suratjalanCombobox.setValue("");
-
 		}
 	}
 	
@@ -662,37 +671,49 @@ public class InvoiceController extends GFCBaseController {
 	}	
 	
 	public void onAfterRender$invoiceProductListbox(Event event) throws Exception {
-		double jumlahJasa = calcJumlahJasa();
-		subtotal01JasaLabel.setValue(
-				toDecimalFormat(new BigDecimal(jumlahJasa), getLocale(), getDecimalFormat()));
-		log.info(String.valueOf(jumlahJasa));
-		double jumlahPpn = PPN * jumlahJasa / 100;
-		ppnJasaLabel.setValue(
-				toDecimalFormat(new BigDecimal(jumlahPpn), getLocale(), getDecimalFormat()));
-		log.info(String.valueOf(jumlahPpn));
-		double jumlahTotalJasa = jumlahJasa + jumlahPpn;
-		subtotal02JasaLabel.setValue(
-				toDecimalFormat(new BigDecimal(jumlahTotalJasa), getLocale(), getDecimalFormat()));
-		double jumlahPph = PPH * jumlahJasa / 100;
-		log.info(String.valueOf(jumlahPpn));
-		pph23JasaLabel.setValue("-"+
-				toDecimalFormat(new BigDecimal(jumlahPph), getLocale(), getDecimalFormat()));
-		double jumlahTotalJasaDecPph = jumlahTotalJasa - jumlahPph;
-		log.info(String.valueOf(jumlahTotalJasaDecPph));
-		totalJasaLabel.setValue(
-				toDecimalFormat(new BigDecimal(jumlahTotalJasaDecPph), getLocale(), getDecimalFormat()));
+		log.info("onafterrender invoiceProductListbox");
+		if (activeInvoice != null) {
+			subtotal01JasaLabel.setValue(
+					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal01()), getLocale(), getDecimalFormat()));
+			ppnJasaLabel.setValue(
+					toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn()), getLocale(), getDecimalFormat()));
+			subtotal02JasaLabel.setValue(
+					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal02()), getLocale(), getDecimalFormat()));
+			pph23JasaLabel.setValue(
+					toDecimalFormat(new BigDecimal(activeInvoice.getAmount_pph()), getLocale(), getDecimalFormat()));
+			totalJasaLabel.setValue(
+					toDecimalFormat(new BigDecimal(activeInvoice.getTotal_invoice()), getLocale(), getDecimalFormat()));
+			subtotalPalletLabel.setValue(
+					toDecimalFormat(new BigDecimal(activeInvoice.getTotal_invoice()), getLocale(), getDecimalFormat()));
+		}
+		
+//		double jumlahJasa = calcJumlahJasa();
+//		subtotal01JasaLabel.setValue(
+//				toDecimalFormat(new BigDecimal(jumlahJasa), getLocale(), getDecimalFormat()));
+//		log.info(toDecimalFormat(new BigDecimal(jumlahJasa), getLocale(), getDecimalFormat()));
+//		double jumlahPpn = PPN * jumlahJasa / 100;
+//		log.info(toDecimalFormat(new BigDecimal(jumlahPpn), getLocale(), getDecimalFormat()));
+//		double jumlahTotalJasa = jumlahJasa + jumlahPpn;
+//		double jumlahPph = PPH * jumlahJasa / 100;
+//		log.info(toDecimalFormat(new BigDecimal(jumlahPph), getLocale(), getDecimalFormat()));
+//		pph23JasaLabel.setValue("-"+
+//				toDecimalFormat(new BigDecimal(jumlahPph), getLocale(), getDecimalFormat()));
+//		double jumlahTotalJasaDecPph = jumlahTotalJasa - jumlahPph;
+//		log.info(String.valueOf(toDecimalFormat(new BigDecimal(jumlahTotalJasaDecPph), getLocale(), getDecimalFormat())));
+//		totalJasaLabel.setValue(
+//				toDecimalFormat(new BigDecimal(jumlahTotalJasaDecPph), getLocale(), getDecimalFormat()));
 				
 	}
 
-	private double calcJumlahJasa() {
-		double jumlah = 0;
+//	private double calcJumlahJasa() {
+//		double jumlah = 0;
 //		if (activeInvoice.getInvoiceProducts()!=null) {
 //			for(Ent_InvoiceProduct invcProd : activeInvoice.getInvoiceProducts()) {
 //				jumlah = jumlah + invcProd.getSub_total();
 //			}			
 //		}
-		return jumlah;
-	}
+//		return jumlah;
+//	}
 	
 	
 	protected EventListener<Event> editInvoiceProduct(Ent_InvoiceProduct product) {
@@ -771,7 +792,7 @@ public class InvoiceController extends GFCBaseController {
 
 	protected void setPO(Listitem activeItem, String ref_document) {
 		Listcell lc = (Listcell) activeItem.getChildren().get(2);
-		lc.setLabel("");
+		lc.setLabel(" ");
 		Textbox textbox = new Textbox();
 		textbox.setValue(ref_document);
 		textbox.setWidth("100px");
@@ -897,15 +918,15 @@ public class InvoiceController extends GFCBaseController {
 				double qtyKg, rpKg, subtotal;
 				doublebox = (Doublebox) event.getTarget();
 				rpKg = doublebox.getValue();
-				log.info("calc Jumlah:"+rpKg);
+				log.info("calc Jumlah: {}", toDecimalFormat(new BigDecimal(rpKg), getLocale(), getDecimalFormat()));
 				// get the 'Berat'
 				lc = (Listcell) activeItem.getChildren().get(5);
 				doublebox = (Doublebox) lc.getFirstChild();
 				qtyKg = doublebox.getValue();
-				log.info("calc Jumlah:"+qtyKg);
+				log.info("calc Jumlah: {}", toDecimalFormat(new BigDecimal(qtyKg), getLocale(), getDecimalFormat()));
 				// calc
 				subtotal = qtyKg * rpKg;
-				log.info("calc Jumlah:"+subtotal);
+				log.info("calc Jumlah: {}",toDecimalFormat(new BigDecimal(subtotal), getLocale(), getDecimalFormat()));
 				// jumlah
 				lc = (Listcell) activeItem.getChildren().get(7);				
 				doublebox = (Doublebox) lc.getFirstChild();
@@ -970,10 +991,28 @@ public class InvoiceController extends GFCBaseController {
 	}
 	
 	public void onClick$saveAddButton(Event event) throws Exception {
+		log.info("saveAddButton click");
 		if (activeInvoice.isAddInProgress()) {
 			// set kwitansi
 			
 			// set faktur
+			
+			// jasa - calc subtotal and others
+			double subtotal01Jasa = 0;
+			for(Ent_InvoiceProduct invcProd : invoiceProductList) {
+				subtotal01Jasa = subtotal01Jasa + invcProd.getSub_total();
+				
+				invcProd.getRef_suratjalan().setInvoice(activeInvoice);
+			}
+			log.info(toDecimalFormat(new BigDecimal(subtotal01Jasa), getLocale(), getDecimalFormat()));
+			double ppnJasa = subtotal01Jasa * PPN / 100;
+			log.info(toDecimalFormat(new BigDecimal(ppnJasa), getLocale(), getDecimalFormat()));
+			double subtotal02Jasa = subtotal01Jasa + ppnJasa;
+			log.info(toDecimalFormat(new BigDecimal(subtotal02Jasa), getLocale(), getDecimalFormat()));
+			double pphJasa = (subtotal01Jasa * PPH / 100) * -1;
+			log.info(toDecimalFormat(new BigDecimal(pphJasa), getLocale(), getDecimalFormat()));
+			double totalinvoiceJasa = subtotal02Jasa + pphJasa;
+			log.info(toDecimalFormat(new BigDecimal(totalinvoiceJasa), getLocale(), getDecimalFormat()));
 			
 			// set invoiceProducts
 			activeInvoice.setInvoiceProducts(invoiceProductList);
@@ -982,6 +1021,12 @@ public class InvoiceController extends GFCBaseController {
 			activeInvoice.setInvc_type(Enm_TypeInvoice.normal);
 			activeInvoice.setPay_type(Enm_TypePayment.bank);
 			activeInvoice.setInvc_customer(selCustomer);
+			activeInvoice.setSubtotal01(subtotal01Jasa);
+			activeInvoice.setAmount_ppn(ppnJasa);
+			activeInvoice.setSubtotal02(subtotal02Jasa);
+			activeInvoice.setAmount_pph(pphJasa);
+			activeInvoice.setTotal_invoice(totalinvoiceJasa);
+
 			// save
 			activeInvoice = getInvoiceDao().update(activeInvoice);
 			// latest invoice for this customer
@@ -1028,10 +1073,31 @@ public class InvoiceController extends GFCBaseController {
 					transformToInvoicePallet(invoiceProductList);
 							//activeInvoice.getInvoiceProducts());
 		} else {
-			
+			log.info("addInProgress false");
 			if (palletList.isEmpty()) {
+				log.info("list is empty -- try to get from invoice products");
 				palletList =
-						transformToInvoicePallet(activeInvoice.getInvoiceProducts());				
+						transformToInvoicePallet(activeInvoice.getInvoiceProducts());
+				
+				if (palletList.isEmpty()) {
+					log.info("list is still empty -- nothing to add from invoice products. Add manually.");
+					
+					// Ent_SuratJalan ref_suratJalan = palletList.get(0).getRef_suratjalan();
+					Ent_SuratJalan ref_suratJalan =
+							activeInvoice.getInvoiceProducts().get(0).getRef_suratjalan();
+					log.info("ref_suratJalan: {}", ref_suratJalan);
+					
+					Ent_InvoicePallet pallet = new Ent_InvoicePallet();
+					pallet.setMarking("");
+					pallet.setPallet_price(0.0);
+					pallet.setPallet_subtotal(0.0);
+					pallet.setQty_pcs(0);
+					pallet.setRef_suratjalan(ref_suratJalan);
+					pallet.setEditInProgress(true);
+					
+					palletList.add(pallet);
+				}
+				
 			} else {
 				// grab the suratjalan
 				Ent_SuratJalan ref_suratJalan = palletList.get(0).getRef_suratjalan();
@@ -1133,27 +1199,34 @@ public class InvoiceController extends GFCBaseController {
 	}
 
 	public void onAfterRender$palletListbox(Event event) throws Exception {
-		double jumlahBahan = calcJumlahBahan();
-		log.info("bhn - jumlah:"+jumlahBahan);
-		subtotalPalletLabel.setValue(
-				toDecimalFormat(new BigDecimal(jumlahBahan), getLocale(), getDecimalFormat()));
-		double jumlahPpn = PPN * jumlahBahan / 100;
-		log.info("bhn - ppn:"+jumlahPpn);
-		ppnPalletLabel.setValue(
-				toDecimalFormat(new BigDecimal(jumlahPpn), getLocale(), getDecimalFormat()));
-		double jumlahTotalBahan = jumlahBahan + jumlahPpn;
-		log.info("bhn - total:"+jumlahTotalBahan);
-		totalPalletLabel.setValue(
-				toDecimalFormat(new BigDecimal(jumlahTotalBahan), getLocale(), getDecimalFormat()));
+		log.info("onAfterRender palletListbox");
+		// double jumlahBahan = calcJumlahBahan();
+		if (activeInvoice != null) {
+			log.info("bhn - jumlah: {}", 
+					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal01Plt()), getLocale(), getDecimalFormat()));
+			subtotalPalletLabel.setValue(
+					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal01Plt()), getLocale(), getDecimalFormat()));
+			log.info("bhn - ppn: {}",
+					toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn_plt()), getLocale(), getDecimalFormat()));
+			ppnPalletLabel.setValue(
+					toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn_plt()), getLocale(), getDecimalFormat()));
+			log.info("bhn - total: {}",
+					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal02Plt()), getLocale(), getDecimalFormat()));
+			totalPalletLabel.setValue(
+					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal02Plt()), getLocale(), getDecimalFormat()));
+		}
+		
+		// double jumlahPpn = PPN * jumlahBahan / 100;
+		// double jumlahTotalBahan = jumlahBahan + jumlahPpn;
 	}
 	
-	private double calcJumlahBahan() throws Exception {
-		double jumlah = 0;
-		for(Ent_InvoicePallet invcPlt : palletList) {
-			jumlah = jumlah + invcPlt.getPallet_subtotal();
-		}
-		return jumlah;
-	}
+//	private double calcJumlahBahan() throws Exception {
+//		double jumlah = 0;
+//		for(Ent_InvoicePallet invcPlt : palletList) {
+//			jumlah = jumlah + invcPlt.getPallet_subtotal();
+//		}
+//		return jumlah;
+//	}
 	
 	protected EventListener<Event> editInvoicePallet(Ent_InvoicePallet pallet) {
 		
@@ -1348,8 +1421,22 @@ public class InvoiceController extends GFCBaseController {
 		
 		// set faktur
 		
+		// bahan - calc subtotal and others
+		double subtotal01plt = 0;
+		for(Ent_InvoicePallet invcPllt : palletList) {
+			subtotal01plt = subtotal01plt + invcPllt.getPallet_subtotal();
+		}
+		log.info(toDecimalFormat(new BigDecimal(subtotal01plt), getLocale(), getDecimalFormat()));
+		double ppnplt = subtotal01plt * PPN / 100;
+		log.info(toDecimalFormat(new BigDecimal(ppnplt), getLocale(), getDecimalFormat()));
+		double subtotal02plt = subtotal01plt + ppnplt;
+		log.info(toDecimalFormat(new BigDecimal(subtotal02plt), getLocale(), getDecimalFormat()));		
+		
 		// set invoicePallet
 		activeInvoice.setInvoicePallet(palletList);
+		activeInvoice.setSubtotal01Plt(subtotal01plt);
+		activeInvoice.setAmount_ppn_plt(ppnplt);
+		activeInvoice.setSubtotal02Plt(subtotal02plt);
 		// save
 		getInvoiceDao().update(activeInvoice);
 		// re-render
@@ -1386,6 +1473,10 @@ public class InvoiceController extends GFCBaseController {
 	
 	public void onClick$printKwitansiTagihanJasperReportButton(Event event) throws Exception {
 		log.info("printKwitansiJasperReportButton click");
+		
+		if (activeInvoice.getJasaKwitansi()==null) {
+			throw new Exception("Kwitansi belum dibuat");
+		}
 		
 		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
 		

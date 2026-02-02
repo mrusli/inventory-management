@@ -58,7 +58,7 @@ public class SerialHibernate extends DaoHibernate implements SerialDao {
 				criteriaBuilder.equal(root.get("documentType"), documentType),
 				criteriaBuilder.equal(root.get("company"), company));
 		criteriaQuery.orderBy(
-				criteriaBuilder.desc(root.get("serialNumber")));
+				criteriaBuilder.desc(root.get("serialDatetime")));
 		
 		try {
 			

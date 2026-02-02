@@ -248,6 +248,12 @@ public class GFCBaseController extends GenericForwardComposer<Component> impleme
 		return localDate.format(formatter);
 	}
 	
+	public String getLocalDateYear(LocalDateTime localDatetime, String yearFormat, Locale locale) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(yearFormat, locale);
+		
+		return localDatetime.format(formatter);
+	}
+	
 	/**
 	 * 
 	 * @param localDate
@@ -292,7 +298,13 @@ public class GFCBaseController extends GenericForwardComposer<Component> impleme
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(monthFormat, locale);
 
 		return localDate.format(formatter);
-	}	
+	}
+	
+	public String getLocalDateMonth(LocalDateTime localDatetime, String monthFormat, Locale locale) {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(monthFormat, locale);
+
+		return localDatetime.format(formatter);
+	}		
 	
 	/**
 	 * 
@@ -536,10 +548,10 @@ public class GFCBaseController extends GenericForwardComposer<Component> impleme
 	 * @param serialNum
 	 * @return
 	 */
-	public String formatSerialComp(String code, LocalDate currentDate, int serialNum) {
+	public String formatSerialComp(String code, LocalDateTime currentDatetime, int serialNum) {
 		
-		String year 	= getLocalDateYear(currentDate, "yy", getLocale());
-		String month	= getLocalDateMonth(currentDate, "MM", getLocale());		
+		String year 	= getLocalDateYear(currentDatetime, "yy", getLocale());
+		String month	= getLocalDateMonth(currentDatetime, "MM", getLocale());		
 		
 		return code+"."+
 			formatTo2DigitWithLeadingZeo(Integer.valueOf(year))+"."+

@@ -37,7 +37,7 @@ public class Ent_SuratJalan extends IdBasedObject {
 	@Column(name = "ref_doc")
 	private String refDocument;
 	
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	private Ent_Invoice invoice;
 	
 	@EqualsAndHashCode.Exclude
@@ -54,6 +54,9 @@ public class Ent_SuratJalan extends IdBasedObject {
 	
 	@Column(name = "no_pol")
 	private String noPolisi;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	private Ent_InventoryProcess inventoryProcess;
 	
 	@Transient
 	private boolean addInProgress = false;

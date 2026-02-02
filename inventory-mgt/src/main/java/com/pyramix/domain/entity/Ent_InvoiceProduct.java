@@ -1,5 +1,7 @@
 package com.pyramix.domain.entity;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.type.TrueFalseConverter;
 
 import jakarta.persistence.Column;
@@ -20,6 +22,7 @@ import lombok.ToString;
 public class Ent_InvoiceProduct extends IdBasedObject {
 
 	@ManyToOne
+	@Cascade(CascadeType.ALL)
 	private Ent_SuratJalan ref_suratjalan;
 	
 	@ManyToOne
