@@ -459,6 +459,7 @@ public class InvoiceController extends GFCBaseController {
 		saveAddButton.setVisible(true);
 		// not allow to edit
 		editButton.setVisible(false);
+		editPltButton.setVisible(false);
 	}
 
 	private void clearInvoiceInfo() throws Exception {
@@ -725,10 +726,20 @@ public class InvoiceController extends GFCBaseController {
 				log.info("edit/save invoiceproduct button click");
 				Button button = (Button) event.getTarget();
 				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
+				// save active item index
+				int activeItemIndex = activeItem.getIndex();
+				// disable other listitems' buttons
+				Listcell lc;
+				Button nonActiveButton;
+				for(Listitem listitem : invoiceProductListbox.getItems()) {
+					lc = (Listcell) listitem.getChildren().get(9);
+					nonActiveButton = (Button) lc.getFirstChild();
+					nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
+				}
 				if (product.isEditInProgress()) {
 					log.info("to edit invoiceProduct click");
 					product.setEditInProgress(false);
-
+					
 					// set columns to edit
 					setMarking(activeItem, product.getMarking(),1);
 					setPO(activeItem, product.getRef_document());
@@ -988,6 +999,9 @@ public class InvoiceController extends GFCBaseController {
 		// hide cancel and save button
 		cancelAddButton.setVisible(false);
 		saveAddButton.setVisible(false);
+		// allow user to edit
+		editButton.setVisible(true);
+		editPltButton.setVisible(true);
 	}
 	
 	public void onClick$saveAddButton(Event event) throws Exception {
@@ -1235,7 +1249,18 @@ public class InvoiceController extends GFCBaseController {
 			@Override
 			public void onEvent(Event event) throws Exception {
 				Button button = (Button) event.getTarget();
+				// get the current listitem
 				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
+				// save the active item index
+				int activeItemIndex = activeItem.getIndex();
+				// disable other listitems' buttons
+				Listcell lc;
+				Button nonActiveButton;
+				for(Listitem listitem : palletListbox.getItems()) {
+					lc = (Listcell) listitem.getChildren().get(6);
+					nonActiveButton = (Button) lc.getFirstChild();
+					nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
+				}				
 				if (pallet.isEditInProgress()) {
 					log.info("to edit invoice pallet");
 					// set to save

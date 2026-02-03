@@ -34,12 +34,24 @@ public class SerialNumberGenerator extends GFCBaseController {
 		if (serialNum != null) {
 			LocalDateTime lastDate = serialNum.getSerialDatetime();
 			
-			// compare year
-			int lastYearValue = lastDate.getYear();
-			int currYearValue = currentDatetime.getYear();
-			// compare month
-			int lastMonthValue = lastDate.getMonthValue();
-			int currMonthValue = currentDatetime.getMonthValue();
+			int lastYearValue 	= 0;
+			int currYearValue 	= 0;
+			int lastMonthValue 	= 0;
+			int currMonthValue 	= 0;
+			
+			if (lastDate == null) {
+				
+				return serNum;
+				
+			} else {
+				// compare year
+				lastYearValue = lastDate.getYear();
+				currYearValue = currentDatetime.getYear();
+				// compare month
+				lastMonthValue = lastDate.getMonthValue();
+				currMonthValue = currentDatetime.getMonthValue();
+			}
+			
 			
 			if (lastYearValue==currYearValue) {
 				

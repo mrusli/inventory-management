@@ -436,7 +436,7 @@ public class SuratJalanController extends GFCBaseController {
 				Button button = (Button) event.getTarget();
 				// get the current listitem
 				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
-				// save the active item index;
+				// save the active item index
 				int activeItemIndex = activeItem.getIndex();
 				// disable other listitems' buttons
 				Listcell lc;
