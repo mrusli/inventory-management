@@ -741,18 +741,29 @@ public class ProcessCoilController extends GFCBaseController {
 				lc = new Listcell();
 				lc.setParent(item);
 				
+				Button button;
 				if (!prod.isAddInProgress()) {
-					Button button = new Button();
+					button = new Button();
 					modifToEdit(button);
 					button.setParent(lc);
 					button.addEventListener(Events.ON_CLICK, onProdukEditButtonClick(prod));					
+				} else {
+					button = new Button();
+					modifToDelete(button);
+					button.setParent(lc);
+					button.addEventListener(Events.ON_CLICK, onProdukDeleteButtonClick(prod));
 				}
+				
 				
 				item.setValue(prod);
 			}
 		};
 	}
 
+	public void onAfterRender$productListbox(Event event) throws Exception {
+		log.info("productListbox afterRender");
+	}
+	
 	protected EventListener<Event> onProdukEditButtonClick(Ent_InventoryProcessProduct product) {
 		
 		return new EventListener<Event>() {
@@ -825,9 +836,36 @@ public class ProcessCoilController extends GFCBaseController {
 		};
 	}
 
+	protected EventListener<Event> onProdukDeleteButtonClick(Ent_InventoryProcessProduct product) {
+		
+		return new EventListener<Event>() {
+			
+			@Override
+			public void onEvent(Event event) throws Exception {
+				log.info("onProdukDeleteButtonClick");
+				// mark this product to delete
+				product.setMarkToDelete(true);
+				
+				// get the current listitem
+				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
+				Listcell lc = (Listcell) activeItem.getChildren().get(4);
+				lc.getChildren().clear();
+				lc.setIconSclass("z-icon-xmark");
+				
+				// int indexToRemove = activeItem.getIndex();
+				
+				// log.info("remove item: {}", indexToRemove);
+				// DO NOT REMOVE - just mark this product NOT TO SAVE
+				// productModelList.remove(indexToRemove);
+				
+
+			}
+		};
+	}	
+	
 	public void onClick$addProductButton(Event event) throws Exception {
 		log.info("addProductButton click");
-		
+				
 		Ent_InventoryProcessProduct product = addProductInLastPos();
 		product.setAddInProgress(true);
 		// will cause the listbox to immediately render all listitems 
@@ -1119,6 +1157,12 @@ public class ProcessCoilController extends GFCBaseController {
 		// Listcell lc;
 		for (Listitem listitem : productListbox.getItems()) {
 			product = listitem.getValue();
+			
+			// check if product mark NOT TO SAVE just continue
+			if (product.isMarkToDelete()) {
+				continue;
+			}
+			
 			// marking
 			// Textbox markingTextbox = (Textbox) listitem.getChildren().get(0).getFirstChild();
 			product.setMarking(getProductMarking(listitem));
@@ -1291,6 +1335,12 @@ public class ProcessCoilController extends GFCBaseController {
 	protected void modifToEdit(Button button) {
 		button.setIconSclass("z-icon-pencil");
 		button.setStyle("background-color:var(--bs-warning);");
+		button.setSclass("compButton");
+	}
+	
+	protected void modifToDelete(Button button) {
+		button.setIconSclass("z-icon-trash");
+		button.setStyle("background-color:var(--bs-danger);");
 		button.setSclass("compButton");
 	}
 

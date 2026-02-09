@@ -94,7 +94,7 @@ public class SuratJalanPrintController extends GFCBaseController {
 					prod.getWidth()+"x"+
 					prod.getLength());
 			dtoSuratJalan.setBeratKg(prod.getQuantityByKg()+" Kg.");
-			dtoSuratJalan.setKeterangan(" ");
+			dtoSuratJalan.setKeterangan(String.valueOf(prod.getQuantityBySht()));
 			
 			dtoSuratJalanList.add(dtoSuratJalan);
 		}

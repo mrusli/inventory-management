@@ -12,17 +12,17 @@
 		<element kind="staticText" uuid="2d496d28-95ef-4cb5-83aa-7656aae6124f" x="0" y="0" width="190" height="20" fontSize="12.0" vTextAlign="Middle">
 			<text><![CDATA[PT.WAJASENTOSA METALINDO]]></text>
 		</element>
-		<element kind="staticText" uuid="900d0fed-7983-4006-acb4-0a8778f872ed" x="0" y="20" width="190" height="10" fontSize="6.0">
+		<element kind="staticText" uuid="900d0fed-7983-4006-acb4-0a8778f872ed" x="0" y="20" width="190" height="20" fontSize="8.0">
 			<text><![CDATA[Jl. Permata Raya Kav. C-2B, Kawasan Industri KIIC]]></text>
 		</element>
-		<element kind="staticText" uuid="9659281f-fd8e-4841-b56d-c50e33411be9" x="0" y="30" width="190" height="10" fontSize="6.0">
+		<element kind="staticText" uuid="9659281f-fd8e-4841-b56d-c50e33411be9" x="0" y="30" width="190" height="20" fontSize="8.0">
 			<text><![CDATA[Jalan Tol Jakarta - Cikampek Km.47, Karawang Barat]]></text>
 		</element>
-		<element kind="staticText" uuid="299b6f58-a4fa-4cfd-9fe3-43fc6ba1c644" x="0" y="40" width="190" height="10" fontSize="6.0">
+		<element kind="staticText" uuid="299b6f58-a4fa-4cfd-9fe3-43fc6ba1c644" x="0" y="40" width="190" height="20" fontSize="8.0">
 			<text><![CDATA[Karawang 41361, Jawa Barat, Indonesia]]></text>
 		</element>
-		<element kind="staticText" uuid="f495a937-036e-4195-a6d3-a4864f87a237" x="0" y="50" width="190" height="10" fontSize="6.0">
-			<text><![CDATA[Telp.021-890 2556, 890 2557, 0267-644 879 Fax.0267-644 881]]></text>
+		<element kind="staticText" uuid="f495a937-036e-4195-a6d3-a4864f87a237" x="0" y="50" width="190" height="20" fontSize="8.0">
+			<text><![CDATA[Telp.0267 644879 0267 6486625]]></text>
 		</element>
 		<element kind="staticText" uuid="a1f1f204-9257-49a2-ba7e-a433fd85c211" x="280" y="10" width="100" height="20" fontSize="12.0" bold="true" vTextAlign="Middle">
 			<text><![CDATA[KWITANSI NO.:]]></text>

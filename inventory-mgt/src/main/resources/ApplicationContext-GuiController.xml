@@ -91,6 +91,10 @@
     	
     </bean>
     
+    <bean id="invoiceNonPphPrintControl" class="com.pyramix.web.invoice.InvoiceNonPphPrintController" scope="prototype" parent="basisController">
+    	<property name="jasperReportUtil" ref="jasperReportUtil"></property>
+    </bean>
+    
     <bean id="invoiceBahanPrintControl" class="com.pyramix.web.invoice.InvoiceBahanPrintController" scope="prototype" parent="basisController">
     	<property name="jasperReportUtil" ref="jasperReportUtil"></property>
     </bean>

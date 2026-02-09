@@ -2,7 +2,7 @@ package com.pyramix.domain.entity;
 
 public enum Enm_TypeDocument {
 	PROCESS_ORDER(0), TRANSFER_ORDER(1), BUKAPETI_ORDER(2), DELIVERY_ORDER(3), 
-		CUSTOMER_ORDER(4), SURATJALAN(5), FAKTUR(6), CUSTOMER(7), EMPLOYEE(8),
+		CUSTOMER_ORDER(4), SURATJALAN(5), INVOICE(6), CUSTOMER(7), EMPLOYEE(8),
 			SETTLEMENT(9), RECEIVABLE(10), NON_PPN_ORDER(11), NON_PPN_SURATJALAN(12),
 				NON_PPN_FAKTUR(13), PROCESS_ORDER_COMPLETE(14), PURCHASE_ORDER(15), 
 					PAYABLE(16), QUOTATION(18), KWITANSI(19);
@@ -21,7 +21,7 @@ public enum Enm_TypeDocument {
 			case 3: return "DO";
 			case 4: return "CO";
 			case 5: return "SJ";
-			case 6: return "FK";
+			case 6: return "INV";
 			case 7: return "CR";
 			case 8: return "EE";
 			case 9: return "SM";

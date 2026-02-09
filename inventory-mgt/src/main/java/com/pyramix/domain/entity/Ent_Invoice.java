@@ -1,7 +1,6 @@
 package com.pyramix.domain.entity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -15,7 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @Entity
@@ -69,30 +68,40 @@ public class Ent_Invoice extends IdBasedObject {
 	private Ent_Customer invc_customer;
 	
 	@OneToOne(cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private Ent_Serial invc_ser;
 		
 	private Enm_StatusDocument invc_status;
 		
 	@EqualsAndHashCode.Exclude
 	@OneToMany(cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private List<Ent_InvoiceProduct> invoiceProducts;
 
 	@EqualsAndHashCode.Exclude
-	@OneToMany(cascade = CascadeType.ALL)	
+	@OneToMany(cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private List<Ent_InvoicePallet> invoicePallet;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private Ent_InvoiceKwitansi jasaKwitansi;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private Ent_InvoiceKwitansi bahanKwitansi;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private Ent_InvoiceFaktur jasaFaktur;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private Ent_InvoiceFaktur bahanFaktur;
 	
 	@Transient
 	private boolean addInProgress = false;
+	
+	@Transient
+	private boolean pph23Option = true;
 }

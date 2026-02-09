@@ -1,7 +1,7 @@
 <?page title="tagihan" contentType="text/html;charset=UTF-8"?>
 <zk>
-<window id="tagihanBahanReportPrintWin" title="Invoice-Bahan" border="normal"
-	apply="${invoiceBahanPrintControl}"
+<window id="tagihanNonPphReportPrintWin" title="Invoice" border="normal"
+	apply="${invoiceNonPphPrintControl}"
 	width="915px" height="1020px" closable="true" sizable="true"
 	action="show: slideDown;hide: slideUp">
 

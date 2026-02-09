@@ -12,6 +12,7 @@ import org.zkoss.util.media.AMedia;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.Iframe;
+import org.zkoss.zul.Textbox;
 
 import com.pyramix.domain.entity.Ent_Invoice;
 import com.pyramix.domain.entity.Ent_InvoiceProduct;
@@ -41,6 +42,7 @@ public class KwitansiPrintController extends GFCBaseController {
 	private NumToWordsConverter numToWordsConverter;
 	
 	private Iframe iframe;
+	private Textbox paymentForTextbox;
 	
 	private Ent_Invoice activeInvoice;
 	
@@ -56,6 +58,8 @@ public class KwitansiPrintController extends GFCBaseController {
 
 	public void onCreate$kwitansiReportPrintWin(Event event) throws Exception {
 		log.info("kwitansiReportPrintWin created");
+		
+		paymentForTextbox.setValue(getPaymentForDescription());
 		
 		JasperReport jasperReport = getJasperReportUtil().loadJasperReport("reports/Kwitansi-KRG.jrxml");
 		jasperReport.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
@@ -78,12 +82,48 @@ public class KwitansiPrintController extends GFCBaseController {
 		
 	}
 
+	private String getPaymentForDescription() {
+		String paymentFor = null;
+		if (activeInvoice.isPph23Option()) {
+			paymentFor =
+					"Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN dan pemotongan PPh23. Perincian Terlampir.";
+		} else {
+			paymentFor =
+					"Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN. Perincian Terlampir.";
+		}
+		return paymentFor;
+	}
+	
+	public void onClick$updateButton(Event event) throws Exception {	
+		JasperReport jasperReport = getJasperReportUtil().loadJasperReport("reports/Kwitansi-KRG.jrxml");
+		jasperReport.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
+		
+		Map<String, Object> parameters = getKwitansiParameters();
+		
+		JRDataSource dataSource = new JRBeanCollectionDataSource(getKwitansiDataSource());
+
+		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		JasperExportManager.exportReportToPdfStream(jasperPrint, baos);
+
+		String rtNoKwitansi = activeInvoice.getJasaKwitansi().getKwitansi_ser().getSerialComp();
+		LocalDateTime currDatetime = getLocalDateTime(getZoneId());
+		String rtTimestamp = datetimeToStringDisplay(currDatetime, getShortDateTimeFormat(), getLocale());
+		
+		AMedia amedia = new AMedia(rtNoKwitansi+"_"+rtTimestamp+".pdf", "pdf", "application/pdf", baos.toByteArray());
+		iframe.setContent(amedia);
+	}
+
 	private Map<String, Object> getKwitansiParameters() throws Exception {
 		// log.info(getNumToWordsConverter().angkaToTerbilang((long) 11223993));
 		double jumlahJasa = calcJumlahJasa();
 		double jumlahPpn = PPN * jumlahJasa / 100;
 		double jumlahTotalJasa = jumlahJasa + jumlahPpn;
-		double jumlahPph = PPH * jumlahJasa / 100;
+		double jumlahPph = 0;
+		if (activeInvoice.isPph23Option()) {
+			jumlahPph = PPH * jumlahJasa / 100;		
+		}
 		double jumlahTotalJasaDecPph = jumlahTotalJasa - jumlahPph;
 		
 		String jumlahEjakan = getNumToWordsConverter().angkaToTerbilang((long) jumlahTotalJasaDecPph);
@@ -93,7 +133,14 @@ public class KwitansiPrintController extends GFCBaseController {
 		parameters.put("customerName", activeInvoice.getInvc_customer().getCompanyType()+"."+
 				activeInvoice.getInvc_customer().getCompanyLegalName());
 		parameters.put("jumlahEjakan", jumlahEjakan+" Rupiah");
-		parameters.put("untukPembayaran", "Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN dan pemotongan PPh23. Perincian Terlampir.");
+		
+		parameters.put("untukPembayaran", paymentForTextbox.getValue());
+		
+//		if (activeInvoice.isPph23Option()) {
+//			parameters.put("untukPembayaran", "Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN dan pemotongan PPh23. Perincian Terlampir.");
+//		} else {
+//			parameters.put("untukPembayaran", "Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN. Perincian Terlampir.");
+//		}
 		parameters.put("sejumlah", toDecimalFormat(new BigDecimal(jumlahTotalJasaDecPph), getLocale(), getDecimalFormat()));
 		parameters.put("kwitansiTgl", dateToStringDisplay(activeInvoice.getJasaKwitansi().getKwitansi_date(), getLongDateFormat(), getLocale()));
 		

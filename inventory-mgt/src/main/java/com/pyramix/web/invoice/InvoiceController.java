@@ -81,6 +81,7 @@ public class InvoiceController extends GFCBaseController {
 	private Button cancelAddButton, saveAddButton, cancelAddPltButton, saveAddPltButton,
 		createKwitansiButton, editButton, createKwitansiPltButton, editPltButton;
 	private Textbox fakturNumberTextbox, fakturNumberPltTextbox;
+	private Checkbox pph23OptionCheckbox;
 	
 	private Ent_Customer selCustomer;
 	private ListModelList<Ent_Invoice> invoiceModelList;
@@ -196,6 +197,50 @@ public class InvoiceController extends GFCBaseController {
 		}
 	}
 	
+	public void onCheck$pph23OptionCheckbox(Event event) throws Exception {
+		log.info("pph23OptionCheckbox set to: {}", pph23OptionCheckbox.isChecked());
+		
+		if (activeInvoice != null) {		
+			double subTotal01Jasa = activeInvoice.getSubtotal01();
+			double ppnJasa = subTotal01Jasa * PPN / 100;
+			double subTotal02Jasa = subTotal01Jasa + ppnJasa;
+			double pphJasa = 0;
+			double totalJasa = 0;
+			if (pph23OptionCheckbox.isChecked()) {
+//			subtotal01JasaLabel.setValue(
+//					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal01()), getLocale(), getDecimalFormat()));
+//			ppnJasaLabel.setValue(
+//					toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn()), getLocale(), getDecimalFormat()));
+//			subtotal02JasaLabel.setValue(
+//					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal02()), getLocale(), getDecimalFormat()));
+				
+				pphJasa = (subTotal01Jasa * PPH / 100) * -1;
+				pph23JasaLabel.setValue(
+						toDecimalFormat(new BigDecimal(pphJasa), getLocale(), getDecimalFormat()));
+				totalJasa = subTotal02Jasa + pphJasa;
+				totalJasaLabel.setValue(
+						toDecimalFormat(new BigDecimal(totalJasa), getLocale(), getDecimalFormat()));
+			} else {
+				pphJasa = 0;
+				pph23JasaLabel.setValue(
+						toDecimalFormat(new BigDecimal(pphJasa), getLocale(), getDecimalFormat()));
+				totalJasa = subTotal02Jasa + pphJasa;
+				totalJasaLabel.setValue(
+						toDecimalFormat(new BigDecimal(totalJasa), getLocale(), getDecimalFormat()));			
+			}
+			
+			// set
+			activeInvoice.setAmount_pph(pphJasa);
+			activeInvoice.setTotal_invoice(totalJasa);
+			// update
+			getInvoiceDao().update(activeInvoice);
+			// notif
+			Clients.showNotification(
+					   "Perubahan pph23 berhasil disimpan", "info", null, "bottom_left", 10000);			
+		}
+		
+	}
+	
 	public void onClick$createKwitansiButton(Event event) throws Exception {
 		log.info("createKwitansiButton click");
 		
@@ -245,9 +290,10 @@ public class InvoiceController extends GFCBaseController {
 
 		@Override
 		public void onEvent(Event event) throws Exception {
-			log.info("fakturNumberLabel click...");
+			Label label = (Label) event.getTarget();
+			log.info("fakturNumberLabel click..."+label.getValue());
 			fakturNumberLabel.setVisible(false);
-			fakturNumberTextbox.setValue("");
+			fakturNumberTextbox.setValue(label.getValue());
 			fakturNumberTextbox.setVisible(true);
 		}		
 	}
@@ -257,9 +303,10 @@ public class InvoiceController extends GFCBaseController {
 
 		@Override
 		public void onEvent(Event event) throws Exception {
-			log.info("fakturNumberPltLabel click...");
+			Label label = (Label) event.getTarget();
+			log.info("fakturNumberPltLabel click..."+label.getValue());
 			fakturNumberPltLabel.setVisible(false);
-			fakturNumberPltTextbox.setValue("");
+			fakturNumberPltTextbox.setValue(label.getValue());
 			fakturNumberPltTextbox.setVisible(true);
 		}
 	}
@@ -495,7 +542,7 @@ public class InvoiceController extends GFCBaseController {
 	private void createInvoice() {
 		activeInvoice = new Ent_Invoice();
 		activeInvoice.setInvc_date(getLocalDate(getZoneId()));
-		activeInvoice.setInvc_ser(getDocumentSerial(Enm_TypeDocument.FAKTUR,
+		activeInvoice.setInvc_ser(getDocumentSerial(Enm_TypeDocument.INVOICE,
 				getLocalDateTime(getZoneId())));
 		activeInvoice.setAddInProgress(true);		
 	}
@@ -620,7 +667,7 @@ public class InvoiceController extends GFCBaseController {
 				lc = new Listcell(product.getMarking());
 				lc.setParent(item);
 				
-				// PO
+				// PO Cust
 				lc = new Listcell(product.getRef_document());
 				lc.setParent(item);
 				
@@ -680,12 +727,13 @@ public class InvoiceController extends GFCBaseController {
 					toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn()), getLocale(), getDecimalFormat()));
 			subtotal02JasaLabel.setValue(
 					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal02()), getLocale(), getDecimalFormat()));
+			pph23OptionCheckbox.setChecked(activeInvoice.getAmount_pph()!=0);
 			pph23JasaLabel.setValue(
 					toDecimalFormat(new BigDecimal(activeInvoice.getAmount_pph()), getLocale(), getDecimalFormat()));
 			totalJasaLabel.setValue(
 					toDecimalFormat(new BigDecimal(activeInvoice.getTotal_invoice()), getLocale(), getDecimalFormat()));
-			subtotalPalletLabel.setValue(
-					toDecimalFormat(new BigDecimal(activeInvoice.getTotal_invoice()), getLocale(), getDecimalFormat()));
+			// subtotalPalletLabel.setValue(
+			//		toDecimalFormat(new BigDecimal(activeInvoice.getTotal_invoice()), getLocale(), getDecimalFormat()));
 		}
 		
 //		double jumlahJasa = calcJumlahJasa();
@@ -1490,8 +1538,14 @@ public class InvoiceController extends GFCBaseController {
 		log.info("printTagihanJasperReportButton click");
 		
 		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
-				
-		Window tagihanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_jasper.zul", null, arg);
+		
+		Window tagihanPrintWin = null;
+		
+		if (pph23OptionCheckbox.isChecked()) {
+			tagihanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_jasper.zul", null, arg);			
+		} else {
+			tagihanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_nonpph_jasper.zul", null, arg);
+		}
 		
 		tagihanPrintWin.doModal();
 	}
@@ -1502,6 +1556,8 @@ public class InvoiceController extends GFCBaseController {
 		if (activeInvoice.getJasaKwitansi()==null) {
 			throw new Exception("Kwitansi belum dibuat");
 		}
+		
+		activeInvoice.setPph23Option(pph23OptionCheckbox.isChecked());
 		
 		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
 		

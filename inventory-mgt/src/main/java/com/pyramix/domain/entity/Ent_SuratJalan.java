@@ -28,26 +28,31 @@ public class Ent_SuratJalan extends IdBasedObject {
 	@Column(name = "dev_date")
 	private LocalDate deliveryDate;
 	
+	@EqualsAndHashCode.Exclude
 	@OneToOne(cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private Ent_Serial suratjalanSerial;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_Customer customer;
 	
 	@Column(name = "ref_doc")
 	private String refDocument;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
+	@ToString.Exclude
 	private Ent_Invoice invoice;
 	
-	@EqualsAndHashCode.Exclude
 	@OneToMany(cascade = CascadeType.ALL)
 	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	private List<Ent_SuratJalanProduct> suratjalanProducts;
 	
 	@Column(name = "status_doc")
 	private Enm_StatusDocument suratjalanStatus;
 	
+	@EqualsAndHashCode.Exclude
 	@ManyToOne
 	@ToString.Exclude
 	private Ent_Company processedByCo;
@@ -56,6 +61,8 @@ public class Ent_SuratJalan extends IdBasedObject {
 	private String noPolisi;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
+	@ToString.Exclude
+	@EqualsAndHashCode.Exclude
 	private Ent_InventoryProcess inventoryProcess;
 	
 	@Transient

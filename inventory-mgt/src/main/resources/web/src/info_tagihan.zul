@@ -62,6 +62,7 @@
 						</row>
 						<row>
 							<cell>
+								<checkbox id="pph23OptionCheckbox" checked="true"></checkbox>
 								<label value="PPh23" sclass="h6"></label>
 							</cell>
 							<cell>
@@ -144,12 +145,11 @@
 					<n:div>
 						<grid style="border:none;">
 							<rows>
-								<row>
-									<cell width="10%">
+								<row>									
+									<cell width="8%">
 										Tgl.Invoice:
 									</cell>
-									<cell width="10%"
-										sclass="text-primary">
+									<cell width="10%" sclass="text-primary">
 										<label id="invoiceDateLabel"
 											value="">
 										</label>
@@ -157,8 +157,8 @@
 											visible="false" width="150px">
 										</datebox>
 									</cell>
-									<cell width="10%">No.Invoice:</cell>
-									<cell width="15%"
+									<cell width="8%">No.Invoice:</cell>
+									<cell width="12%"
 										sclass="text-primary">
 										<label id="invoiceNumberLabel"
 											value="">
@@ -167,12 +167,12 @@
 									<cell width="10%">
 										No.Kwitansi:
 									</cell>
-									<cell width="15%"
+									<cell width="12%"
 										sclass="text-primary">
 										<label id="kwitansiNumberLabel" value=""></label>
 										<button id="createKwitansiButton" label="Create" sclass="compButton" visible="true"></button>
 									</cell>
-									<cell width="10%">No.Faktur:</cell>
+									<cell width="8%">No.Faktur:</cell>
 									<cell sclass="text-primary">
 										<label id="fakturNumberLabel"
 											value="">

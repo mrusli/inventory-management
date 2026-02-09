@@ -9,7 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @Entity
@@ -29,6 +29,7 @@ public class Ent_InventoryTable extends IdBasedObject {
 	private double weightQuantity;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_InventoryCode inventoryCode;
 	
 	@Transient

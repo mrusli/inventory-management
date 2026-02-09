@@ -1,7 +1,6 @@
 package com.pyramix.web.suratjalan;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -603,12 +602,16 @@ public class SuratJalanController extends GFCBaseController {
 		currSuratJalan.setNoPolisi(nopolTextbox.getValue());
 		currSuratJalan.setRefDocument(refdocTextbox.getValue());
 		
-		Ent_InventoryProcess selInvtProcess = 
-				processCombobox.getSelectedItem().getValue();
-		// set the selected inventoryProcess to this suratJalan
-		currSuratJalan.setInventoryProcess(selInvtProcess);
-		// set this suratJalan to the selected inventoryProcess
-		selInvtProcess.setSuratjalan(currSuratJalan);
+		Ent_InventoryProcess selInvtProcess;
+		
+		if (processCombobox.getSelectedItem()!=null) {
+			selInvtProcess = 
+					processCombobox.getSelectedItem().getValue();
+			// set the selected inventoryProcess to this suratJalan
+			currSuratJalan.setInventoryProcess(selInvtProcess);
+			// set this suratJalan to the selected inventoryProcess
+			selInvtProcess.setSuratjalan(currSuratJalan);
+		}
 		
 		return currSuratJalan;
 	}

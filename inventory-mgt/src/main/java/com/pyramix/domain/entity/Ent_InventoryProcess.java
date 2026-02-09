@@ -16,7 +16,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @Entity
@@ -48,6 +48,7 @@ public class Ent_InventoryProcess extends IdBasedObject {
 	private Ent_Company processedForCo;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_Customer customer;	
 	
 	@OneToMany(cascade = CascadeType.ALL)
@@ -59,6 +60,7 @@ public class Ent_InventoryProcess extends IdBasedObject {
 	private Enm_TypeProcess processType;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_SuratJalan suratjalan;
 	
 	@Transient

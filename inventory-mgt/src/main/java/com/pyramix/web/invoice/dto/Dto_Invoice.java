@@ -15,6 +15,8 @@ public class Dto_Invoice {
 	
 	private String berat;
 	
+	private String qty;
+	
 	private String rpKg;
 	
 	private String jumlah;

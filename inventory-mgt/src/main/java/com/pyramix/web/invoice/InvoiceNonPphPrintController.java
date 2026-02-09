@@ -29,17 +29,17 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.type.WhenNoDataTypeEnum;
 
 @Slf4j
-public class InvoicePrintController extends GFCBaseController {
+public class InvoiceNonPphPrintController extends GFCBaseController {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4516944169780855774L;
+	private static final long serialVersionUID = -8207109278027367736L;
 
 	private JasperReportsUtil jasperReportUtil;
-	
-	private Iframe iframe;
 
+	private Iframe iframe;
+	
 	private Ent_Invoice activeInvoice;
 	private double subtotal01, subtotal02;
 	private double ppnAmount;
@@ -52,14 +52,14 @@ public class InvoicePrintController extends GFCBaseController {
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
-
+		
 		activeInvoice = (Ent_Invoice) arg.get("activeInvoice");
 	}
-
-	public void onCreate$tagihanReportPrintWin(Event event) throws Exception {
-		log.info("tagihanReportPrintWin created");
+	
+	public void onCreate$tagihanNonPphReportPrintWin(Event event) throws Exception {
+		log.info("tagihanNonPphReportPrintWin created");
 		
-		JasperReport jasperReport = getJasperReportUtil().loadJasperReport("reports/Tagihan-KRG.jrxml");
+		JasperReport jasperReport = getJasperReportUtil().loadJasperReport("reports/Tagihan-KRG-NonPph.jrxml");
 		jasperReport.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
 		
 		JRDataSource dataSource = new JRBeanCollectionDataSource(getInvoiceDataSource());
@@ -77,29 +77,6 @@ public class InvoicePrintController extends GFCBaseController {
 		AMedia amedia = new AMedia(rtNoInvoice+"_"+rtTimestamp+".pdf", "pdf", "application/pdf", baos.toByteArray());
 		iframe.setContent(amedia);		
 		
-	}
-
-	private Map<String, Object> getInvoiceParameters() throws Exception {
-		ppnAmount = subtotal01 * PPN / 100;
-		subtotal02 = subtotal01 + ppnAmount;
-		pphAmount = subtotal01 * PPH / 100;
-		totalAmount = subtotal02 - pphAmount;
-		
-		Map<String, Object> parameters = new HashMap<String,Object>();
-		parameters.put("InvoiceNo", activeInvoice.getInvc_ser().getSerialComp());
-		parameters.put("InvoiceTgl", dateToStringDisplay(
-				activeInvoice.getInvc_date(), getLongDateFormat(), getLocale()));
-		parameters.put("CustomerName", activeInvoice.getInvc_customer().getCompanyType()+"."+
-				activeInvoice.getInvc_customer().getCompanyLegalName());
-		parameters.put("CustomerAddr1", activeInvoice.getInvc_customer().getAddress01());
-		parameters.put("CustomerAddr2", activeInvoice.getInvc_customer().getAddress02());
-		parameters.put("subtotal01", toDecimalFormat(new BigDecimal(subtotal01), getLocale(), "###.###.###"));
-		parameters.put("subtotal02", toDecimalFormat(new BigDecimal(subtotal02), getLocale(), "###.###.###"));
-		parameters.put("ppnAmount", toDecimalFormat(new BigDecimal(ppnAmount), getLocale(), "###.###.###"));
-		parameters.put("pphAmount", toDecimalFormat(new BigDecimal(pphAmount*-1), getLocale(), "###.###.###"));
-		parameters.put("totalAmount", toDecimalFormat(new BigDecimal(totalAmount), getLocale(), "###.###.###"));
-		
-		return parameters;
 	}
 	
 	private List<Dto_Invoice> getInvoiceDataSource() throws Exception {
@@ -130,6 +107,29 @@ public class InvoicePrintController extends GFCBaseController {
 		
 		return dtoInvoiceList;
 	}
+	
+	private Map<String, Object> getInvoiceParameters() throws Exception {
+		ppnAmount = subtotal01 * PPN / 100;
+		subtotal02 = subtotal01 + ppnAmount;
+		pphAmount = subtotal01 * PPH / 100;
+		totalAmount = subtotal02 - pphAmount;
+		
+		Map<String, Object> parameters = new HashMap<String,Object>();
+		parameters.put("InvoiceNo", activeInvoice.getInvc_ser().getSerialComp());
+		parameters.put("InvoiceTgl", dateToStringDisplay(
+				activeInvoice.getInvc_date(), getLongDateFormat(), getLocale()));
+		parameters.put("CustomerName", activeInvoice.getInvc_customer().getCompanyType()+"."+
+				activeInvoice.getInvc_customer().getCompanyLegalName());
+		parameters.put("CustomerAddr1", activeInvoice.getInvc_customer().getAddress01());
+		parameters.put("CustomerAddr2", activeInvoice.getInvc_customer().getAddress02());
+		parameters.put("subtotal01", toDecimalFormat(new BigDecimal(subtotal01), getLocale(), "###.###.###"));
+		parameters.put("subtotal02", toDecimalFormat(new BigDecimal(subtotal02), getLocale(), "###.###.###"));
+		parameters.put("ppnAmount", toDecimalFormat(new BigDecimal(ppnAmount), getLocale(), "###.###.###"));
+		parameters.put("pphAmount", toDecimalFormat(new BigDecimal(pphAmount), getLocale(), "###.###.###"));
+		parameters.put("totalAmount", toDecimalFormat(new BigDecimal(totalAmount), getLocale(), "###.###.###"));
+		
+		return parameters;
+	}
 
 	public JasperReportsUtil getJasperReportUtil() {
 		return jasperReportUtil;
@@ -138,5 +138,6 @@ public class InvoicePrintController extends GFCBaseController {
 	public void setJasperReportUtil(JasperReportsUtil jasperReportUtil) {
 		this.jasperReportUtil = jasperReportUtil;
 	}
+	
 	
 }

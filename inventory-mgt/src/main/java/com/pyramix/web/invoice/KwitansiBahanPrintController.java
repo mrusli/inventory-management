@@ -12,6 +12,7 @@ import org.zkoss.util.media.AMedia;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.Iframe;
+import org.zkoss.zul.Textbox;
 
 import com.pyramix.domain.entity.Ent_Invoice;
 import com.pyramix.domain.entity.Ent_InvoicePallet;
@@ -41,10 +42,12 @@ public class KwitansiBahanPrintController extends GFCBaseController {
 	private NumToWordsConverter numToWordsConverter;
 
 	private Iframe iframe;
+	private Textbox paymentForTextbox;
 	
 	private Ent_Invoice activeInvoice;
+	private String paymentFor = null; 
 	
-	private static final Double PPN = 11.0;
+	private final Double PPN = 11.0;
 	
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
@@ -55,7 +58,12 @@ public class KwitansiBahanPrintController extends GFCBaseController {
 
 	public void onCreate$kwitansiBahanReportPrintWin(Event event) throws Exception {
 		log.info("kwitansiBahanReportPrintWin created");
-
+		
+		paymentFor =
+				"Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN. Perincian Terlampir.";
+		
+		paymentForTextbox.setValue(paymentFor);
+		
 		JasperReport jasperReport = getJasperReportUtil().loadJasperReport("reports/Kwitansi-KRG.jrxml");
 		jasperReport.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
 		
@@ -77,6 +85,27 @@ public class KwitansiBahanPrintController extends GFCBaseController {
 
 	}
 	
+	public void onClick$updateButton(Event event) throws Exception {
+		JasperReport jasperReport = getJasperReportUtil().loadJasperReport("reports/Kwitansi-KRG.jrxml");
+		jasperReport.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
+		
+		Map<String, Object> parameters = getKwitansiBahanParameters();
+		
+		JRDataSource dataSource = new JRBeanCollectionDataSource(getKwitansiDataSource());
+
+		JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		JasperExportManager.exportReportToPdfStream(jasperPrint, baos);
+
+		String rtNoKwitansi = activeInvoice.getBahanKwitansi().getKwitansi_ser().getSerialComp();
+		LocalDateTime currDatetime = getLocalDateTime(getZoneId());
+		String rtTimestamp = datetimeToStringDisplay(currDatetime, getShortDateTimeFormat(), getLocale());
+		
+		AMedia amedia = new AMedia(rtNoKwitansi+"_"+rtTimestamp+".pdf", "pdf", "application/pdf", baos.toByteArray());
+		iframe.setContent(amedia);		
+	}
+	
 	private Map<String, Object> getKwitansiBahanParameters() throws Exception {
 		double jumlahBahan = calcJumlahBahan();
 		double jumlahPpn = PPN * jumlahBahan / 100;
@@ -89,7 +118,7 @@ public class KwitansiBahanPrintController extends GFCBaseController {
 		parameters.put("customerName", activeInvoice.getInvc_customer().getCompanyType()+"."+
 				activeInvoice.getInvc_customer().getCompanyLegalName());
 		parameters.put("jumlahEjakan", jumlahEjakan+" Rupiah");
-		parameters.put("untukPembayaran", "");
+		parameters.put("untukPembayaran", paymentForTextbox.getValue());
 		parameters.put("sejumlah", toDecimalFormat(new BigDecimal(jumlahTotalBahan), getLocale(), getDecimalFormat()));
 		parameters.put("kwitansiTgl", dateToStringDisplay(activeInvoice.getJasaKwitansi().getKwitansi_date(), getLongDateFormat(), getLocale()));
 		

@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @Entity
@@ -25,6 +25,7 @@ public class Ent_InventoryProcessProduct extends IdBasedObject {
 	private String marking;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_InventoryCode inventoryCode;
 	
 	@Column(name = "inv_thkns")
@@ -55,9 +56,11 @@ public class Ent_InventoryProcessProduct extends IdBasedObject {
 	private Ent_Company processedByCo;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_InventoryProcessMaterial processMaterial;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_Customer customer;
 	
 	@Transient
@@ -65,4 +68,7 @@ public class Ent_InventoryProcessProduct extends IdBasedObject {
 	
 	@Transient
 	private boolean addInProgress = false;
+	
+	@Transient
+	private boolean markToDelete = false;
 }

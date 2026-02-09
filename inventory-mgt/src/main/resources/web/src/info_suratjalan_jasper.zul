@@ -2,7 +2,7 @@
 <zk>
 <window id="suratjalanReportPrintWin" title="SuratJalan" border="normal"
 	apply="${suratjalanPrintControl}"
-	width="1815px" height="1020px" closable="true" sizable="true"
+	width="915px" height="720px" closable="true" sizable="true"
 	action="show: slideDown;hide: slideUp">
 
 	<iframe id="iframe" width="100%" height="100%"></iframe>

@@ -14,7 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 @Data
 @Entity
@@ -26,6 +26,7 @@ public class Ent_InvoiceProduct extends IdBasedObject {
 	private Ent_SuratJalan ref_suratjalan;
 	
 	@ManyToOne
+	@ToString.Exclude
 	private Ent_InventoryCode inventoryCode;
 	
 	private String marking;
