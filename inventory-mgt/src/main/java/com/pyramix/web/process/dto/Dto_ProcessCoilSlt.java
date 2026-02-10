@@ -19,4 +19,6 @@ public class Dto_ProcessCoilSlt {
 	
 	private String slitQty;
 	
+	private String slitWeight;
+	
 }

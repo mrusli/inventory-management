@@ -125,7 +125,7 @@ public class ProcessCoilJasperController extends GFCBaseController {
 		LocalDateTime currDatetime = getLocalDateTime(getZoneId());
 		String rtTimestamp = datetimeToStringDisplay(currDatetime, getShortDateTimeFormat(), getLocale());
 
-		AMedia amedia = new AMedia(rtNoProcess+"_"+rtTimestamp+"pdf", "pdf", "application/pdf", baos.toByteArray());
+		AMedia amedia = new AMedia(rtNoProcess+"_"+rtTimestamp+".pdf", "pdf", "application/pdf", baos.toByteArray());
 		iframe.setContent(amedia);
 	}
 
@@ -155,10 +155,10 @@ public class ProcessCoilJasperController extends GFCBaseController {
 			dtoProcessCoil.setCoilNo(processMaterial.getMarking());
 			dtoProcessCoil.setSpec(processMaterial.getInventoryCode().getProductCode());
 			dtoProcessCoil.setWeigth(toDecimalFormat(new BigDecimal(
-					processMaterial.getWeightQuantity()), getLocale(), getDecimalFormat())+"Kg");
+					processMaterial.getWeightQuantity()), getLocale(), "###.###"));
 			dtoProcessCoil.setShearingSize(processProduct.getThickness()+"x"+
-					processProduct.getWidth()+"x"+
-					processProduct.getLength());
+					toDecimalFormat(new BigDecimal(processProduct.getWidth()), getLocale(), "#####")+"x"+
+					toDecimalFormat(new BigDecimal(processProduct.getLength()), getLocale(), "#####"));
 			dtoProcessCoil.setSheet(getFormatedInteger(processProduct.getSheetQuantity()));
 			// calc
 			thck = processProduct.getThickness();
@@ -167,14 +167,14 @@ public class ProcessCoilJasperController extends GFCBaseController {
 			dens = processProduct.getInventoryCode().getInventoryType().getDensity();
 			qtyKg = thck * wdth * lgth * dens / 1000000;
 			// set
-			dtoProcessCoil.setWeigthPcs(toDecimalFormat(new BigDecimal(qtyKg), getLocale(), getDecimalFormat()));
+			dtoProcessCoil.setWeigthPcs(toDecimalFormat(new BigDecimal(qtyKg), getLocale(), "###.###"));
 			// increment
 			idx++;
 			// add to list
 			processList.add(dtoProcessCoil);
 		}
-		// row padding - max row for jasper report is 6 rows
-		for (int i=idx; i<7; i++) {
+		// row padding - max row for jasper report is 5 rows
+		for (int i=idx; i<6; i++) {
 			Dto_ProcessCoilShr dtoProcessCoil = new Dto_ProcessCoilShr();
 			dtoProcessCoil.setSeq(String.valueOf(i)+".");
 			dtoProcessCoil.setCoilNo(" ");
@@ -205,18 +205,20 @@ public class ProcessCoilJasperController extends GFCBaseController {
 			dtoProcessCoil.setCoilNo(processMaterial.getMarking());
 			dtoProcessCoil.setSpec(processMaterial.getInventoryCode().getProductCode());
 			dtoProcessCoil.setWeigth(toDecimalFormat(new BigDecimal(
-					processMaterial.getWeightQuantity()), getLocale(), getDecimalFormat()));
+					processMaterial.getWeightQuantity()), getLocale(), "###.###")+" Kg");
 			dtoProcessCoil.setMaterialSize(processMaterial.getThickness()+"x"+
-					processMaterial.getWidth()+"x Coil");
+					toDecimalFormat(new BigDecimal(processMaterial.getWidth()), getLocale(), "#####")+"x Coil");
 			dtoProcessCoil.setSlittingSize(toDecimalFormat(new BigDecimal(
-					processProduct.getWidth()), getLocale(), getDecimalFormat()));
+					processProduct.getWidth()), getLocale(), "#####"));
 			dtoProcessCoil.setSlitQty(getFormatedInteger(processProduct.getSheetQuantity()));
+			dtoProcessCoil.setSlitWeight(getFormatedInteger(processProduct.getSheetQuantity()) + " x " +
+					toDecimalFormat(new BigDecimal(processProduct.getWeightQuantity()), getLocale(), "##.###")+" Kg");
 			// increment
 			idx++;
 			// add to list
 			processList.add(dtoProcessCoil);
 		}
-		for (int i=idx; i<6; i++) {
+		for (int i=idx; i<5; i++) {
 			Dto_ProcessCoilSlt dtoProcessCoil = new Dto_ProcessCoilSlt();
 			dtoProcessCoil.setSeq(String.valueOf(i));
 			dtoProcessCoil.setCoilNo(" ");
@@ -225,6 +227,7 @@ public class ProcessCoilJasperController extends GFCBaseController {
 			dtoProcessCoil.setMaterialSize(" ");
 			dtoProcessCoil.setSlittingSize(" ");
 			dtoProcessCoil.setSlitQty(" ");
+			dtoProcessCoil.setSlitWeight(" ");
 			// add to list
 			processList.add(dtoProcessCoil);
 		}

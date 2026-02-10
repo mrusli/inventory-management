@@ -12,6 +12,7 @@
 	<field name="materialSize" class="java.lang.String"/>
 	<field name="slittingSize" class="java.lang.String"/>
 	<field name="slitQty" class="java.lang.String"/>
+	<field name="slitWeight" class="java.lang.String"/>
 	<background splitType="Stretch"/>
 	<title height="67" splitType="Stretch">
 		<element kind="rectangle" uuid="03526936-306a-4f66-8c34-b64cf27f63e3" mode="Transparent" x="280" y="0" width="521" height="20"/>
@@ -245,6 +246,20 @@
 			<element kind="line" uuid="df7ed96b-f125-4671-8f49-0436cffaac2d" x="430" y="0" width="1" height="18">
 				<property name="com.jaspersoft.studio.unit.width" value="px"/>
 			</element>
+			<element kind="textField" uuid="5c054bb0-c87b-4fbf-beec-e3a1416142d3" x="722" y="0" width="70" height="18">
+				<expression><![CDATA[$F{slitWeight}]]></expression>
+			</element>
 		</band>
 	</detail>
+	<summary height="70">
+		<element kind="staticText" uuid="b064e0fb-aef0-44e7-ba21-32f8b989a9cb" x="0" y="0" width="50" height="20" fontSize="10.0">
+			<text><![CDATA[Perhatian:]]></text>
+		</element>
+		<element kind="staticText" uuid="59068c23-2bc8-48c9-8701-b2a4f8e77681" x="50" y="0" width="530" height="20">
+			<text><![CDATA[ - Hasil produksi tersebut diatas harap segera diambil]]></text>
+		</element>
+		<element kind="staticText" uuid="05ac45df-92fa-4512-8147-a8507df872a6" x="50" y="20" width="750" height="30">
+			<text><![CDATA[- Material yang ada di Pabrik/Gudang kami harap diasuransikan, karena kami tidak bertanggung jawab atas semua resiko yang diakibatkan oleh kebakaran, pencurian, banjir, gempat, huru hara dll.]]></text>
+		</element>
+	</summary>
 </jasperReport>
