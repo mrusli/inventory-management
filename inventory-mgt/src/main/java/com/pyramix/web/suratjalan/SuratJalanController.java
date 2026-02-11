@@ -100,7 +100,7 @@ public class SuratJalanController extends GFCBaseController {
 		Ent_Customer selCustomer = customerCombobox.getSelectedItem().getValue();
 		
 		suratjalanList = 
-				getSuratjalanDao().findSuratJalanByCustomer(selCustomer);		
+				getSuratjalanDao().findSuratJalanByCustomerNonInvoice(selCustomer);		
 	}
 
 	private void renderSuratJalan() {

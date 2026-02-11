@@ -129,6 +129,8 @@ public class CompanyController extends GFCBaseController {
 		emailLabel.setValue(selCompany.getEmail());
 		address01Label.setValue(selCompany.getAddress01());
 		address02Label.setValue(selCompany.getAddress02());
+		hoqCheckbox.setChecked(selCompany.isHoq());
+		prcCheckbox.setChecked(selCompany.isProc());
 	}
 
 	public void onClick$addCompanyButton(Event event) throws Exception {
@@ -192,6 +194,18 @@ public class CompanyController extends GFCBaseController {
 		companyEditButton.setVisible(false);
 		// show save button
 		companySaveButton.setVisible(true);
+	}
+	
+	public void onCheck$hoqCheckbox(Event event) throws Exception {
+		log.info("hoqCheckbox click");
+		selCompany.setHoq(hoqCheckbox.isChecked());
+		getCompanyDao().update(selCompany);
+	}
+	
+	public void onCheck$prcCheckbox(Event event) throws Exception {
+		log.info("prcCheckbox click");
+		selCompany.setProc(prcCheckbox.isChecked());
+		getCompanyDao().update(selCompany);
 	}
 	
 	public void onClick$companySaveButton(Event event) throws Exception {

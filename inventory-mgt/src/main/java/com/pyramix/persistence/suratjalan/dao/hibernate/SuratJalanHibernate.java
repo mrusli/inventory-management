@@ -95,4 +95,27 @@ public class SuratJalanHibernate extends DaoHibernate implements SuratJalanDao {
 		return suratjalan;
 	}
 
+	@Override
+	public List<Ent_SuratJalan> findSuratJalanByCustomerNonInvoice(Ent_Customer customer) throws Exception {
+		Session session = super.getSessionFactory().openSession();
+		
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<Ent_SuratJalan> criteriaQuery = criteriaBuilder.createQuery(Ent_SuratJalan.class);
+		Root<Ent_SuratJalan> root = criteriaQuery.from(Ent_SuratJalan.class);
+		criteriaQuery.select(root).where(
+				criteriaBuilder.equal(root.get("customer"), customer));
+		criteriaQuery.orderBy(
+				criteriaBuilder.desc(root.get("suratjalanDate")));
+		
+		try {
+			
+			return session.createQuery(criteriaQuery).getResultList();
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			session.close();
+		}
+	}
+
 }

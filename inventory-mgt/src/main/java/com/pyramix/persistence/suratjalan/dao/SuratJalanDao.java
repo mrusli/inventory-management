@@ -19,6 +19,8 @@ public interface SuratJalanDao {
 
 	public List<Ent_SuratJalan> findSuratJalanByCustomer(Ent_Customer customer) throws Exception;
 
+	public List<Ent_SuratJalan> findSuratJalanByCustomerNonInvoice(Ent_Customer customer) throws Exception;
+	
 	public Ent_SuratJalan getSuratJalanProductByProxy(long id) throws Exception;
 	
 }
