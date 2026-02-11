@@ -121,6 +121,7 @@ public class KwitansiBahanPrintController extends GFCBaseController {
 		parameters.put("untukPembayaran", paymentForTextbox.getValue());
 		parameters.put("sejumlah", toDecimalFormat(new BigDecimal(jumlahTotalBahan), getLocale(), getDecimalFormat()));
 		parameters.put("kwitansiTgl", dateToStringDisplay(activeInvoice.getJasaKwitansi().getKwitansi_date(), getLongDateFormat(), getLocale()));
+		parameters.put("fakturNo", activeInvoice.getBahanFaktur().getFaktur_number());
 		
 		return parameters;
 	}

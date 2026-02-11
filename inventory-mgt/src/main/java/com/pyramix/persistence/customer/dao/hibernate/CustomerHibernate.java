@@ -66,4 +66,27 @@ public class CustomerHibernate extends DaoHibernate implements CustomerDao {
 		}
 	}
 
+	@Override
+	public List<Ent_Customer> findAllActiveCustomerSorted() throws Exception {
+		Session session = super.getSessionFactory().openSession();
+		
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<Ent_Customer> criteriaQuery = criteriaBuilder.createQuery(Ent_Customer.class);
+		Root<Ent_Customer> root = criteriaQuery.from(Ent_Customer.class);
+		criteriaQuery.select(root).where(
+				criteriaBuilder.isTrue(root.get("active")));
+		criteriaQuery.orderBy(
+				criteriaBuilder.asc(root.get("companyLegalName")));
+		
+		try {
+			
+			return session.createQuery(criteriaQuery).getResultList();
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			session.close();
+		}
+	}
+
 }

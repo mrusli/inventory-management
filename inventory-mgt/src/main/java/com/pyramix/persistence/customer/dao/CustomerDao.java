@@ -17,5 +17,7 @@ public interface CustomerDao {
 	public void delete(Ent_Customer ent_Customer) throws Exception;
 
 	public List<Ent_Customer> findAllCustomerSorted() throws Exception;
+	
+	public List<Ent_Customer> findAllActiveCustomerSorted() throws Exception;
 
 }

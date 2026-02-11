@@ -5,6 +5,48 @@
 	<div sclass="row mt-3">
 		<n:div sclass="col-12">
 			<n:div sclass="mt-3">
+				<n:h1>Pyramix - Inventory Management</n:h1>
+				<grid style="border:none;">
+					<rows>
+						<row>
+							<cell width="15%"><n:h4>Version:</n:h4></cell>
+							<cell>
+								<label id="versionLabel" value="" sclass="h4"></label>
+							</cell>
+						</row>
+						<row>
+							<cell><n:h4>Build:</n:h4></cell>
+							<cell>
+								<label id="buildLabel" value="" sclass="h4"></label>
+							</cell>
+						</row>
+						<row>
+							<cell><n:h4>Name:</n:h4></cell>
+							<cell>
+								<label id="nameLabel" value="" sclass="h4"></label>
+							</cell>
+						</row>
+						<row>
+							<cell><n:h4>Locale:</n:h4></cell>
+							<cell>
+								<label id="localeLabel" value="" sclass="h4"></label>
+							</cell>
+						</row>
+						<row>
+							<cell><n:h4>Language:</n:h4></cell>
+							<cell>
+								<label id="languageLabel" value="" sclass="h4"></label>
+							</cell>
+						</row>
+						<row>
+							<cell><n:h4>Timezone:</n:h4></cell>
+							<cell>
+								<label id="timezoneLabel" value="" sclass="h4"></label>
+							</cell>
+						</row>
+
+					</rows>
+				</grid>				
 				<space orient="horizontal"/>	
 				<space orient="horizontal"/>	
 				<space orient="horizontal"/>						

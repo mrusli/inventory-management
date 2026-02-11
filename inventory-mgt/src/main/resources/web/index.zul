@@ -12,9 +12,10 @@
 			 	<n:a class="navbar-brand nav-adjust" href="#">
 			 		<n:img 
  		 			src="/zkau/web/img/img01.png" alt="DoubleRings"
-			 			width="38" height="38">
+			 			width="38" height="38"
+			 		onClick="infoPanelMenuClick();">
 <!-- 			 		src="/zkau/web/img/img02.png" alt="DataAbsensi"
-				 		width="65" height="36">
+				 		width="65" height="36"
  -->
 			 		</n:img>
 			 	</n:a>

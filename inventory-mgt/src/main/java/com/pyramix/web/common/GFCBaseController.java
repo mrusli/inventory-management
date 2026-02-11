@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
@@ -52,10 +53,13 @@ public class GFCBaseController extends GenericForwardComposer<Component> impleme
 												.setRegion("ID")
 												.build();
 	
+	// Timezone
+	private final TimeZone timeZone			= TimeZone.getDefault();
+	
 	public GFCBaseController() {
 		super();
 	}
-
+	
 	/**
 	 * {@link Locale} is set to ("id","ID")
 	 * 
@@ -74,6 +78,16 @@ public class GFCBaseController extends GenericForwardComposer<Component> impleme
 	public ZoneId getZoneId() {
 		
 		return zoneId;
+	}
+	
+	/**
+	 * {@link TimeZone} is set according to {@link ZoneId}
+	 * 
+	 * @return {@link TimeZone}
+	 */
+	public TimeZone getTimezone() {
+		
+		return timeZone;
 	}
 	
 	/**

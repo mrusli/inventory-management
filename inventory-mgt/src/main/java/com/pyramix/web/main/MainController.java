@@ -27,10 +27,12 @@ public class MainController extends GFCBaseController {
 	
 	public void onCreate$mainWindow(Event event) throws Exception {
 		log.info("mainWindow created");
+		
+		TimeZone.setDefault(TimeZone.getTimeZone(getZoneId()));
 
 		log.info("Version	: {}", getSettingsUtility().getWebAppProperties("build.version"));
 		log.info("Build No	: {}", getSettingsUtility().getWebAppProperties("build.timestamp"));
-		log.info("Build Name: {}", getSettingsUtility().getWebAppProperties("build.name"));
+		log.info("Build Name	: {}", getSettingsUtility().getWebAppProperties("build.name"));
 		
 		// log.info("Locale: "+getLocale().toString());
 		// log.info("Language: "+getLocale().getLanguage());
@@ -38,7 +40,7 @@ public class MainController extends GFCBaseController {
 		// log.info("Display Name: "+getLocale().getDisplayName());
 		// log.info("Zone Id: "+getZoneId().toString());
 		
-		log.info("Locale	: {}", Locales.getCurrent());
+		log.info("Locale		: {}", Locales.getCurrent());
 		log.info("Language	: {}", Labels.getLabel("language"));
 		log.info("Timezone	: {}", TimeZone.getDefault().getID());
 		log.info("DateTime	: {}", getLocalDateTime(getZoneId()));
@@ -130,6 +132,14 @@ public class MainController extends GFCBaseController {
 		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-Company");
 		// load page
 		mainInclude.setSrc("~./src/info_company.zul");				
+	}
+	
+	public void onClickInfoPanelMenu(Event event) {
+		log.info("onClickInfoPanelMenu click...");
+		// change page title
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-Info");
+		// load page
+		mainInclude.setSrc("~./src/info_panel_main.zul");						
 	}
 	
 	public SettingsUtil getSettingsUtility() {

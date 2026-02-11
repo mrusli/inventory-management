@@ -63,7 +63,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 		
 		// list
 		inventoryCodeList = getInventoryCodeDao().findAllInventoryCodesSorted();
-		customerList = getCustomerDao().findAllCustomer();
+		customerList = getCustomerDao().findAllActiveCustomerSorted();
 		
 		// load customer selection combobox 
 		// (only customers in the inventory list)

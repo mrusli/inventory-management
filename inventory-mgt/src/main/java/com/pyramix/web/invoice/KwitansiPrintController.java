@@ -143,6 +143,7 @@ public class KwitansiPrintController extends GFCBaseController {
 //		}
 		parameters.put("sejumlah", toDecimalFormat(new BigDecimal(jumlahTotalJasaDecPph), getLocale(), getDecimalFormat()));
 		parameters.put("kwitansiTgl", dateToStringDisplay(activeInvoice.getJasaKwitansi().getKwitansi_date(), getLongDateFormat(), getLocale()));
+		parameters.put("fakturNo", activeInvoice.getJasaFaktur().getFaktur_number());
 		
 		return parameters;
 	}

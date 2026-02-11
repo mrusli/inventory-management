@@ -28,7 +28,7 @@
 	</bean>
 	
     <bean id="mainController" class="com.pyramix.web.main.MainController" scope="prototype" parent="basisController">
-    	<property name="settingsUtility" ref="settingsUtility"></property>
+    		<property name="settingsUtility" ref="settingsUtility"></property>
     </bean>
     
     <bean id="infoPenerimaanCoilController" class="com.pyramix.web.penerimaan.PenerimaanCoilController" scope="prototype" parent="basisController">
@@ -131,6 +131,6 @@
 	</bean>
 	
 	<bean id="infoMainPanelController" class="com.pyramix.web.main.panel.InfoMainPanelController" scope="prototype" parent="basisController">
-	
+		<property name="settingsUtility" ref="settingsUtility"></property>
 	</bean>    
 </beans>
