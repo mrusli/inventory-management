@@ -79,7 +79,8 @@ public class InvoiceController extends GFCBaseController {
 	private Tabbox invoiceTabbox;
 	private Grid suratjalanGrid;
 	private Button cancelAddButton, saveAddButton, cancelAddPltButton, saveAddPltButton,
-		createKwitansiButton, editButton, createKwitansiPltButton, editPltButton;
+		createKwitansiButton, editButton, createKwitansiPltButton, editPltButton,
+		printTagihanJasperReportButton, printKwitansiTagihanJasperReportButton;
 	private Textbox fakturNumberTextbox, fakturNumberPltTextbox;
 	private Checkbox pph23OptionCheckbox;
 	
@@ -507,6 +508,9 @@ public class InvoiceController extends GFCBaseController {
 		// not allow to edit
 		editButton.setVisible(false);
 		editPltButton.setVisible(false);
+		// now allow to print
+		printTagihanJasperReportButton.setVisible(false);
+		printKwitansiTagihanJasperReportButton.setVisible(false);
 	}
 
 	private void clearInvoiceInfo() throws Exception {
@@ -1029,6 +1033,10 @@ public class InvoiceController extends GFCBaseController {
 	
 	public void onClick$cancelAddButton(Event event) throws Exception {
 		cancelAdd();
+		
+		// allow to print
+		printKwitansiTagihanJasperReportButton.setVisible(true);
+		printTagihanJasperReportButton.setVisible(true);
 	}
 	
 	private void cancelAdd() throws Exception {
@@ -1126,6 +1134,11 @@ public class InvoiceController extends GFCBaseController {
 		// allow user to save or batal
 		saveAddButton.setVisible(true);
 		cancelAddButton.setVisible(true);
+		// hide edit button
+		editButton.setVisible(false);
+		// hide print button
+		printKwitansiTagihanJasperReportButton.setVisible(false);
+		printTagihanJasperReportButton.setVisible(false);
 	}
 	
 	public void onClick$palletAddButton(Event event) throws Exception {

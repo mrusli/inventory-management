@@ -14,7 +14,10 @@
 					<listheader label="Keterangan" width="280px"/>
 					<listheader width="100px"/>
 				</listhead>
-			</listbox>			
+			</listbox>
+			<n:div sclass="mt-3">
+				<button id="cancelAddInventoryTypeButton" label="Batal" visible="false" iconSclass="z-icon-trash" sclass="compButton" style="background-color: var(--bs-warning)"></button>			
+			</n:div>
 		</n:div>
 		<n:div sclass="col-5">
 			<n:div sclass="mt-3">
@@ -42,6 +45,10 @@
 						<listheader />
 					</listhead>
 				</listbox>								
+				<n:div sclass="mt-3">
+					<button id="cancelAddInventoryCodeButton" label="Batal" visible="false" iconSclass="z-icon-trash" sclass="compButton" style="background-color: var(--bs-warning)"></button>			
+				</n:div>
+
 			</n:div>		
 		</n:div>
 	</div>

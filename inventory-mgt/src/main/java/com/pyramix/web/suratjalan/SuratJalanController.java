@@ -63,7 +63,7 @@ public class SuratJalanController extends GFCBaseController {
 	private Combobox customerCombobox, processCombobox;
 	private Listbox suratJalanListbox, suratjalanProductListbox;
 	private Div processSelDiv;
-	private Button cancelAddButton, saveAddButton, editButton;
+	private Button cancelAddButton, saveAddButton, editButton, printJasperReportButton;
 	private Label customerNameLabel, suratjalanDateLabel, suratjalanNumberLabel, nopolLabel,
 		refdocLabel;
 	private Textbox nopolTextbox, refdocTextbox;
@@ -187,6 +187,8 @@ public class SuratJalanController extends GFCBaseController {
 		cancelAddButton.setVisible(true);
 		// allow user to save this add
 		saveAddButton.setVisible(true);
+		// hide print button
+		printJasperReportButton.setVisible(false);
 	}
 
 	private void loadCustomerCombobox(List<Ent_Customer> customerList) {
@@ -629,6 +631,8 @@ public class SuratJalanController extends GFCBaseController {
 		cancelAddButton.setVisible(false);
 		// hide save button
 		saveAddButton.setVisible(false);
+		// show the print button
+		printJasperReportButton.setVisible(true);
 		
 		// list the suratjalan 
 		loadSuratJalan();		
@@ -638,12 +642,19 @@ public class SuratJalanController extends GFCBaseController {
 	
 	public void onClick$editButton(Event event) throws Exception {
 		log.info("editButton click");
-
+		
+		// adjust the listbox height
+		suratJalanListbox.setHeight("400px");
+		
 		currSuratJalan.setEditInProgress(true);
 		// show cancel button
 		cancelAddButton.setVisible(true);
 		// show save button
 		saveAddButton.setVisible(true);
+		// hide the print button
+		printJasperReportButton.setVisible(false);
+		// hide the edit button
+		editButton.setVisible(false);
 		
 		displaySuratJalan();
 	}

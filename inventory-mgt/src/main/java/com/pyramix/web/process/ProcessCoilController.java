@@ -1205,14 +1205,6 @@ public class ProcessCoilController extends GFCBaseController {
 		}
 	}
 	
-	public void onClick$cancelProcessButton(Event event) throws Exception {
-		// change the process status to BATAL
-		
-		// disable the Print button
-		
-		
-	}
-	
 	public void onClick$cancelAddProcessButton(Event event) throws Exception {
 		// load inventoryProcess list
 		// loadInventoryProcessList();
@@ -1247,10 +1239,13 @@ public class ProcessCoilController extends GFCBaseController {
 //			// display
 //			displayDetailInventoryProcessInfo();
 //		}
+		
 		// hide add material button
 		addMaterialButton.setVisible(false);
-		
+		// hide cancel button
 		cancelAddProcessButton.setVisible(false);
+		// shows print button
+		printJasperReportButton.setVisible(true);
 	}
 	
 //	public void onClick$processEditButton(Event event) throws Exception {

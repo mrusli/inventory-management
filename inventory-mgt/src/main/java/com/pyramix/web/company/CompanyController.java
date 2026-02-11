@@ -39,7 +39,7 @@ public class CompanyController extends GFCBaseController {
 	private Textbox companyNameTextbox, displayNameTextbox, contactNumberTextbox,
 		emailTextbox, address01Textbox, address02Textbox;
 	private Checkbox hoqCheckbox, prcCheckbox;
-	private Button companyEditButton, companySaveButton;
+	private Button companyEditButton, companySaveButton, companyCancelButton;
 	
 	private ListModelList<Ent_Company> companyModelList = null;
 	
@@ -60,7 +60,7 @@ public class CompanyController extends GFCBaseController {
 		// select 1s company
 		if (!companyModelList.isEmpty()) {
 			selCompany =
-					companyModelList.get(0);
+					companyModelList.get(0);			
 			// display
 			displayCompanyInfo();
 		}
@@ -122,6 +122,11 @@ public class CompanyController extends GFCBaseController {
 	}
 	
 	private void displayCompanyInfo() {
+		if (selCompany == null) {
+			log.info("company not selected...");
+			
+			return;
+		}
 		companyNameLabel.setValue(selCompany.getCompanyType().toString()+"."+
 				selCompany.getCompanyLegalName());
 		displayNameLabel.setValue(selCompany.getCompanyDisplayName());
@@ -145,6 +150,9 @@ public class CompanyController extends GFCBaseController {
 		setToAllowEditInfo();
 		// select 1st company type
 		companyTypeCombobox.setSelectedIndex(0);
+		
+		// show the cancel button
+		companyCancelButton.setVisible(true);
 	}
 	
 	private void setToAllowEditInfo() {
@@ -286,11 +294,30 @@ public class CompanyController extends GFCBaseController {
 		}
 	}	
 	
-	public void onClick$companyEditButton(Event event) {
+	public void onClick$companyEditButton(Event event) throws Exception {
 		log.info("companyEditButton click");
 		
 		// allow user to edit info
 		setToAllowEditInfo();
+		
+		// show the cancel button
+		companyCancelButton.setVisible(true);
+	}
+	
+	public void onClick$companyCancelButton(Event event) throws Exception {
+		log.info("companyCancelButton click");
+
+		if (!companyModelList.isEmpty()) {
+			// hide all the edit boxes
+			setToDisplayInfo();
+			// select
+			selCompany =
+					companyModelList.get(0);	
+			// display
+			displayCompanyInfo();
+			// hide cancel button
+			companyCancelButton.setVisible(false);
+		}
 	}
 	
 	public CompanyDao getCompanyDao() {

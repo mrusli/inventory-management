@@ -37,6 +37,7 @@ public class InventoryTypeController extends GFCBaseController {
 	
 	private Listbox inventoryTypeListbox, inventoryCodeListbox;
 	private Label tipeLabel, brtJnsLabel, keteranganLabel;
+	private Button cancelAddInventoryTypeButton, cancelAddInventoryCodeButton;
 	
 	private ListModelList<Ent_InventoryType> inventoryTypeModelList = null;
 	private ListModelList<Ent_InventoryCode> inventoryCodeModelList = null;
@@ -170,6 +171,10 @@ public class InventoryTypeController extends GFCBaseController {
 			selInvtType = 
 					inventoryTypeModelList.get(idx);
 			log.info(selInvtType.toString());
+			
+			// set selected
+			inventoryTypeListbox.setSelectedIndex(idx);
+			
 			displayInventoryCode(selInvtType);
 		}
 	}	
@@ -206,6 +211,16 @@ public class InventoryTypeController extends GFCBaseController {
 	
 	public void onClick$addInventoryTypeButton(Event event) throws Exception {
 		log.info("addInventoryTypeButton click");
+		int posToAddIndex = inventoryTypeModelList.size();
+		// freeze items
+		Listcell lc;
+		Button nonActiveButton;
+		for(Listitem listitem : inventoryTypeListbox.getItems()) {
+			lc = (Listcell) listitem.getChildren().get(3);
+			nonActiveButton = (Button) lc.getFirstChild();
+			nonActiveButton.setDisabled(listitem.getIndex()!=posToAddIndex);
+		}
+		
 		// add to the last pos
 		Ent_InventoryType inventoryType = addInventoryTypeInLastPos();
 		
@@ -236,6 +251,9 @@ public class InventoryTypeController extends GFCBaseController {
 		
 		// clean up the details
 		resetInventoryCode(inventoryType);
+		
+		// show the cancel button
+		cancelAddInventoryTypeButton.setVisible(true);
 	}
 
 	private Ent_InventoryType addInventoryTypeInLastPos() {
@@ -448,6 +466,20 @@ public class InventoryTypeController extends GFCBaseController {
 		}
 	}
 
+	public void onClick$cancelAddInventoryTypeButton(Event event) throws Exception {
+		// load
+		loadInventoryTypeList();
+		
+		// display
+		displayInventoryTypeList();
+		
+		// select
+		selectInventoryType(0);
+		
+		// hide the cancel button
+		cancelAddInventoryTypeButton.setVisible(false);
+	}
+	
 	public void onClick$addInventoryCodeButton(Event event) throws Exception {
 		// add to the last pos
 		Ent_InventoryCode activeInvtCode = addInventoryCodeInLastPos();
@@ -470,6 +502,16 @@ public class InventoryTypeController extends GFCBaseController {
 		Listitem activeItem =
 				inventoryCodeListbox.getItemAtIndex(lastItem-1);
 		
+		// freeze all items except the last one
+		int activeItemIndex = activeItem.getIndex();
+		Listcell lc;
+		Button nonActiveButton;
+		for(Listitem listitem : inventoryCodeListbox.getItems()) {
+			lc = (Listcell) listitem.getChildren().get(2);
+			nonActiveButton = (Button) lc.getFirstChild();
+			nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
+		}
+		
 		setupKodeTextbox(activeItem, activeInvtCode.getProductCode());
 		setupKodeKeteranganTextbox(activeItem, activeInvtCode.getCodeDescription());
 		setupEditToSaveButton(activeItem, 2);
@@ -478,6 +520,9 @@ public class InventoryTypeController extends GFCBaseController {
 		activeInvtCode.setEditInProgress(true);
 		// switch to true so that the object will added to type
 		activeInvtCode.setAddInProgress(true);
+		
+		// show the cancel button
+		cancelAddInventoryCodeButton.setVisible(true);
 	}
 
 	private String getKodeTextbox(Listitem activeItem) {
@@ -538,6 +583,16 @@ public class InventoryTypeController extends GFCBaseController {
 		// displayInventoryTypeList();
 		
 		selectInventoryType(0);
+	}
+	
+	public void onClick$cancelAddInventoryCodeButton(Event event) throws Exception {
+		selInvtType = inventoryTypeListbox.getSelectedItem().getValue();
+		if (selInvtType != null) {
+			displayInventoryCode(selInvtType);
+		}
+		
+		// hide the cancel button
+		cancelAddInventoryCodeButton.setVisible(false);
 	}
 
 	public InventoryTypeDao getInventoryTypeDao() {
