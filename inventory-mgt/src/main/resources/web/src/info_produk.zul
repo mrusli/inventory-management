@@ -62,7 +62,8 @@
 				<listbox sclass="mt-3" id="productListbox" height="450px">
 					<listhead>
 						<listheader label="Marking" width="120px" />
-						<listheader label="Spek" width="260px" />
+						<listheader label="Spek" width="230px" />
+						<listheader label="Re-Coil" width="80px"/>
 						<listheader label="Qty(Kg)" width="120px" />
 						<listheader label="Qty(Lbr)" width="120px" />
 						<listheader width="80px"/>

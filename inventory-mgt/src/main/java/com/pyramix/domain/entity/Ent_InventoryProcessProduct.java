@@ -39,7 +39,7 @@ public class Ent_InventoryProcessProduct extends IdBasedObject {
 	
 	@Column(name = "re_coil")
 	@Convert(converter = TrueFalseConverter.class)
-	private boolean recoil;
+	private boolean recoil = false;
 	
 	@Column(name = "inv_s_qty")
 	private int sheetQuantity;

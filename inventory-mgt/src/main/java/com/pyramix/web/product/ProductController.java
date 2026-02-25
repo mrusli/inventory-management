@@ -128,7 +128,12 @@ public class ProductController extends GFCBaseController {
 			processCombobox.setSelectedIndex(0);
 			
 			onSelectProcessCombobox();
-		}		
+		} else {
+			// no proses materials for this customer
+			renderProcessMaterials(new ArrayList<Ent_InventoryProcessMaterial>());
+			// no products for this this customer
+			renderProcessProducts(new ArrayList<Ent_InventoryProcessProduct>());
+		}
 	}
 	
 	public void onSelect$customerProcessCombobox(Event event) throws Exception {
@@ -277,8 +282,12 @@ public class ProductController extends GFCBaseController {
 				// spek
 				lc = new Listcell(
 						toDecimalFormat(new BigDecimal(product.getThickness()), getLocale(), "#0,00")+" x "+
-						toDecimalFormat(new BigDecimal(product.getWidth()), getLocale(), "###.###")+" x "+
+						toDecimalFormat(new BigDecimal(product.getWidth()), getLocale(), "###.###")+" x " +
 						toDecimalFormat(new BigDecimal(product.getLength()), getLocale(), "###.###"));
+				lc.setParent(item);
+				
+				// re-coil
+				lc = initReCoil(new Listcell(), product);
 				lc.setParent(item);
 				
 				// qty(kg)
@@ -315,6 +324,22 @@ public class ProductController extends GFCBaseController {
 		};
 	}
 
+	protected Listcell initReCoil(Listcell listcell, Ent_InventoryProcessProduct product) {
+		Checkbox checkbox = new Checkbox();
+		checkbox.setChecked(product.isRecoil());
+		checkbox.setDisabled(true);
+		checkbox.setParent(listcell);
+		checkbox.addEventListener(Events.ON_CHECK, new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				log.info("Re-Coil...");
+			}
+		});
+		
+		return listcell;
+	}
+
 	protected EventListener<Event> editProcessProduct(Ent_InventoryProcessProduct product) {
 
 		return new EventListener<Event>() {
@@ -331,10 +356,10 @@ public class ProductController extends GFCBaseController {
 				Listcell lc;
 				Button nonActiveButton;
 				for(Listitem listitem : productListbox.getItems()) {
-					lc = (Listcell) listitem.getChildren().get(4);
+					lc = (Listcell) listitem.getChildren().get(5);
 					nonActiveButton = (Button) lc.getFirstChild();
 					nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
-					lc = (Listcell) listitem.getChildren().get(5);
+					lc = (Listcell) listitem.getChildren().get(6);
 					nonActiveButton = (Button) lc.getFirstChild();
 					nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
 				}				
@@ -363,6 +388,7 @@ public class ProductController extends GFCBaseController {
 								procProduct.setThickness(updatedProduct.getThickness());
 								procProduct.setWidth(updatedProduct.getWidth());
 								procProduct.setLength(updatedProduct.getLength());
+								procProduct.setRecoil(updatedProduct.isRecoil());
 								procProduct.setWeightQuantity(updatedProduct.getWeightQuantity());
 								procProduct.setSheetQuantity(updatedProduct.getSheetQuantity());
 								procProduct.setProcessMaterial(selMaterial);
@@ -393,6 +419,7 @@ public class ProductController extends GFCBaseController {
 					setProductMarking(activeItem, product.getMarking());
 					setProductSpek(activeItem, product.getThickness(), product.getWidth(),
 							product.getLength());
+					setProductRecoil(activeItem, product.isRecoil());
 					setProductQtyKg(activeItem, product.getWeightQuantity());
 					setProductQtyLbr(activeItem, product.getSheetQuantity());
 					
@@ -451,6 +478,7 @@ public class ProductController extends GFCBaseController {
 		setProductMarking(activeItem, processProduct.getMarking());
 		setProductSpek(activeItem, processProduct.getThickness(), processProduct.getWidth(),
 				processProduct.getLength());
+		setProductRecoil(activeItem, processProduct.isRecoil());
 		setProductQtyKg(activeItem, processProduct.getWeightQuantity());
 		setProductQtyLbr(activeItem, processProduct.getSheetQuantity());
 		setEditToSaveButton(activeItem);
@@ -461,10 +489,10 @@ public class ProductController extends GFCBaseController {
 		Listcell lc;
 		Button nonActiveButton;
 		for(Listitem listitem : productListbox.getItems()) {
-			lc = (Listcell) listitem.getChildren().get(4);
+			lc = (Listcell) listitem.getChildren().get(5);
 			nonActiveButton = (Button) lc.getFirstChild();
 			nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
-			lc = (Listcell) listitem.getChildren().get(5);
+			lc = (Listcell) listitem.getChildren().get(6);
 			nonActiveButton = (Button) lc.getFirstChild();
 			nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
 		}
@@ -492,17 +520,18 @@ public class ProductController extends GFCBaseController {
 		Listcell lc = (Listcell) activeItem.getChildren().get(1);
 		
 		Doublebox doublebox = (Doublebox) lc.getChildren().get(idx);
-		
+
 		return doublebox.getValue();
 	}	
 	
 	protected void setProductSpek(Listitem activeItem, double thickness, double width, double length) {
 		Listcell lc = (Listcell) activeItem.getChildren().get(1);
 		lc.setLabel("");
+		
 		// thickness
 		Doublebox doublebox = new Doublebox();
 		doublebox.setLocale(getLocale());
-		doublebox.setWidth("60px");
+		doublebox.setWidth("40px");
 		doublebox.setValue(thickness);
 		doublebox.setParent(lc);
 		Label label = new Label();
@@ -522,12 +551,26 @@ public class ProductController extends GFCBaseController {
 		doublebox.setLocale(getLocale());
 		doublebox.setWidth("60px");
 		doublebox.setValue(length);
-		doublebox.setParent(lc);	
-	}	
+		doublebox.setParent(lc);
+	}
 	
+	private boolean getProductRecoild(Listitem activeItem) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		
+		Checkbox checkbox = (Checkbox) lc.getFirstChild();
+		
+		return checkbox.isChecked();
+	}
+
+	protected void setProductRecoil(Listitem activeItem, boolean recoil) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		
+		Checkbox checkbox = (Checkbox) lc.getFirstChild();
+		checkbox.setDisabled(false);
+	}
 
 	private double getProductQtyKg(Listitem activeItem) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
 
 		Doublebox doublebox = (Doublebox) lc.getFirstChild();
 		
@@ -535,7 +578,7 @@ public class ProductController extends GFCBaseController {
 	}
 
 	protected void setProductQtyKg(Listitem activeItem, double weightQuantity) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(2);
+		Listcell lc = (Listcell) activeItem.getChildren().get(3);
 		lc.setLabel("");
 		Doublebox doublebox = new Doublebox();
 		doublebox.setLocale(getLocale());
@@ -545,7 +588,7 @@ public class ProductController extends GFCBaseController {
 	}	
 	
 	private int getProductQtyLbr(Listitem activeItem) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
 
 		Intbox intbox = (Intbox) lc.getFirstChild();
 		
@@ -553,7 +596,7 @@ public class ProductController extends GFCBaseController {
 	}
 	
 	protected void setProductQtyLbr(Listitem activeItem, int sheetQuantity) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(3);
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
 		lc.setLabel("");
 		Intbox intbox = new Intbox();
 		intbox.setValue(sheetQuantity);
@@ -562,7 +605,7 @@ public class ProductController extends GFCBaseController {
 	}	
 	
 	private void setEditToSaveButton(Listitem activeItem) {
-		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		Listcell lc = (Listcell) activeItem.getChildren().get(5);
 		Button button = (Button) lc.getFirstChild();
 		
 		// signal it can be used to save the entry
@@ -596,6 +639,7 @@ public class ProductController extends GFCBaseController {
 		product.setThickness(getProductSpek(activeItem,0));
 		product.setWidth(getProductSpek(activeItem,2));
 		product.setLength(getProductSpek(activeItem,4));
+		product.setRecoil(getProductRecoild(activeItem));
 		product.setWeightQuantity(getProductQtyKg(activeItem));
 		product.setSheetQuantity(getProductQtyLbr(activeItem));
 		product.setProcessMaterial(selMaterial);
