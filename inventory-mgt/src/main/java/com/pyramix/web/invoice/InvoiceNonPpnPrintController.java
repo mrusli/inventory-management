@@ -29,12 +29,12 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.type.WhenNoDataTypeEnum;
 
 @Slf4j
-public class InvoiceNonPphPrintController extends GFCBaseController {
+public class InvoiceNonPpnPrintController extends GFCBaseController {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8207109278027367736L;
+	private static final long serialVersionUID = 7342831093241974815L;
 
 	private JasperReportsUtil jasperReportUtil;
 
@@ -46,8 +46,8 @@ public class InvoiceNonPphPrintController extends GFCBaseController {
 	private double totalAmount;
 	private double pphAmount;
 	
-	private static final Double PPN = 11.0;
-	private static final Double PPH = 2.0;
+	// private static final Double PPN = 11.0;
+	// private static final Double PPH = 2.0;
 	
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
@@ -55,13 +55,13 @@ public class InvoiceNonPphPrintController extends GFCBaseController {
 		
 		activeInvoice = (Ent_Invoice) arg.get("activeInvoice");
 	}
-	
-	public void onCreate$tagihanNonPphReportPrintWin(Event event) throws Exception {
-		log.info("tagihanNonPphReportPrintWin created");
+
+	public void onCreate$tagihanNonPpnReportPrintWin(Event event) throws Exception {
+		log.info("tagihanNonPpnReportPrintWin created");
 		
-		JasperReport jasperReport = getJasperReportUtil().loadJasperReport("reports/Tagihan-KRG-NonPph.jrxml");
+		JasperReport jasperReport = getJasperReportUtil().loadJasperReport("reports/Tagihan-KRG-NonPpn.jrxml");
 		jasperReport.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
-		
+
 		JRDataSource dataSource = new JRBeanCollectionDataSource(getInvoiceDataSource());
 		Map<String, Object> parameters = getInvoiceParameters();		
 
@@ -76,9 +76,9 @@ public class InvoiceNonPphPrintController extends GFCBaseController {
 		
 		AMedia amedia = new AMedia(rtNoInvoice+"_"+rtTimestamp+".pdf", "pdf", "application/pdf", baos.toByteArray());
 		iframe.setContent(amedia);		
-		
+
 	}
-	
+
 	private List<Dto_Invoice> getInvoiceDataSource() throws Exception {
 		List<Dto_Invoice> dtoInvoiceList = new ArrayList<Dto_Invoice>();
 		subtotal01 = 0;
@@ -107,11 +107,11 @@ public class InvoiceNonPphPrintController extends GFCBaseController {
 		
 		return dtoInvoiceList;
 	}
-	
+
 	private Map<String, Object> getInvoiceParameters() throws Exception {
-		ppnAmount = subtotal01 * PPN / 100;
+		ppnAmount = 0;
 		subtotal02 = subtotal01 + ppnAmount;
-		pphAmount = subtotal01 * PPH / 100;
+		pphAmount = 0;
 		totalAmount = subtotal02 - pphAmount;
 		
 		Map<String, Object> parameters = new HashMap<String,Object>();
@@ -130,8 +130,9 @@ public class InvoiceNonPphPrintController extends GFCBaseController {
 		parameters.put("totalAmount", toDecimalFormat(new BigDecimal(totalAmount), getLocale(), "###.###.###"));
 		
 		return parameters;
-	}
 
+	}	
+	
 	public JasperReportsUtil getJasperReportUtil() {
 		return jasperReportUtil;
 	}

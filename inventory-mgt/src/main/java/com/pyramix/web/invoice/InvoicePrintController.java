@@ -87,6 +87,7 @@ public class InvoicePrintController extends GFCBaseController {
 		
 		Map<String, Object> parameters = new HashMap<String,Object>();
 		parameters.put("InvoiceNo", activeInvoice.getInvc_ser().getSerialComp());
+		parameters.put("FakturNo", activeInvoice.getJasaFaktur().getFaktur_number());
 		parameters.put("InvoiceTgl", dateToStringDisplay(
 				activeInvoice.getInvc_date(), getLongDateFormat(), getLocale()));
 		parameters.put("CustomerName", activeInvoice.getInvc_customer().getCompanyType()+"."+

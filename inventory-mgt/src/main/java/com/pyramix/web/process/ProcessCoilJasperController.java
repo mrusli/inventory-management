@@ -160,6 +160,7 @@ public class ProcessCoilJasperController extends GFCBaseController {
 					toDecimalFormat(new BigDecimal(processProduct.getWidth()), getLocale(), "#####")+"x"+
 					toDecimalFormat(new BigDecimal(processProduct.getLength()), getLocale(), "#####"));
 			dtoProcessCoil.setSheet(getFormatedInteger(processProduct.getSheetQuantity()));
+			dtoProcessCoil.setRemark(processProduct.getRemark());
 			// calc
 			thck = processProduct.getThickness();
 			wdth = processProduct.getWidth();
@@ -183,6 +184,7 @@ public class ProcessCoilJasperController extends GFCBaseController {
 			dtoProcessCoil.setShearingSize(" ");
 			dtoProcessCoil.setSheet(" ");
 			dtoProcessCoil.setWeigthPcs(" ");
+			dtoProcessCoil.setRemark(" ");
 			// add to list
 			processList.add(dtoProcessCoil);			
 		}

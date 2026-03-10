@@ -23,13 +23,17 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Textbox;
 
+import com.pyramix.domain.entity.Enm_StatusInventory;
 import com.pyramix.domain.entity.Enm_StatusProcess;
+import com.pyramix.domain.entity.Enm_TypePacking;
 import com.pyramix.domain.entity.Ent_Company;
 import com.pyramix.domain.entity.Ent_Customer;
+import com.pyramix.domain.entity.Ent_Inventory;
 import com.pyramix.domain.entity.Ent_InventoryProcess;
 import com.pyramix.domain.entity.Ent_InventoryProcessMaterial;
 import com.pyramix.domain.entity.Ent_InventoryProcessProduct;
 import com.pyramix.persistence.company.dao.CompanyDao;
+import com.pyramix.persistence.inventory.dao.InventoryDao;
 import com.pyramix.persistence.inventoryprocess.dao.InventoryProcessDao;
 import com.pyramix.web.common.GFCBaseController;
 
@@ -45,9 +49,11 @@ public class ProductController extends GFCBaseController {
 
 	private InventoryProcessDao inventoryProcessDao;
 	private CompanyDao companyDao;
+	private InventoryDao inventoryDao;
 	
-	private Combobox customerProcessCombobox, processCombobox, processTypeCombobox;
-	private Listbox materialListbox, productListbox;
+	private Combobox customerProcessCombobox, processCombobox, processTypeCombobox,
+		statusReturnCombobox;
+	private Listbox materialListbox, productListbox, productReturnListbox;
 	private Label materialLabel;
 	private Checkbox processCompletedCheckbox;
 	private Button saveProcButton;
@@ -131,12 +137,20 @@ public class ProductController extends GFCBaseController {
 		} else {
 			// no proses materials for this customer
 			renderProcessMaterials(new ArrayList<Ent_InventoryProcessMaterial>());
-			// no products for this this customer
+			// reset process combobox and material description
+			processTypeCombobox.setValue("");
+			materialLabel.setValue("");
+			// no products for this this customero
 			renderProcessProducts(new ArrayList<Ent_InventoryProcessProduct>());
 		}
 	}
 	
 	public void onSelect$customerProcessCombobox(Event event) throws Exception {
+		// reset processCompleted
+		processCompletedCheckbox.setChecked(false);
+		// action
+		onCheckProcessCompletedCheckbox(processCompletedCheckbox.isChecked());
+		
 		onSelectCustomerProcessCombobox();
 	}
 	
@@ -151,7 +165,11 @@ public class ProductController extends GFCBaseController {
 	}
 	
 	public void onSelect$processCombobox(Event event) throws Exception {
-		log.info("processCombobox select");
+		// reset processCompleted
+		processCompletedCheckbox.setChecked(false);
+		// action
+		onCheckProcessCompletedCheckbox(processCompletedCheckbox.isChecked());
+		
 		onSelectProcessCombobox();
 	}
 
@@ -227,8 +245,8 @@ public class ProductController extends GFCBaseController {
 			processTypeCombobox.setValue(selMaterial.getInventoryProcess().getProcessType().toString());
 			materialLabel.setValue(
 					selMaterial.getMarking()+" "+
-							selMaterial.getInventoryCode().getProductCode()+" "+
-							toDecimalFormat(new BigDecimal(selMaterial.getWeightQuantity()), getLocale(), getDecimalFormat())+" Kg."
+					selMaterial.getInventoryCode().getProductCode()+" "+
+					toDecimalFormat(new BigDecimal(selMaterial.getWeightQuantity()), getLocale(), getDecimalFormat())+" Kg."
 					);
 			List<Ent_InventoryProcessProduct> productList =
 					onSelectMaterialListbox(selMaterial);
@@ -320,6 +338,8 @@ public class ProductController extends GFCBaseController {
 				button.setStyle("background-color:var(--bs-danger);");		
 				button.setParent(lc);
 				button.addEventListener(Events.ON_CLICK, onDeleteProductButtonClick(product));
+
+				item.setValue(product);
 			}
 		};
 	}
@@ -333,7 +353,7 @@ public class ProductController extends GFCBaseController {
 
 			@Override
 			public void onEvent(Event event) throws Exception {
-				log.info("Re-Coil...");
+				log.info("Re-Coil...Save this to inventory");
 			}
 		});
 		
@@ -461,8 +481,87 @@ public class ProductController extends GFCBaseController {
 			}
 		};
 	}
+
+	public void onAfterRender$productListbox(Event event) throws Exception {
+		log.info("onAfterRender ProductListbox");
+		// reset statusReturnCombobox
+		statusReturnCombobox.setValue("");
+		// look for re-coil products
+		List<Ent_Inventory> recoilInventoryList = 
+				new ArrayList<Ent_Inventory>();
+		for (Listitem listitem : productListbox.getItems()) {
+			Ent_InventoryProcessProduct processProduct = listitem.getValue();
+			if (processProduct != null) {
+				if (processProduct.isRecoil()) {
+					recoilInventoryList.add(processProductToInventory(processProduct));
+				}
+			}
+		}
+		// renderRecoilProducts
+		renderRecoilProducts(recoilInventoryList);
+	}
 	
-	
+	private Ent_Inventory processProductToInventory(Ent_InventoryProcessProduct processProduct) {
+		Ent_Inventory inventory = new Ent_Inventory();
+		inventory.setThickness(processProduct.getThickness());
+		inventory.setWidth(processProduct.getWidth());
+		inventory.setLength(processProduct.getLength());
+		inventory.setSheetQuantity(0);
+		inventory.setWeightQuantity(processProduct.getWeightQuantity());
+		inventory.setMarking(processProduct.getMarking());
+		inventory.setDescription(null);
+		inventory.setCustomer(selCustomer);
+		inventory.setReceiveDate(getLocalDate(getZoneId()));
+		inventory.setInventoryCode(processProduct.getInventoryCode());
+		inventory.setInventoryStatus(Enm_StatusInventory.ready);
+		inventory.setInventoryPacking(Enm_TypePacking.coil);
+		
+		return inventory;
+	}
+
+	private void renderRecoilProducts(List<Ent_Inventory> recoilInventoryList) {
+		// set statusReturnCombobox
+		if (!recoilInventoryList.isEmpty()) {
+			statusReturnCombobox.setValue("Re-Coil");			
+		}
+
+		ListModelList<Ent_Inventory> recoilInventoryModelList =
+				new ListModelList<Ent_Inventory>(recoilInventoryList);
+		
+		productReturnListbox.setModel(recoilInventoryModelList);
+		productReturnListbox.setItemRenderer(getInventoryRecoilItemRenderer());
+	}
+
+	private ListitemRenderer<Ent_Inventory> getInventoryRecoilItemRenderer() {
+
+		return new ListitemRenderer<Ent_Inventory>() {
+			
+			@Override
+			public void render(Listitem item, Ent_Inventory inventory, int index) throws Exception {
+				Listcell lc;
+				
+				// Marking
+				lc = new Listcell(inventory.getMarking());
+				lc.setParent(item);
+				
+				// Spek
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(inventory.getThickness()), getLocale(), "#0,00")+" x "+
+						toDecimalFormat(new BigDecimal(inventory.getWidth()), getLocale(), "###.###")+" x " +
+						toDecimalFormat(new BigDecimal(inventory.getLength()), getLocale(), "###.###"));
+				lc.setParent(item);
+				
+				// Qty(Kg)
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(inventory.getWeightQuantity()), getLocale(), "###.###")
+						);
+				lc.setParent(item);
+
+				item.setValue(inventory);
+			}
+		};
+	}
+
 	public void onClick$addProductButton(Event event) throws Exception {
 		log.info("addProductButton click");
 		
@@ -652,17 +751,31 @@ public class ProductController extends GFCBaseController {
 	public void onCheck$processCompletedCheckbox(Event event) throws Exception {
 		log.info("processCompletedCheckbox: "+processCompletedCheckbox.isChecked());
 		
-		// allow user to click save
-		saveProcButton.setVisible(processCompletedCheckbox.isChecked());
-		
+		onCheckProcessCompletedCheckbox(processCompletedCheckbox.isChecked());
 	}
 	
+	private void onCheckProcessCompletedCheckbox(boolean checked) {
+		// allow user to click save
+		saveProcButton.setVisible(checked);
+		
+		// allow user to click save if there's a recoil to return to inventory (penerimaan)
+		// saveReturnButton.setVisible(!productReturnListbox.getItems().isEmpty() && checked);			
+	}
+
 	public void onClick$saveProcButton(Event event) throws Exception {
 		// set to 'Selesai'
 		selInvtProc.setProcessStatus(Enm_StatusProcess.Selesai);
 		selInvtProc.setCompletedDate(getLocalDate(getZoneId()));
 		// update
 		getInventoryProcessDao().update(selInvtProc);
+		// get the inventory from the listbox and save
+		if (!productReturnListbox.getItems().isEmpty()) {
+			for (Listitem item : productReturnListbox.getItems()) {
+				Ent_Inventory inventory = item.getValue();
+				getInventoryDao().save(inventory);
+			}
+		}
+		
 		// reload
 		onSelectCustomerProcessCombobox();
 		// reset checkbox
@@ -695,5 +808,13 @@ public class ProductController extends GFCBaseController {
 
 	public void setCompanyDao(CompanyDao companyDao) {
 		this.companyDao = companyDao;
+	}
+
+	public InventoryDao getInventoryDao() {
+		return inventoryDao;
+	}
+
+	public void setInventoryDao(InventoryDao inventoryDao) {
+		this.inventoryDao = inventoryDao;
 	}
 }

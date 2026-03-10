@@ -11,6 +11,7 @@
 	<parameter name="subtotal02" class="java.lang.String"/>
 	<parameter name="pphAmount" class="java.lang.String"/>
 	<parameter name="totalAmount" class="java.lang.String"/>
+	<parameter name="FakturNo" class="java.lang.String"/>
 	<query language="sql"><![CDATA[]]></query>
 	<field name="suratJalanNo" class="java.lang.String"/>
 	<field name="suratJalanTgl" class="java.lang.String"/>
@@ -22,14 +23,14 @@
 	<field name="marking" class="java.lang.String"/>
 	<field name="qty" class="java.lang.String"/>
 	<background splitType="Stretch"/>
-	<title height="99" splitType="Stretch">
+	<title height="104" splitType="Stretch">
 		<element kind="staticText" uuid="2d496d28-95ef-4cb5-83aa-7656aae6124f" x="0" y="0" width="190" height="20" fontSize="12.0" vTextAlign="Middle">
 			<text><![CDATA[PT.WAJASENTOSA METALINDO]]></text>
 		</element>
 		<element kind="staticText" uuid="900d0fed-7983-4006-acb4-0a8778f872ed" x="0" y="20" width="190" height="20" fontSize="8.0">
 			<text><![CDATA[Jl. Permata Raya Kav. C-2B, Kawasan Industri KIIC]]></text>
 		</element>
-		<element kind="staticText" uuid="9659281f-fd8e-4841-b56d-c50e33411be9" x="0" y="30" width="190" height="20" fontSize="8.0">
+		<element kind="staticText" uuid="9659281f-fd8e-4841-b56d-c50e33411be9" x="0" y="30" width="200" height="20" fontSize="8.0">
 			<text><![CDATA[Jalan Tol Jakarta - Cikampek Km.47, Karawang Barat]]></text>
 		</element>
 		<element kind="staticText" uuid="299b6f58-a4fa-4cfd-9fe3-43fc6ba1c644" x="0" y="40" width="190" height="20" fontSize="8.0">
@@ -62,9 +63,15 @@
 		<element kind="textField" uuid="6ec0423b-b00b-419e-8ab8-2666f89842f6" x="340" y="60" width="210" height="20">
 			<expression><![CDATA[$P{CustomerAddr2}]]></expression>
 		</element>
-		<element kind="line" uuid="f0b3cc1b-e2a7-48f2-84de-01a13c829507" x="0" y="98" width="550" height="1">
+		<element kind="line" uuid="f0b3cc1b-e2a7-48f2-84de-01a13c829507" x="0" y="101" width="550" height="1">
 			<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="staticText" uuid="76cf8f1b-1593-4c43-be54-41fbbf558fc6" x="0" y="80" width="100" height="20" bold="true" vTextAlign="Middle">
+			<text><![CDATA[FAKTUR NO.:]]></text>
+		</element>
+		<element kind="textField" uuid="7ee3e246-f1ca-4bd7-b3a1-16e0f33eaa3e" x="100" y="80" width="90" height="20" vTextAlign="Middle">
+			<expression><![CDATA[$P{FakturNo}]]></expression>
 		</element>
 	</title>
 	<columnHeader height="24" splitType="Stretch">

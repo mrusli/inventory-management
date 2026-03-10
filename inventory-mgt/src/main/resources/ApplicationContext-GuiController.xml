@@ -62,6 +62,7 @@
     <bean id="infoProductController" class="com.pyramix.web.product.ProductController" scope="prototype" parent="basisController">
     	<property name="companyDao" ref="companyDao"></property>
     	<property name="inventoryProcessDao" ref="inventoryProcessDao"></property>
+    	<property name="inventoryDao" ref="inventoryDao"></property>
     </bean>    
 
     <bean id="infoSuratJalanController" class="com.pyramix.web.suratjalan.SuratJalanController" scope="prototype" parent="basisController">
@@ -92,6 +93,10 @@
     </bean>
     
     <bean id="invoiceNonPphPrintControl" class="com.pyramix.web.invoice.InvoiceNonPphPrintController" scope="prototype" parent="basisController">
+    	<property name="jasperReportUtil" ref="jasperReportUtil"></property>
+    </bean>
+    
+    <bean id="invoiceNonPpnPrintControl" class="com.pyramix.web.invoice.InvoiceNonPpnPrintController" scope="prototype" parent="basisController">
     	<property name="jasperReportUtil" ref="jasperReportUtil"></property>
     </bean>
     

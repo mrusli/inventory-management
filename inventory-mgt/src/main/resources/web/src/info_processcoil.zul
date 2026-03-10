@@ -108,6 +108,7 @@
 						<listheader label="Spek" width="260px"/>
 						<listheader label="Qty(Kg)" width="120px"/>
 						<listheader id="productQtyListheader" label="Qty(Lbr)" width="120px"/>
+						<listheader id="remarkListheader" label="Rem." width="120px"></listheader>
 						<listheader/>
 					</listhead>
 				</listbox>				

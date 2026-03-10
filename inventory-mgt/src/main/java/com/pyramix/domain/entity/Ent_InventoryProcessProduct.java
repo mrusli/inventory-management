@@ -63,6 +63,8 @@ public class Ent_InventoryProcessProduct extends IdBasedObject {
 	@ToString.Exclude
 	private Ent_Customer customer;
 	
+	private String remark;
+	
 	@Transient
 	private boolean editInProgress = false;
 	

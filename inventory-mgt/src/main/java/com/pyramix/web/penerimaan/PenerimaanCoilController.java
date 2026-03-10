@@ -11,6 +11,7 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
@@ -213,6 +214,52 @@ public class PenerimaanCoilController extends GFCBaseController {
 				lc = new Listcell(
 						 inventory.getCustomer().getCompanyType()+" "+
 				 		 inventory.getCustomer().getCompanyLegalName());
+				lc.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
+
+					@Override
+					public void onEvent(Event event) throws Exception {
+						log.info("allow to edit...");
+						Listcell lc = (Listcell) event.getTarget();
+						lc.setLabel("");
+						
+						// get all active customers
+						List<Ent_Customer> customerList = getCustomerDao().findAllActiveCustomerSorted();
+						// combobox
+						Combobox combobox = new Combobox();
+						combobox.addEventListener(Events.ON_SELECT, new EventListener<Event>() {
+
+							@Override
+							public void onEvent(Event event) throws Exception {
+								Combobox combobox = (Combobox) event.getTarget();
+								Comboitem comboitem = combobox.getSelectedItem();
+								Ent_Customer selCustomer = comboitem.getValue();
+								// set the customer
+								inventory.setCustomer(selCustomer);
+								// update
+								getInventoryDao().update(inventory);
+								// notif
+								Clients.showNotification(
+										   "Perubahan Customer sudah tersimpan", "info", null, "bottom_left", 10000);
+								// remove combobox
+								Listcell lc = (Listcell) event.getTarget().getParent();
+								lc.getChildren().clear();
+								// set customer name
+								lc.setLabel(inventory.getCustomer().getCompanyType()+" "+
+											inventory.getCustomer().getCompanyLegalName());
+							}
+						});
+						combobox.setParent(lc);
+						// items
+						Comboitem comboitem;
+						for(Ent_Customer customer : customerList) {
+							comboitem = new Comboitem();
+							comboitem.setLabel(customer.getCompanyType()+"."+
+									customer.getCompanyLegalName());
+							comboitem.setValue(customer);
+							comboitem.setParent(combobox);
+						}
+					}
+				});
 				lc.setStyle("white-space: nowrap;");
 				lc.setParent(item);
 				
@@ -222,6 +269,73 @@ public class PenerimaanCoilController extends GFCBaseController {
 						toDecimalFormat(new BigDecimal(inventory.getWidth()), getLocale(), "###.###")+" x "+
 						toDecimalFormat(new BigDecimal(inventory.getLength()), getLocale(), "###.###")								
 						);
+				lc.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
+
+					@Override
+					public void onEvent(Event event) throws Exception {
+						Listcell lc = (Listcell) event.getTarget();
+						lc.setLabel("");
+						// thickness
+						Doublebox doublebox = new Doublebox();
+						doublebox.setLocale(getLocale());
+						doublebox.setWidth("60px");
+						doublebox.setValue(inventory.getThickness());
+						doublebox.setParent(lc);
+						
+						Label label = new Label(" x ");
+						label.setParent(lc);
+						// width
+						doublebox = new Doublebox();
+						doublebox.setLocale(getLocale());
+						doublebox.setWidth("60px");
+						doublebox.setValue(inventory.getWidth());
+						doublebox.setParent(lc);
+						
+						label = new Label(" x ");
+						label.setParent(lc);
+						// length
+						doublebox = new Doublebox();
+						doublebox.setLocale(getLocale());
+						doublebox.setWidth("60px");
+						doublebox.setValue(inventory.getLength());
+						doublebox.setParent(lc);
+						
+						doublebox.addEventListener(Events.ON_OK, new EventListener<Event>() {
+
+							@Override
+							public void onEvent(Event event) throws Exception {
+								Listcell lc = (Listcell) event.getTarget().getParent();
+								double spek[] = { 0.0, 0.0, 0.0 };
+								Doublebox doublebox;
+								// thickness
+								doublebox = (Doublebox) lc.getChildren().get(0);
+								spek[0] = doublebox.getValue();
+								// width
+								doublebox = (Doublebox) lc.getChildren().get(2);
+								spek[1] = doublebox.getValue();
+								// length
+								doublebox = (Doublebox) lc.getChildren().get(4);
+								spek[2] = doublebox.getValue();
+								// set
+								inventory.setThickness(spek[0]);
+								inventory.setWidth(spek[1]);
+								inventory.setLength(spek[2]);
+								// update
+								getInventoryDao().update(inventory);
+								// notif
+								Clients.showNotification(
+										   "Perubahan Spek sudah tersimpan", "info", null, "bottom_left", 10000);
+								// remove doublebox
+								lc.getChildren().clear();
+								// set spek
+								lc.setLabel(
+										toDecimalFormat(new BigDecimal(inventory.getThickness()), getLocale(), THICKNESS_FORMAT)+" x "+
+												toDecimalFormat(new BigDecimal(inventory.getWidth()), getLocale(), "###.###")+" x "+
+												toDecimalFormat(new BigDecimal(inventory.getLength()), getLocale(), "###.###"));
+							}
+						});
+					}
+				});
 				lc.setParent(item);
 				
 				// Packing
@@ -232,10 +346,79 @@ public class PenerimaanCoilController extends GFCBaseController {
 				lc = new Listcell(
 						toDecimalFormat(new BigDecimal(inventory.getWeightQuantity()), getLocale(), "###.###")
 						);
+				lc.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
+
+					@Override
+					public void onEvent(Event event) throws Exception {
+						Listcell lc = (Listcell) event.getTarget();
+						lc.setLabel("");
+						
+						Doublebox doublebox = new Doublebox();
+						doublebox.setLocale(getLocale());
+						doublebox.setWidth("100px");
+						doublebox.setValue(inventory.getWeightQuantity());
+						doublebox.setParent(lc);
+						doublebox.addEventListener(Events.ON_OK, new EventListener<Event>() {
+
+							@Override
+							public void onEvent(Event event) throws Exception {
+								Doublebox doublebox = (Doublebox) event.getTarget();
+								// set
+								inventory.setWeightQuantity(doublebox.getValue());
+								// update
+								getInventoryDao().update(inventory);
+								// notif
+								Clients.showNotification(
+										   "Perubahan Jmlh/Kg sudah tersimpan", "info", null, "bottom_left", 10000);								
+								// remove doublebox
+								Listcell lc = (Listcell) event.getTarget().getParent();
+								lc.getChildren().clear();
+								// set weightQty
+								lc.setLabel(
+										toDecimalFormat(new BigDecimal(inventory.getWeightQuantity()), getLocale(), "###.###")
+										);
+							}
+						});
+					}
+				});
 				lc.setParent(item);
 				
-				// No.Coil
+				// No.Coil / Marking
 				lc = new Listcell(inventory.getMarking());
+				lc.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
+
+					@Override
+					public void onEvent(Event event) throws Exception {
+						Listcell lc = (Listcell) event.getTarget();
+						lc.setLabel(" ");
+						
+						Textbox textbox = new Textbox();
+						textbox.setWidth("90px");
+						textbox.setValue(inventory.getMarking());
+						textbox.setParent(lc);					
+						textbox.addEventListener(Events.ON_OK, new EventListener<Event>() {
+
+							@Override
+							public void onEvent(Event event) throws Exception {
+								Textbox textbox = (Textbox) event.getTarget();
+								// set
+								inventory.setMarking(textbox.getValue());
+								// update
+								getInventoryDao().update(inventory);
+								// notif
+								Clients.showNotification(
+										   "Perubahan No.Coil sudah tersimpan", "info", null, "bottom_left", 10000);								
+								// remove doublebox
+								Listcell lc = (Listcell) event.getTarget().getParent();
+								lc.getChildren().clear();
+								// set Coil No
+								lc.setLabel(inventory.getMarking());							
+							}
+							
+						});
+
+					}
+				});
 				lc.setParent(item);
 				
 				// Notif 
@@ -248,13 +431,13 @@ public class PenerimaanCoilController extends GFCBaseController {
 				
 				// Status
 				lc = new Listcell();
-				lc.setParent(item);
-
 				if (inventory.getInventoryProcesses().isEmpty()) {
 					lc.setLabel("");
 				} else {
 					lc.setIconSclass("z-icon-code");
 				}
+				lc.setParent(item);
+
 				// inventory.getInventoryProcesses().forEach(p -> log.info(p.toString()));
 				
 				item.setValue(inventory);

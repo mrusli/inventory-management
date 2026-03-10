@@ -82,6 +82,7 @@ public class ProcessCoilController extends GFCBaseController {
 	private Ent_InventoryProcess selInventoryProcess = null;
 	private Ent_InventoryProcessMaterial selMaterial = null;
 	private Ent_Company defaultCompany = null;
+	private Enm_TypeProcess selProcessType = null;
 	
 	private static final Long DEF_COMPANY_IDX = (long) 3;
 	
@@ -191,9 +192,11 @@ public class ProcessCoilController extends GFCBaseController {
 		if (processTypeCombobox.getSelectedItem().getValue().equals(Enm_TypeProcess.Shearing)) {
 			log.info("change product listbox Qty() to Qty(Lbr)");
 			productQtyListheader.setLabel("Qty(Lbr)");
+			selProcessType = Enm_TypeProcess.Shearing;
 		} else {
 			log.info("change product listbox Qty() to Qty(Brs)");
 			productQtyListheader.setLabel("Qty(Brs)");
+			selProcessType = Enm_TypeProcess.Slitting;
 		}		
 	}
 	
@@ -266,6 +269,7 @@ public class ProcessCoilController extends GFCBaseController {
 		processTypeCombobox.setVisible(false);
 		processTypeLabel.setVisible(true);
 		processTypeLabel.setValue(selInventoryProcess.getProcessType().toString());
+		selProcessType = selInventoryProcess.getProcessType();
 		
 		selInventoryProcess = 
 				getInventoryProcessDao().findInventoryProcessMaterialsByProxy(selInventoryProcess.getId());
@@ -390,6 +394,7 @@ public class ProcessCoilController extends GFCBaseController {
 		// allow user to enter new info
 		setToAllowEditInfo();
 		// default process is 'Shearing' and the produk qty is 'Lbr'
+		selProcessType = Enm_TypeProcess.Shearing;
 		productQtyListheader.setLabel("Qty(Lbr)");
 		// render material list
 		renderInventoryProcessMaterial(selInventoryProcess.getProcessMaterials());
@@ -409,7 +414,6 @@ public class ProcessCoilController extends GFCBaseController {
 		// customerNameLabel.setVisible(false);
 		// customerNameLabel.setValue(" ");
 		customerNameCombobox.setVisible(false);
-				//true);
 
 		processDateLabel.setVisible(false);
 		processDatebox.setVisible(true);
@@ -429,6 +433,7 @@ public class ProcessCoilController extends GFCBaseController {
 		processNumberLabel.setValue(serial.getSerialComp());
 		statusLabel.setValue(Enm_StatusProcess.Proses.toString());
 		// statusLabel.setAttribute("statusProcess", Enm_StatusProcess.Proses);
+		processTypeCombobox.setDisabled(false);
 		processTypeCombobox.setSelectedIndex(0);
 	}	
 
@@ -524,6 +529,9 @@ public class ProcessCoilController extends GFCBaseController {
 		renderInventoryProcessProduct(processMaterial.getProcessProducts());
 		// hide material button - only allowed one material coil per process
 		addMaterialButton.setVisible(false);
+		// disable the processType 
+		// - if user decides to change, user must cancel the current process
+		processTypeCombobox.setDisabled(true);
 	}
 
 	private Set<Ent_InventoryCode> getInventoryCodeSet() throws Exception {
@@ -737,6 +745,13 @@ public class ProcessCoilController extends GFCBaseController {
 				lc = new Listcell(getFormatedInteger(prod.getSheetQuantity()));
 				lc.setParent(item);
 
+				// remark - id="remarkListheader"
+				String remark = selProcessType.equals(Enm_TypeProcess.Shearing) ?
+						prod.getRemark() : "";
+				lc = new Listcell(remark);
+				lc.setParent(item);
+				
+				// button
 				lc = new Listcell();
 				lc.setParent(item);
 				
@@ -779,7 +794,7 @@ public class ProcessCoilController extends GFCBaseController {
 				Listcell lc;
 				Button nonActiveButton;
 				for(Listitem listitem : productListbox.getItems()) {
-					lc = (Listcell) listitem.getChildren().get(4);
+					lc = (Listcell) listitem.getChildren().get(5);
 					nonActiveButton = (Button) lc.getFirstChild();
 					nonActiveButton.setDisabled(listitem.getIndex()!=activeItemIndex);
 				}
@@ -802,6 +817,7 @@ public class ProcessCoilController extends GFCBaseController {
 							procProduct.setSheetQuantity(updatedProduct.getSheetQuantity());
 							procProduct.setProcessMaterial(updatedProduct.getProcessMaterial());
 							procProduct.setProcessedByCo(updatedProduct.getProcessedByCo());
+							procProduct.setRemark(updatedProduct.getRemark());
 							break;
 						}
 					}
@@ -825,6 +841,7 @@ public class ProcessCoilController extends GFCBaseController {
 					setupProductSpek(activeItem, product);
 					setupProductQtyKg(activeItem, product);
 					setupProductQtyLbr(activeItem, product);
+					setupProductRemark(activeItem, product);
 					
 					// set to true
 					product.setEditInProgress(true);
@@ -847,7 +864,7 @@ public class ProcessCoilController extends GFCBaseController {
 				
 				// get the current listitem
 				Listitem activeItem = (Listitem) event.getTarget().getParent().getParent();
-				Listcell lc = (Listcell) activeItem.getChildren().get(4);
+				Listcell lc = (Listcell) activeItem.getChildren().get(5);
 				lc.getChildren().clear();
 				lc.setIconSclass("z-icon-xmark");
 				
@@ -856,8 +873,6 @@ public class ProcessCoilController extends GFCBaseController {
 				// log.info("remove item: {}", indexToRemove);
 				// DO NOT REMOVE - just mark this product NOT TO SAVE
 				// productModelList.remove(indexToRemove);
-				
-
 			}
 		};
 	}	
@@ -889,10 +904,11 @@ public class ProcessCoilController extends GFCBaseController {
 		setupProductSpek(activeItem, product);
 		setupProductQtyKg(activeItem, product);
 		setupProductQtyLbr(activeItem, product);
+		setupProductRemark(activeItem, product);
 		
 		processSaveButton.setVisible(true);
 	}
-	
+
 	private Ent_InventoryProcessProduct addProductInLastPos() {
 		Ent_InventoryProcessProduct processProduct =
 				new Ent_InventoryProcessProduct();
@@ -989,6 +1005,23 @@ public class ProcessCoilController extends GFCBaseController {
 		intbox.setParent(lc);
 	}
 
+	private String getProductRemark(Listitem activeItem) {
+		Textbox textbox = (Textbox) activeItem.getChildren().get(4).getFirstChild();
+		
+		return textbox.getValue();
+	}
+	
+	private void setupProductRemark(Listitem activeItem, Ent_InventoryProcessProduct product) {
+		Listcell lc = (Listcell) activeItem.getChildren().get(4);
+		lc.setLabel(" ");
+		Textbox textbox = new Textbox();
+		textbox.setWidth("80px");
+		textbox.setValue("");
+		// disable if slitting
+		textbox.setDisabled(selProcessType.equals(Enm_TypeProcess.Slitting));
+		textbox.setParent(lc);
+	}
+	
 	protected Ent_InventoryProcessProduct getUpdatedProcessProduct(Listitem listitem,
 			Ent_InventoryProcessProduct product) {
 
@@ -1004,6 +1037,8 @@ public class ProcessCoilController extends GFCBaseController {
 		product.setWeightQuantity(getProductQtyKg(listitem));
 		// Qty(Lbr)
 		product.setSheetQuantity(getProductQtyLbr(listitem));
+		// remark
+		product.setRemark(getProductRemark(listitem));
 		// from material
 		product.setInventoryCode(selMaterial.getInventoryCode());
 		
@@ -1014,8 +1049,7 @@ public class ProcessCoilController extends GFCBaseController {
 		
 		return product;
 	}
-	
-	
+
 	public void onClick$processSaveButton(Event event) throws Exception {
 		log.info("processSaveButton click");
 		Listitem listitem =	getLastMaterialItem();
@@ -1025,7 +1059,7 @@ public class ProcessCoilController extends GFCBaseController {
 			
 			Ent_Inventory selInventory =
 					editedProcessMaterial.getInventoryCoil();
-			log.info("-----> {}", selInventory.toString());
+			log.info("save {}", selInventory.toString());
 			if (selInventory.getInventoryProcesses().isEmpty()) {
 				// create a new list
 				List<Ent_InventoryProcess> invtProcessList = new ArrayList<Ent_InventoryProcess>();
@@ -1139,7 +1173,6 @@ public class ProcessCoilController extends GFCBaseController {
 		material.setSheetQuantity(invt.getSheetQuantity());
 		// products
 		material.setProcessProducts(getProcessProducts(material));
-		// material.getProcessProducts().forEach(p -> log.info(p.toString()));
 
 		// inventoryProcess
 		material.setInventoryProcess(selInventoryProcess);
@@ -1153,7 +1186,6 @@ public class ProcessCoilController extends GFCBaseController {
 		List<Ent_InventoryProcessProduct> productList =
 				new ArrayList<Ent_InventoryProcessProduct>();
 		Ent_InventoryProcessProduct product; 
-		// Listcell lc;
 		for (Listitem listitem : productListbox.getItems()) {
 			product = listitem.getValue();
 			
@@ -1163,23 +1195,19 @@ public class ProcessCoilController extends GFCBaseController {
 			}
 			
 			// marking
-			// Textbox markingTextbox = (Textbox) listitem.getChildren().get(0).getFirstChild();
 			product.setMarking(getProductMarking(listitem));
 			// spek - thk
-			// Doublebox thkDoublebox = (Doublebox) listitem.getChildren().get(1).getChildren().get(0);
 			product.setThickness(getProductSpek(listitem, 0));
 			// spek - wdth
-			// Doublebox wdthDoublebox = (Doublebox) listitem.getChildren().get(1).getChildren().get(2);
 			product.setWidth(getProductSpek(listitem, 2));
 			// spek - lgth
-			// Doublebox lgthDoublebox = (Doublebox) listitem.getChildren().get(1).getChildren().get(4);
 			product.setLength(getProductSpek(listitem, 4));
 			// Qty(Kg)
-			// Doublebox qtyKgDoublebox = (Doublebox) listitem.getChildren().get(2).getFirstChild();
 			product.setWeightQuantity(getProductQtyKg(listitem));
 			// Qty(Lbr)
-			// Intbox qtyLbrIntbox = (Intbox) listitem.getChildren().get(3).getFirstChild();
 			product.setSheetQuantity(getProductQtyLbr(listitem));
+			// remark
+			product.setRemark(getProductRemark(listitem));
 			// from material
 			product.setInventoryCode(material.getInventoryCode());
 			
@@ -1205,12 +1233,7 @@ public class ProcessCoilController extends GFCBaseController {
 		}
 	}
 	
-	public void onClick$cancelAddProcessButton(Event event) throws Exception {
-		// load inventoryProcess list
-		// loadInventoryProcessList();
-		// render inventoryProcess list
-		// renderInventoryProcessList();
-		
+	public void onClick$cancelAddProcessButton(Event event) throws Exception {	
 		// select to display details
 		if (!processModelList.isEmpty()) {
 			selInventoryProcess =
@@ -1220,6 +1243,8 @@ public class ProcessCoilController extends GFCBaseController {
 			displayDetailInventoryProcessInfo();
 			// hide add material button
 			addMaterialButton.setVisible(false);
+			// hide add product button
+			addProductButton.setVisible(false);
 			// allow user to cancel the process
 			// cancelProcessButton.setVisible(true);
 		} else {
@@ -1244,6 +1269,8 @@ public class ProcessCoilController extends GFCBaseController {
 		addMaterialButton.setVisible(false);
 		// hide cancel button
 		cancelAddProcessButton.setVisible(false);
+		// hide save button
+		processSaveButton.setVisible(false);
 		// shows print button
 		printJasperReportButton.setVisible(true);
 	}

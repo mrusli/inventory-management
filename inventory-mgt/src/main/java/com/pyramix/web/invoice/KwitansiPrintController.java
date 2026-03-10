@@ -84,12 +84,15 @@ public class KwitansiPrintController extends GFCBaseController {
 
 	private String getPaymentForDescription() {
 		String paymentFor = null;
-		if (activeInvoice.isPph23Option()) {
+		if (activeInvoice.isPpnOption() || activeInvoice.isPph23Option()) {
 			paymentFor =
 					"Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN dan pemotongan PPh23. Perincian Terlampir.";
-		} else {
+		} else if (activeInvoice.isPpnOption() || activeInvoice.isPph23Option()) {
 			paymentFor =
 					"Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN. Perincian Terlampir.";
+		} else {
+			paymentFor =
+					"Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+". Perincian Terlampir.";
 		}
 		return paymentFor;
 	}

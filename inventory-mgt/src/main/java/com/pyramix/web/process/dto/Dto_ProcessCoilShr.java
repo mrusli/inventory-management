@@ -19,4 +19,6 @@ public class Dto_ProcessCoilShr {
 	
 	private String weigthPcs;
 	
+	private String remark;
+	
 }

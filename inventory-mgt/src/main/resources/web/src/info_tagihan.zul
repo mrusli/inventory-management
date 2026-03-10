@@ -38,6 +38,7 @@
 						</row>
 						<row>
 							<cell>
+								<checkbox id="ppnOptionCheckbox" checked="true"></checkbox>							
 								<label value="PPn 11%" sclass="h6"></label>
 							</cell>
 							<cell>

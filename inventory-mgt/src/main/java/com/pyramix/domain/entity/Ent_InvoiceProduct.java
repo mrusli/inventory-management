@@ -7,6 +7,8 @@ import org.hibernate.type.TrueFalseConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -62,6 +64,10 @@ public class Ent_InvoiceProduct extends IdBasedObject {
 	private int pallet_qty = 0;
 	
 	private String ref_document;
+	
+	@Column(name = "process_type")
+	@Enumerated(EnumType.ORDINAL)
+	private Enm_TypeProcess processType;
 	
 	@Transient
 	private boolean editInProgress = false;

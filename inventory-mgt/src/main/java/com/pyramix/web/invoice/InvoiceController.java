@@ -34,6 +34,7 @@ import com.pyramix.domain.entity.Enm_StatusDocument;
 import com.pyramix.domain.entity.Enm_TypeDocument;
 import com.pyramix.domain.entity.Enm_TypeInvoice;
 import com.pyramix.domain.entity.Enm_TypePayment;
+import com.pyramix.domain.entity.Enm_TypeProcess;
 import com.pyramix.domain.entity.Ent_Company;
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_Invoice;
@@ -82,7 +83,7 @@ public class InvoiceController extends GFCBaseController {
 		createKwitansiButton, editButton, createKwitansiPltButton, editPltButton,
 		printTagihanJasperReportButton, printKwitansiTagihanJasperReportButton;
 	private Textbox fakturNumberTextbox, fakturNumberPltTextbox;
-	private Checkbox pph23OptionCheckbox;
+	private Checkbox pph23OptionCheckbox, ppnOptionCheckbox;
 	
 	private Ent_Customer selCustomer;
 	private ListModelList<Ent_Invoice> invoiceModelList;
@@ -93,6 +94,7 @@ public class InvoiceController extends GFCBaseController {
 			new ArrayList<Ent_SuratJalan>();
 	private Ent_Invoice activeInvoice = null;
 	private List<Ent_InvoicePallet> palletList;
+	private Enm_TypeProcess jasaProcess = null;
 	
 	private static final Long DEF_COMPANY_IDX = (long) 3;
 	private static final Double PPN = 11.0;
@@ -129,17 +131,12 @@ public class InvoiceController extends GFCBaseController {
 	private void displayInvoiceInfo() throws Exception {
 		if (activeInvoice==null) {
 			log.info("clear InvoiceInfo");
+			// customerName from selected customer
+			customerNameLabel.setValue(selCustomer.getCompanyType()+"."+
+					selCustomer.getCompanyLegalName());
 			// reset all
 			clearInvoiceInfo();
 		} else {
-			// display total
-			// subtotal01JasaLabel.setValue(toDecimalFormat(new BigDecimal(activeInvoice.getTotal_invoice()), getLocale(), getDecimalFormat()));
-			// ppnJasaLabel.setValue(toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn()), getLocale(), getDecimalFormat()));
-			// double subtotal = activeInvoice.getTotal_invoice() + activeInvoice.getAmount_ppn();
-			// subtotal02JasaLabel.setValue(toDecimalFormat(new BigDecimal(subtotal), getLocale(), getDecimalFormat()));
-			// pph23JasaLabel.setValue("-"+toDecimalFormat(new BigDecimal(activeInvoice.getAmount_pph()), getLocale(), getDecimalFormat()));
-			// double total = subtotal - activeInvoice.getAmount_pph();
-			// totalJasaLabel.setValue(toDecimalFormat(new BigDecimal(total), getLocale(), getDecimalFormat()));
 			// jasa
 			customerNameLabel.setValue(activeInvoice.getInvc_customer().getCompanyType()+"."+
 					activeInvoice.getInvc_customer().getCompanyLegalName());
@@ -238,6 +235,52 @@ public class InvoiceController extends GFCBaseController {
 			// notif
 			Clients.showNotification(
 					   "Perubahan pph23 berhasil disimpan", "info", null, "bottom_left", 10000);			
+		}
+	}
+	
+	public void onCheck$ppnOptionCheckbox(Event event) throws Exception {
+		log.info("ppnOptionCheckbox set to: {}", ppnOptionCheckbox.isChecked());
+		
+		if (activeInvoice != null) {
+			double subTotal01Jasa = activeInvoice.getSubtotal01();
+			double ppnJasa = 0; 
+			double subTotal02Jasa = 0;
+			double pphJasa = activeInvoice.getAmount_pph() * -1;
+			double totalJasa = 0;
+			if (ppnOptionCheckbox.isChecked()) {
+				ppnJasa = subTotal01Jasa * PPN / 100;
+				ppnJasaLabel.setValue(
+						toDecimalFormat(new BigDecimal(ppnJasa), getLocale(), getDecimalFormat()));
+				subTotal02Jasa = subTotal01Jasa + ppnJasa;
+				subtotal02JasaLabel.setValue(
+						toDecimalFormat(new BigDecimal(subTotal02Jasa), getLocale(), getDecimalFormat()));
+				pph23OptionCheckbox.setDisabled(false);
+			} else {
+				ppnJasa = 0;
+				ppnJasaLabel.setValue(
+						toDecimalFormat(new BigDecimal(ppnJasa), getLocale(), getDecimalFormat()));
+				pph23OptionCheckbox.setChecked(false);
+				pph23OptionCheckbox.setDisabled(true);
+				pphJasa = 0;
+				pph23JasaLabel.setValue(
+						toDecimalFormat(new BigDecimal(pphJasa), getLocale(), getDecimalFormat()));			
+				subTotal02Jasa = subTotal01Jasa + ppnJasa;
+				subtotal02JasaLabel.setValue(
+						toDecimalFormat(new BigDecimal(subTotal02Jasa), getLocale(), getDecimalFormat()));
+			}
+			totalJasa = subTotal02Jasa + pphJasa;
+			totalJasaLabel.setValue(
+					toDecimalFormat(new BigDecimal(totalJasa), getLocale(), getDecimalFormat()));
+			// set
+			activeInvoice.setAmount_ppn(ppnJasa);
+			activeInvoice.setAmount_pph(pphJasa);
+			activeInvoice.setSubtotal02(subTotal02Jasa);
+			activeInvoice.setTotal_invoice(totalJasa);
+			// update
+			getInvoiceDao().update(activeInvoice);
+			// notif
+			Clients.showNotification(
+					   "Perubahan ppn berhasil disimpan", "info", null, "bottom_left", 10000);			
 		}
 		
 	}
@@ -596,6 +639,10 @@ public class InvoiceController extends GFCBaseController {
 			selSuratJalanList.add(selSuratJalan);
 			// find the suratjalanproduct and transform invoiceproduct
 			selSuratJalan = getSuratjalanDao().getSuratJalanProductByProxy(selSuratJalan.getId());
+			
+			jasaProcess = selSuratJalan.getInventoryProcess().getProcessType();
+			log.info("tagihan jasa: {}", jasaProcess.toString());
+			
 			// transform
 			loadInvoiceProduct(selSuratJalan);
 			// render
@@ -640,6 +687,9 @@ public class InvoiceController extends GFCBaseController {
 			invoiceProduct.setUse_pallet(false);
 			invoiceProduct.setInventoryCode(suratjalanProduct.getInventoryCode());
 			invoiceProduct.setEditInProgress(true);
+			
+			Enm_TypeProcess processType = suratjalan.getInventoryProcess().getProcessType();
+			invoiceProduct.setProcessType(processType);
 			
 			productList.add(invoiceProduct);
 		}
@@ -727,11 +777,13 @@ public class InvoiceController extends GFCBaseController {
 		if (activeInvoice != null) {
 			subtotal01JasaLabel.setValue(
 					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal01()), getLocale(), getDecimalFormat()));
+			ppnOptionCheckbox.setChecked(activeInvoice.getAmount_ppn()!=0);
 			ppnJasaLabel.setValue(
 					toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn()), getLocale(), getDecimalFormat()));
 			subtotal02JasaLabel.setValue(
 					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal02()), getLocale(), getDecimalFormat()));
 			pph23OptionCheckbox.setChecked(activeInvoice.getAmount_pph()!=0);
+			pph23OptionCheckbox.setDisabled(!ppnOptionCheckbox.isChecked());
 			pph23JasaLabel.setValue(
 					toDecimalFormat(new BigDecimal(activeInvoice.getAmount_pph()), getLocale(), getDecimalFormat()));
 			totalJasaLabel.setValue(
@@ -914,6 +966,44 @@ public class InvoiceController extends GFCBaseController {
 		intbox.setValue(quantity_by_sht);
 		intbox.setWidth("100px");
 		intbox.setParent(lc);
+		intbox.addEventListener(Events.ON_CHANGE, new EventListener<Event>() {
+
+			@Override
+			public void onEvent(Event event) throws Exception {
+				Listcell lc;
+				Doublebox doublebox;
+				Intbox intbox;
+				int qtyPcs;
+				double qtyKg, rpKg, subtotal;
+				// get the Pcs
+				intbox = (Intbox) event.getTarget();
+				qtyPcs = intbox.getValue();
+				// get the qtyKg
+				lc = (Listcell) activeItem.getChildren().get(5);
+				doublebox = (Doublebox) lc.getFirstChild();
+				qtyKg = doublebox.getValue();
+				// get the rpKg
+				lc = (Listcell) activeItem.getChildren().get(6);
+				doublebox = (Doublebox) lc.getFirstChild();
+				rpKg = doublebox.getValue();
+				
+				if (jasaProcess==null || jasaProcess.equals(Enm_TypeProcess.Shearing)) {
+					// calc
+					subtotal = qtyKg * rpKg;
+					log.info("calc Jumlah:"+subtotal);				
+				} else {
+					// calc
+					subtotal = qtyPcs * qtyKg * rpKg;
+					log.info("calc Jumlah:"+subtotal);				
+				}
+				
+				// jumlah
+				lc = (Listcell) activeItem.getChildren().get(7);				
+				doublebox = (Doublebox) lc.getFirstChild();
+				doublebox.setValue(subtotal);				
+			}
+		});
+		
 	}
 
 	protected double getBerat(Listitem activeItem) {
@@ -935,20 +1025,41 @@ public class InvoiceController extends GFCBaseController {
 
 			@Override
 			public void onEvent(Event event) throws Exception {
+				// check whther it's shearing / slitting
+				// Listitem item = (Listitem) event.getTarget().getParent().getParent();
+				// Ent_InvoiceProduct product = item.getValue();
+				// Enm_TypeProcess processType = product.getProcessType()==null ?
+				//		null : product.getProcessType();
+				// log.info(processType==null ? null : processType.toString());
+				
 				Listcell lc;
 				Doublebox doublebox;
+				Intbox intbox;
+				int qtyPcs;
 				double qtyKg, rpKg, subtotal;
 				doublebox = (Doublebox) event.getTarget();
 				qtyKg = doublebox.getValue();
 				log.info("calc Jumlah:"+qtyKg);
+				// get the 'Pcs'
+				lc = (Listcell) activeItem.getChildren().get(4);
+				intbox = (Intbox) lc.getFirstChild();
+				qtyPcs = intbox.getValue();
 				// get the 'RpKg'
 				lc = (Listcell) activeItem.getChildren().get(6);
 				doublebox = (Doublebox) lc.getFirstChild();
 				rpKg = doublebox.getValue();
 				log.info("calc Jumlah:"+rpKg);
-				// calc
-				subtotal = qtyKg * rpKg;
-				log.info("calc Jumlah:"+subtotal);
+				
+				if (jasaProcess==null || jasaProcess.equals(Enm_TypeProcess.Shearing)) {
+					// calc
+					subtotal = qtyKg * rpKg;
+					log.info("calc Jumlah:"+subtotal);				
+				} else {
+					// calc
+					subtotal = qtyPcs * qtyKg * rpKg;
+					log.info("calc Jumlah:"+subtotal);				
+				}
+				
 				// jumlah
 				lc = (Listcell) activeItem.getChildren().get(7);				
 				doublebox = (Doublebox) lc.getFirstChild();
@@ -978,18 +1089,35 @@ public class InvoiceController extends GFCBaseController {
 			public void onEvent(Event event) throws Exception {
 				Listcell lc;
 				Doublebox doublebox;
+				Intbox intbox;
+				int qtyPcs;
 				double qtyKg, rpKg, subtotal;
 				doublebox = (Doublebox) event.getTarget();
 				rpKg = doublebox.getValue();
 				log.info("calc Jumlah: {}", toDecimalFormat(new BigDecimal(rpKg), getLocale(), getDecimalFormat()));
+				// get the 'Pcs'
+				lc = (Listcell) activeItem.getChildren().get(4);
+				intbox = (Intbox) lc.getFirstChild();
+				qtyPcs = intbox.getValue();
 				// get the 'Berat'
 				lc = (Listcell) activeItem.getChildren().get(5);
 				doublebox = (Doublebox) lc.getFirstChild();
 				qtyKg = doublebox.getValue();
 				log.info("calc Jumlah: {}", toDecimalFormat(new BigDecimal(qtyKg), getLocale(), getDecimalFormat()));
+				
+				if (jasaProcess==null || jasaProcess.equals(Enm_TypeProcess.Shearing)) {
+					// calc
+					subtotal = qtyKg * rpKg;
+					log.info("calc Jumlah:"+subtotal);				
+				} else {
+					// calc
+					subtotal = qtyPcs * qtyKg * rpKg;
+					log.info("calc Jumlah:"+subtotal);				
+				}				
+				
 				// calc
-				subtotal = qtyKg * rpKg;
-				log.info("calc Jumlah: {}",toDecimalFormat(new BigDecimal(subtotal), getLocale(), getDecimalFormat()));
+				// subtotal = qtyKg * rpKg;
+				// log.info("calc Jumlah: {}",toDecimalFormat(new BigDecimal(subtotal), getLocale(), getDecimalFormat()));
 				// jumlah
 				lc = (Listcell) activeItem.getChildren().get(7);				
 				doublebox = (Doublebox) lc.getFirstChild();
@@ -1554,11 +1682,20 @@ public class InvoiceController extends GFCBaseController {
 		
 		Window tagihanPrintWin = null;
 		
-		if (pph23OptionCheckbox.isChecked()) {
-			tagihanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_jasper.zul", null, arg);			
-		} else {
+		if (ppnOptionCheckbox.isChecked() && pph23OptionCheckbox.isChecked()) {
+			tagihanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_jasper.zul", null, arg);
+		} else if (ppnOptionCheckbox.isChecked() && !pph23OptionCheckbox.isChecked()) {
 			tagihanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_nonpph_jasper.zul", null, arg);
+		} else {
+			// nonppn and nonpph
+			tagihanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_nonppn_jasper.zul", null, arg);
 		}
+		
+//		if (pph23OptionCheckbox.isChecked()) {
+//			tagihanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_jasper.zul", null, arg);			
+//		} else {
+//			tagihanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_nonpph_jasper.zul", null, arg);
+//		} 
 		
 		tagihanPrintWin.doModal();
 	}
@@ -1571,6 +1708,7 @@ public class InvoiceController extends GFCBaseController {
 		}
 		
 		activeInvoice.setPph23Option(pph23OptionCheckbox.isChecked());
+		activeInvoice.setPpnOption(ppnOptionCheckbox.isChecked());
 		
 		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
 		

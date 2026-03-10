@@ -12,6 +12,7 @@
 	<field name="shearingSize" class="java.lang.String"/>
 	<field name="sheet" class="java.lang.String"/>
 	<field name="weigthPcs" class="java.lang.String"/>
+	<field name="remark" class="java.lang.String"/>
 	<background splitType="Stretch"/>
 	<title height="68" splitType="Stretch">
 		<element kind="rectangle" uuid="03526936-306a-4f66-8c34-b64cf27f63e3" mode="Transparent" x="280" y="0" width="521" height="20"/>
@@ -251,6 +252,9 @@
 			</element>
 			<element kind="textField" uuid="76967236-00d6-4924-863c-f9213a729cc5" x="500" y="0" width="31" height="30" vTextAlign="Middle">
 				<expression><![CDATA[$F{weigthPcs}]]></expression>
+			</element>
+			<element kind="textField" uuid="c4792084-0728-4f40-8f04-8fa5e2820f35" x="620" y="0" width="172" height="30" vTextAlign="Middle">
+				<expression><![CDATA[$F{remark}]]></expression>
 			</element>
 		</band>
 	</detail>
