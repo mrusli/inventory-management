@@ -299,6 +299,9 @@ public class SuratJalanController extends GFCBaseController {
 		List<Ent_SuratJalanProduct> suratjalanProductList = new ArrayList<Ent_SuratJalanProduct>();
 		Ent_SuratJalanProduct suratjalanProduct;
 		for(Ent_InventoryProcessProduct product : productList) {
+			if (product.isRecoil()) {
+				continue;
+			}
 			suratjalanProduct = new Ent_SuratJalanProduct();
 			suratjalanProduct.setInventoryCode(product.getInventoryCode());
 			suratjalanProduct.setMarking(product.getMarking());
