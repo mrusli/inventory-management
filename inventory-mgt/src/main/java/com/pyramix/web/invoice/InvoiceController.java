@@ -81,7 +81,8 @@ public class InvoiceController extends GFCBaseController {
 	private Grid suratjalanGrid;
 	private Button cancelAddButton, saveAddButton, cancelAddPltButton, saveAddPltButton,
 		createKwitansiButton, editButton, createKwitansiPltButton, editPltButton,
-		printTagihanJasperReportButton, printKwitansiTagihanJasperReportButton;
+		printTagihanJasperReportButton, printKwitansiTagihanJasperReportButton,
+		printTagihanBahanJasperReportButton, printKwitansiBahanJasperReportButton;
 	private Textbox fakturNumberTextbox, fakturNumberPltTextbox;
 	private Checkbox pph23OptionCheckbox, ppnOptionCheckbox;
 	
@@ -1247,6 +1248,9 @@ public class InvoiceController extends GFCBaseController {
 		saveAddButton.setVisible(false);
 		// allow user to edit
 		editButton.setVisible(true);
+		// allow user to print
+		printTagihanJasperReportButton.setVisible(true);
+		printKwitansiTagihanJasperReportButton.setVisible(true);
 	}
 	
 	public void onClick$editButton(Event event) throws Exception {
@@ -1659,8 +1663,14 @@ public class InvoiceController extends GFCBaseController {
 		palletList.forEach(p -> p.setEditInProgress(false));
 		renderPalletListbox();
 
+		// hide cancel and save button
 		cancelAddPltButton.setVisible(false);
 		saveAddPltButton.setVisible(false);
+		// allow user to edit
+		editPltButton.setVisible(true);
+		// allow user to print
+		printTagihanBahanJasperReportButton.setVisible(true);
+		printKwitansiBahanJasperReportButton.setVisible(true);		
 	}
 	
 	public void onClick$editPltButton(Event event) throws Exception {
@@ -1673,6 +1683,9 @@ public class InvoiceController extends GFCBaseController {
 		saveAddPltButton.setVisible(true);
 		// hide edit button
 		editPltButton.setVisible(false);
+		// hide print button
+		printTagihanBahanJasperReportButton.setVisible(false);
+		printKwitansiBahanJasperReportButton.setVisible(false);
 	}
 	
 	public void onClick$printTagihanJasperReportButton(Event event) throws Exception {
