@@ -1,6 +1,5 @@
 package com.pyramix.web.common;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.pyramix.domain.entity.Enm_TypeDocument;

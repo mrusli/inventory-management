@@ -14,6 +14,8 @@
 		<mapping class="com.pyramix.domain.entity.Ent_Customer"/>
 		
 		<mapping class="com.pyramix.domain.entity.Ent_Inventory"/>
+		
+		<mapping class="com.pyramix.domain.entity.Ent_InventoryCustomer"/>
 
 		<mapping class="com.pyramix.domain.entity.Ent_Serial"/>
 

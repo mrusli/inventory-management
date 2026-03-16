@@ -9,6 +9,10 @@ function prosesCoilMenuClick() {
 	zAu.send(new zk.Event(zk.Widget.$(this), 'onProsesCoilMenuClick', 'Admin...'));
 }
 
+function inventoryCustomerClick() {
+	zAu.send(new zk.Event(zk.Widget.$(this), 'onInventoryCustomerMenuClick', 'Admin...'));
+}
+
 function produkMenuClick() {
 	zAu.send(new zk.Event(zk.Widget.$(this), 'onProdukMenuClick', 'Admin...'));
 }

@@ -33,18 +33,20 @@
 			</n:div>
 			<n:div sclass="col-4">
 				<n:div>
-					<n:h5></n:h5>				
+					<n:h5>Return to Inventory</n:h5>				
 				</n:div>
-				<n:div>
-					<grid style="border: none;">
-						<rows>
-							<row>
-								<cell></cell>
-								<cell></cell>
-							</row>
-						</rows>
-					</grid>
+				<n:div sclass="mt-3">
+					Status:
+					<combobox id="statusReturnCombobox" disabled="true" width="120px"></combobox>
 				</n:div>
+				<listbox sclass="mt-3" id="productReturnListbox" height="250px">
+					<listhead sclass="redHeader">
+						<listheader label="Marking" width="100px" />
+						<listheader label="Spek" width="210px" />
+						<listheader label="Qty(Kg)" width="80px" />
+						<listheader/>
+					</listhead>
+				</listbox>
 			</n:div>
 		</n:div>
 		<n:div sclass="row mt-3">
@@ -76,21 +78,20 @@
 			</n:div>
 			<n:div sclass="col-4">
 				<n:div>
-					<n:h5>Return to Inventory</n:h5>				
+					<n:h5>Simpan ke Hasil Produksi</n:h5>				
 				</n:div>
 				<n:div sclass="mt-3">
 					Status:
-					<combobox id="statusReturnCombobox" disabled="true" width="120px"></combobox>
+					<combobox id="statusInventoryCombobox" disabled="true" width="120px"></combobox>
 				</n:div>
-				<listbox sclass="mt-3" id="productReturnListbox" height="450px">
-					<listhead>
+				<listbox sclass="mt-3" id="hasilProduksiListbox" height="450px">
+					<listhead sclass="greenHeader">
 						<listheader label="Marking" width="100px" />
 						<listheader label="Spek" width="210px" />
 						<listheader label="Qty(Kg)" width="80px" />
 						<listheader/>
 					</listhead>
 				</listbox>
-
 			</n:div>
 		</n:div>
 	</div>	

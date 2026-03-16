@@ -23,11 +23,25 @@
 			 		<n:ul class="navbar-nav">
 			 			<n:ul class="navbar-nav">
 			 				<n:li class="nav-item">
-			 					<n:a class="nav-link nav-adjust"
-			 						aria-current="page" href="#"
-			 						onClick="penerimaanCoilMenuClick();">
-			 						Penerimaan
+			 					<n:a class="nav-link nav-adjust dropdown-toggle"
+			 						href="#" role="button" data-bs-toggle="dropdown"
+			 						aria-expanded="false">
+			 						Inventory
 			 					</n:a>
+			 					<n:ul class="dropdown-menu">
+			 						<n:li>
+			 							<n:a class="dropdown-item"
+			 								href="#" onClick="penerimaanCoilMenuClick();">
+			 								Penerimaan Coil
+			 							</n:a>
+			 						</n:li>
+			 						<n:li>
+			 							<n:a class="dropdown-item"
+			 								href="#" onClick="inventoryCustomerClick();">
+			 								Hasil Produksi
+			 							</n:a>
+			 						</n:li>
+			 					</n:ul>			 					
 			 				</n:li>
 			 				<n:li class="nav-item">
 			 					<n:a class="nav-link nav-adjust"
@@ -65,7 +79,7 @@
 			 					<n:a class="nav-link nav-adjust dropdown-toggle"
 			 						href="#" role="button" data-bs-toggle="dropdown"
 			 						aria-expanded="false">
-			 						Inventory
+			 						Material
 			 					</n:a>
 			 					<n:ul class="dropdown-menu">
 			 						<n:li>

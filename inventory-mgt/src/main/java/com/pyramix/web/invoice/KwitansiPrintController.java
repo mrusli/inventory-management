@@ -15,7 +15,6 @@ import org.zkoss.zul.Iframe;
 import org.zkoss.zul.Textbox;
 
 import com.pyramix.domain.entity.Ent_Invoice;
-import com.pyramix.domain.entity.Ent_InvoiceProduct;
 import com.pyramix.web.common.GFCBaseController;
 import com.pyramix.web.common.JasperReportsUtil;
 import com.pyramix.web.common.NumToWordsConverter;
@@ -46,8 +45,8 @@ public class KwitansiPrintController extends GFCBaseController {
 	
 	private Ent_Invoice activeInvoice;
 	
-	private static final Double PPN = 11.0;
-	private static final Double PPH = 2.0;
+//	private static final Double PPN = 11.0;
+//	private static final Double PPH = 2.0;
 	
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
@@ -84,10 +83,10 @@ public class KwitansiPrintController extends GFCBaseController {
 
 	private String getPaymentForDescription() {
 		String paymentFor = null;
-		if (activeInvoice.isPpnOption() || activeInvoice.isPph23Option()) {
+		if ((activeInvoice.getAmount_ppn()!=0) && (activeInvoice.getAmount_pph()!=0)) {
 			paymentFor =
 					"Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN dan pemotongan PPh23. Perincian Terlampir.";
-		} else if (activeInvoice.isPpnOption() || activeInvoice.isPph23Option()) {
+		} else if (activeInvoice.getAmount_ppn()!=0) {
 			paymentFor =
 					"Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN. Perincian Terlampir.";
 		} else {
@@ -120,16 +119,23 @@ public class KwitansiPrintController extends GFCBaseController {
 
 	private Map<String, Object> getKwitansiParameters() throws Exception {
 		// log.info(getNumToWordsConverter().angkaToTerbilang((long) 11223993));
-		double jumlahJasa = calcJumlahJasa();
-		double jumlahPpn = PPN * jumlahJasa / 100;
-		double jumlahTotalJasa = jumlahJasa + jumlahPpn;
-		double jumlahPph = 0;
-		if (activeInvoice.isPph23Option()) {
-			jumlahPph = PPH * jumlahJasa / 100;		
-		}
-		double jumlahTotalJasaDecPph = jumlahTotalJasa - jumlahPph;
+//		double jumlahJasa = activeInvoice.getSubtotal01();
+//		double jumlahPpn = activeInvoice.getAmount_ppn();
+//		double jumlahTotalJasa = activeInvoice.getSubtotal02();
+//		double jumlahPph = activeInvoice.getAmount_pph();
+		double totalJasa = activeInvoice.getTotal_invoice();
+//		if (activeInvoice.isPpnOption()) {
+//			jumlahPpn = PPN * jumlahJasa / 100;
+//			jumlahTotalJasa = jumlahJasa + jumlahPpn;
+//			if (activeInvoice.isPph23Option()) {
+//				jumlahPph = PPH * jumlahJasa / 100;		
+//			}
+//		} else {
+//			jumlahTotalJasa = jumlahJasa;
+//		}
+//		double jumlahTotalJasaDecPph = jumlahTotalJasa - jumlahPph;
 		
-		String jumlahEjakan = getNumToWordsConverter().angkaToTerbilang((long) jumlahTotalJasaDecPph);
+		String jumlahEjakan = getNumToWordsConverter().angkaToTerbilang((long) totalJasa);
 		
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("kwitansiNo", activeInvoice.getJasaKwitansi().getKwitansi_ser().getSerialComp());
@@ -144,20 +150,20 @@ public class KwitansiPrintController extends GFCBaseController {
 //		} else {
 //			parameters.put("untukPembayaran", "Tagihan/Invoice No: "+activeInvoice.getInvc_ser().getSerialComp()+" termasuk PPN. Perincian Terlampir.");
 //		}
-		parameters.put("sejumlah", toDecimalFormat(new BigDecimal(jumlahTotalJasaDecPph), getLocale(), getDecimalFormat()));
+		parameters.put("sejumlah", toDecimalFormat(new BigDecimal(totalJasa), getLocale(), getDecimalFormat()));
 		parameters.put("kwitansiTgl", dateToStringDisplay(activeInvoice.getJasaKwitansi().getKwitansi_date(), getLongDateFormat(), getLocale()));
 		parameters.put("fakturNo", activeInvoice.getJasaFaktur().getFaktur_number());
 		
 		return parameters;
 	}
 
-	private double calcJumlahJasa() {
-		double jumlah = 0;
-		for(Ent_InvoiceProduct invcProd : activeInvoice.getInvoiceProducts()) {
-			jumlah = jumlah + invcProd.getSub_total();
-		}
-		return jumlah;
-	}
+//	private double calcJumlahJasa() {
+//		double jumlah = 0;
+//		for(Ent_InvoiceProduct invcProd : activeInvoice.getInvoiceProducts()) {
+//			jumlah = jumlah + invcProd.getSub_total();
+//		}
+//		return jumlah;
+//	}
 
 	private List<Dto_Kwitansi> getKwitansiDataSource() {
 		List<Dto_Kwitansi> kwitansiList = new ArrayList<Dto_Kwitansi>();

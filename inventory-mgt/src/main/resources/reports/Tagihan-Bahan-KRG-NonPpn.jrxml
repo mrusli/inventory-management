@@ -20,7 +20,7 @@
 	<field name="rpPallet" class="java.lang.String"/>
 	<field name="jumlah" class="java.lang.String"/>
 	<field name="marking" class="java.lang.String"/>
-	<title height="106" splitType="Stretch">
+	<title height="105" splitType="Stretch">
 		<element kind="staticText" uuid="2d496d28-95ef-4cb5-83aa-7656aae6124f" x="0" y="0" width="190" height="20" fontSize="12.0" vTextAlign="Middle">
 			<text><![CDATA[PT.WAJASENTOSA METALINDO]]></text>
 		</element>
@@ -65,15 +65,15 @@
 			<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
-		<element kind="staticText" uuid="75917002-c458-44c1-a5f5-fa70d5727799" x="0" y="80" width="100" height="20" bold="true" vTextAlign="Middle">
+		<element kind="staticText" uuid="767c9236-1c22-4661-8a6d-fc38b39505be" x="0" y="80" width="100" height="20" bold="true" vTextAlign="Middle">
 			<text><![CDATA[FAKTUR NO.:]]></text>
 		</element>
-		<element kind="textField" uuid="51922798-afaa-46ad-bcca-960bb17dd60f" x="100" y="80" width="180" height="20" vTextAlign="Middle">
+		<element kind="textField" uuid="be91c5ed-aba3-4fe0-975d-85dfb91212e8" x="100" y="80" width="180" height="20" vTextAlign="Middle">
 			<expression><![CDATA[$P{FakturNo}]]></expression>
 		</element>
 	</title>
 	<columnHeader height="37" splitType="Stretch">
-		<element kind="staticText" uuid="b04e4916-6850-490d-8053-3835cbaadeed" x="402" y="4" width="68" height="30">
+		<element kind="staticText" uuid="b04e4916-6850-490d-8053-3835cbaadeed" x="402" y="4" width="78" height="30">
 			<text><![CDATA[Rp/Pallet]]></text>
 		</element>
 		<element kind="staticText" uuid="fbc0e092-9ada-43ad-907a-57c33c3d5292" x="142" y="4" width="60" height="30">
@@ -91,7 +91,7 @@
 		<element kind="staticText" uuid="459b7ac7-7f90-4b99-85ee-3bd8dff1a999" x="352" y="4" width="50" height="30">
 			<text><![CDATA[Pcs]]></text>
 		</element>
-		<element kind="staticText" uuid="196a1940-bee5-49bd-a129-319e8a42d13f" x="473" y="3" width="77" height="30">
+		<element kind="staticText" uuid="196a1940-bee5-49bd-a129-319e8a42d13f" x="483" y="3" width="70" height="30">
 			<text><![CDATA[Jumlah]]></text>
 		</element>
 		<element kind="line" uuid="7e9ed36c-f7ba-4911-848d-c9c3f1e3b92f" x="0" y="34" width="550" height="1">
@@ -114,10 +114,10 @@
 			<element kind="textField" uuid="3c46df8a-dbd8-4e06-a919-73958385a5f8" x="353" y="0" width="50" height="30">
 				<expression><![CDATA[$F{pcs}]]></expression>
 			</element>
-			<element kind="textField" uuid="bf36ea37-4340-43ae-8efa-f5a9ef622dc9" x="403" y="0" width="67" height="30" hTextAlign="Right">
+			<element kind="textField" uuid="bf36ea37-4340-43ae-8efa-f5a9ef622dc9" x="403" y="0" width="77" height="30" hTextAlign="Right">
 				<expression><![CDATA[$F{rpPallet}]]></expression>
 			</element>
-			<element kind="textField" uuid="fe50bdd0-1e91-4c14-8371-bcab0ca415b5" x="473" y="-2" width="77" height="30" hTextAlign="Right">
+			<element kind="textField" uuid="fe50bdd0-1e91-4c14-8371-bcab0ca415b5" x="480" y="0" width="77" height="30" hTextAlign="Right">
 				<expression><![CDATA[$F{jumlah}]]></expression>
 			</element>
 			<element kind="textField" uuid="4e05d214-be3e-4825-99c0-30cf574268ac" x="140" y="0" width="63" height="30">
@@ -125,50 +125,29 @@
 			</element>
 		</band>
 	</detail>
-	<columnFooter height="20" splitType="Stretch">
+	<columnFooter height="17" splitType="Stretch">
 		<element kind="line" uuid="ef100224-6b5a-4f64-9d44-c99c83476d2d" x="0" y="6" width="550" height="1">
 			<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 	</columnFooter>
-	<lastPageFooter height="98">
-		<element kind="rectangle" uuid="f08282f6-1081-4f6b-9c2c-cec0e61c10ba" x="-1" y="8" width="240" height="83"/>
-		<element kind="staticText" uuid="89aba160-04d4-405e-94d9-853e6663f24f" x="10" y="14" width="219" height="70">
+	<lastPageFooter height="94">
+		<element kind="staticText" uuid="9bbd56d0-57ad-4c8a-b297-f35b919d2d65" x="457" y="3" width="23" height="20">
+			<text><![CDATA[Rp]]></text>
+		</element>
+		<element kind="staticText" uuid="180478a7-a8a4-4e74-a742-8c86b2ec7783" x="380" y="3" width="77" height="20">
+			<text><![CDATA[TOTAL]]></text>
+		</element>
+		<element kind="textField" uuid="4f76f518-ef50-4576-ae94-3e8ddc53f5b5" x="480" y="4" width="77" height="19" hTextAlign="Right">
+			<expression><![CDATA[$P{subtotal02}]]></expression>
+		</element>
+		<element kind="rectangle" uuid="f08282f6-1081-4f6b-9c2c-cec0e61c10ba" x="0" y="3" width="240" height="83"/>
+		<element kind="staticText" uuid="89aba160-04d4-405e-94d9-853e6663f24f" x="10" y="9" width="219" height="70">
 			<text><![CDATA[Pembayaran Jasa Potong harap di transfer ke:
 BANK BCA, cabang P.Jayakarta
 a/n PT. WAJASENTOSA METALINDO
 a/c 083 3009793]]></text>
-		</element>
-		<element kind="textField" uuid="08a96506-64e4-49ef-9d26-6ef2938c0b15" x="480" y="28" width="77" height="20" hTextAlign="Right">
-			<expression><![CDATA[$P{ppnAmount}]]></expression>
-		</element>
-		<element kind="textField" uuid="4f76f518-ef50-4576-ae94-3e8ddc53f5b5" x="480" y="49" width="77" height="19" hTextAlign="Right">
-			<expression><![CDATA[$P{subtotal02}]]></expression>
-		</element>
-		<element kind="staticText" uuid="451aa6b2-f286-4015-8b9a-26453229882c" x="380" y="28" width="77" height="20">
-			<text><![CDATA[PPN 11%]]></text>
-		</element>
-		<element kind="staticText" uuid="180478a7-a8a4-4e74-a742-8c86b2ec7783" x="380" y="48" width="77" height="20">
-			<text><![CDATA[TOTAL]]></text>
-		</element>
-		<element kind="textField" uuid="21dd6650-2b97-48a3-9692-197f300d4f22" x="480" y="8" width="77" height="20" hTextAlign="Right">
-			<expression><![CDATA[$P{subtotal01}]]></expression>
-		</element>
-		<element kind="staticText" uuid="b4bcb9f0-e612-4b60-8166-0d4414a11113" x="457" y="28" width="23" height="20">
-			<text><![CDATA[Rp]]></text>
-		</element>
-		<element kind="staticText" uuid="0a520641-ea30-43af-ae4c-629d4f88f12a" x="380" y="8" width="77" height="20">
-			<text><![CDATA[Jumlah]]></text>
-		</element>
-		<element kind="staticText" uuid="e544cd2b-ab54-471c-8806-25ea74f5f947" x="457" y="48" width="23" height="20">
-			<text><![CDATA[Rp]]></text>
-		</element>
-		<element kind="staticText" uuid="9bbd56d0-57ad-4c8a-b297-f35b919d2d65" x="457" y="8" width="23" height="20">
-			<text><![CDATA[Rp]]></text>
-		</element>
-		<element kind="line" uuid="f432979f-0156-4c22-8c6e-6de6c6441f9d" x="380" y="48" width="177" height="1">
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 	</lastPageFooter>
 </jasperReport>

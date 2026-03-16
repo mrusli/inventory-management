@@ -83,7 +83,7 @@ public class InvoiceController extends GFCBaseController {
 		createKwitansiButton, editButton, createKwitansiPltButton, editPltButton,
 		printTagihanJasperReportButton, printKwitansiTagihanJasperReportButton;
 	private Textbox fakturNumberTextbox, fakturNumberPltTextbox;
-	private Checkbox pph23OptionCheckbox, ppnOptionCheckbox;
+	private Checkbox pph23OptionCheckbox, ppnOptionCheckbox, ppnOptionPalletCheckbox;
 	
 	private Ent_Customer selCustomer;
 	private ListModelList<Ent_Invoice> invoiceModelList;
@@ -282,7 +282,6 @@ public class InvoiceController extends GFCBaseController {
 			Clients.showNotification(
 					   "Perubahan ppn berhasil disimpan", "info", null, "bottom_left", 10000);			
 		}
-		
 	}
 	
 	public void onClick$createKwitansiButton(Event event) throws Exception {
@@ -1292,6 +1291,7 @@ public class InvoiceController extends GFCBaseController {
 					
 					Ent_InvoicePallet pallet = new Ent_InvoicePallet();
 					pallet.setMarking("");
+					pallet.setKeterangan("");
 					pallet.setPallet_price(0.0);
 					pallet.setPallet_subtotal(0.0);
 					pallet.setQty_pcs(0);
@@ -1307,6 +1307,7 @@ public class InvoiceController extends GFCBaseController {
 				// add another item
 				Ent_InvoicePallet pallet = new Ent_InvoicePallet();
 				pallet.setMarking("");
+				pallet.setKeterangan("");
 				pallet.setPallet_price(0.0);
 				pallet.setPallet_subtotal(0.0);
 				pallet.setQty_pcs(0);
@@ -1405,22 +1406,53 @@ public class InvoiceController extends GFCBaseController {
 		log.info("onAfterRender palletListbox");
 		// double jumlahBahan = calcJumlahBahan();
 		if (activeInvoice != null) {
-			log.info("bhn - jumlah: {}", 
-					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal01Plt()), getLocale(), getDecimalFormat()));
+			// log.info("bhn - jumlah: {}", 
+			//		toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal01Plt()), getLocale(), getDecimalFormat()));
 			subtotalPalletLabel.setValue(
 					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal01Plt()), getLocale(), getDecimalFormat()));
-			log.info("bhn - ppn: {}",
-					toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn_plt()), getLocale(), getDecimalFormat()));
+			// log.info("bhn - ppn: {}",
+			//		toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn_plt()), getLocale(), getDecimalFormat()));
+			ppnOptionPalletCheckbox.setChecked(activeInvoice.getAmount_ppn_plt()!=0);
 			ppnPalletLabel.setValue(
 					toDecimalFormat(new BigDecimal(activeInvoice.getAmount_ppn_plt()), getLocale(), getDecimalFormat()));
-			log.info("bhn - total: {}",
-					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal02Plt()), getLocale(), getDecimalFormat()));
+			// log.info("bhn - total: {}",
+			//		toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal02Plt()), getLocale(), getDecimalFormat()));
 			totalPalletLabel.setValue(
 					toDecimalFormat(new BigDecimal(activeInvoice.getSubtotal02Plt()), getLocale(), getDecimalFormat()));
 		}
 		
 		// double jumlahPpn = PPN * jumlahBahan / 100;
 		// double jumlahTotalBahan = jumlahBahan + jumlahPpn;
+	}
+	
+	public void onCheck$ppnOptionPalletCheckbox(Event event) throws Exception {
+		log.info("ppnOptionPalletCheckbox is set to: {}", ppnOptionPalletCheckbox.isChecked());
+		if (activeInvoice != null) {
+			double subTotal01Plt = activeInvoice.getSubtotal01Plt();
+			double ppn = 0;
+			double totalPlt = 0;
+			if (ppnOptionPalletCheckbox.isChecked()) {
+				// use ppn
+				ppn = subTotal01Plt * PPN / 100;
+			} else {
+				ppn = 0;
+			}
+			totalPlt = subTotal01Plt + ppn;
+			ppnPalletLabel.setValue(
+					toDecimalFormat(new BigDecimal(ppn), getLocale(), getDecimalFormat()));
+			totalPalletLabel.setValue(
+					toDecimalFormat(new BigDecimal(totalPlt), getLocale(), getDecimalFormat()));
+			// set
+			activeInvoice.setAmount_ppn_plt(ppn);
+			activeInvoice.setSubtotal02Plt(totalPlt);
+			activeInvoice.setPpnBahanOption(ppnOptionPalletCheckbox.isChecked());
+			// update
+			getInvoiceDao().update(activeInvoice);
+			// notif
+			Clients.showNotification(
+					   "Perubahan ppn (Bahan) berhasil disimpan", "info", null, "bottom_left", 10000);			
+		}
+		
 	}
 	
 //	private double calcJumlahBahan() throws Exception {
@@ -1677,6 +1709,12 @@ public class InvoiceController extends GFCBaseController {
 	
 	public void onClick$printTagihanJasperReportButton(Event event) throws Exception {
 		log.info("printTagihanJasperReportButton click");
+		if (activeInvoice.getJasaKwitansi()==null) {
+			throw new Exception("Tidak bisa print. Belum membuat Kwitansi.");
+		}
+		if (activeInvoice.getJasaFaktur()==null) {
+			throw new Exception("Tidak bisa print. Belum membuat Faktur.");
+		}
 		
 		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
 		
@@ -1704,9 +1742,11 @@ public class InvoiceController extends GFCBaseController {
 		log.info("printKwitansiJasperReportButton click");
 		
 		if (activeInvoice.getJasaKwitansi()==null) {
-			throw new Exception("Kwitansi belum dibuat");
+			throw new Exception("Tidak bisa print. Belum membuat Kwitansi.");
 		}
-		
+		if (activeInvoice.getJasaFaktur()==null) {
+			throw new Exception("Tidak bisa print. Belum membuat Faktur.");
+		}		
 		activeInvoice.setPph23Option(pph23OptionCheckbox.isChecked());
 		activeInvoice.setPpnOption(ppnOptionCheckbox.isChecked());
 		
@@ -1719,17 +1759,36 @@ public class InvoiceController extends GFCBaseController {
 	
 	public void onClick$printTagihanBahanJasperReportButton(Event event) throws Exception {
 		log.info("printTagihanBahanJasperReportButton click");
-		
+		if (activeInvoice.getBahanKwitansi()==null) {
+			throw new Exception("Tidak bisa print. Belum membuat Kwitansi.");
+		}
+		if (activeInvoice.getBahanFaktur()==null) {
+			throw new Exception("Tidak bisa print. Belum membuat Faktur.");
+		}
 		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
 		
-		Window tagihanBahanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_bahan_jasper.zul", null, arg);
+		Window tagihanBahanPrintWin = null;
+		
+		if (ppnOptionPalletCheckbox.isChecked()) {
+			// use ppn
+			tagihanBahanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_bahan_jasper.zul", null, arg);
+		} else {
+			// no ppn
+			tagihanBahanPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_bahan_nonppn_jasper.zul", null, arg);
+		}
+		
 		
 		tagihanBahanPrintWin.doModal();
 	}
 	
 	public void onClick$printKwitansiBahanJasperReportButton(Event event) throws Exception {
 		log.info("printKwitansiBahanJasperReportButton click");
-
+		if (activeInvoice.getBahanKwitansi()==null) {
+			throw new Exception("Tidak bisa print. Belum membuat Kwitansi.");
+		}
+		if (activeInvoice.getBahanFaktur()==null) {
+			throw new Exception("Tidak bisa print. Belum membuat Faktur.");
+		}
 		Map<String, Ent_Invoice> arg = Collections.singletonMap("activeInvoice", activeInvoice);
 		
 		Window kwitansiPrintWin = (Window) Executions.createComponents("~./src/info_tagihan_bahan_kwitansi_jasper.zul", null, arg);

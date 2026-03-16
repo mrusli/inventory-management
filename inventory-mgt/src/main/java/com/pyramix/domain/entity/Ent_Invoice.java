@@ -107,4 +107,7 @@ public class Ent_Invoice extends IdBasedObject {
 	
 	@Transient
 	private boolean ppnOption = true;
+	
+	@Transient
+	private boolean ppnBahanOption = true;
 }

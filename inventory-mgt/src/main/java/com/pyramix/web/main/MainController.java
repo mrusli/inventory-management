@@ -70,6 +70,14 @@ public class MainController extends GFCBaseController {
 		mainInclude.setSrc("~./src/info_penerimaancoil.zul");
 	}
 	
+	public void onInventoryCustomerMenuClick(Event event) {
+		log.info("onInventoryCustomerMenuClick");
+		// change page title
+		Executions.getCurrent().getDesktop().getFirstPage().setTitle("Inventory-HasilProduksi");
+		// load page
+		mainInclude.setSrc("~./src/info_hasilproduksi.zul");
+	}
+	
 	public void onProsesCoilMenuClick(Event event) {
 		log.info("onProsesCoilMenuClick...");
 		// change page title

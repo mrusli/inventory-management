@@ -45,3 +45,13 @@
 .inputTextUpperCase {
 	text-transform: uppercase;
 }
+.redHeader > .z-listheader {
+	background: red;
+	border-left: 1px solid red;
+	border-bottom: 1px solid red;
+}
+.greenHeader > .z-listheader {
+	background: green;
+	border-left: 1px solid green;
+	border-bottom: 1px solid green;
+}

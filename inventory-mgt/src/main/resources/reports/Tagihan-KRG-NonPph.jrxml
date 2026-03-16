@@ -48,7 +48,7 @@
 		<element kind="staticText" uuid="01376ef9-9784-4c2c-93ed-ba9c8c151bee" x="280" y="20" width="60" height="20">
 			<text><![CDATA[Kepada Yth.:]]></text>
 		</element>
-		<element kind="textField" uuid="7fe53d0f-dcef-446a-b324-9e2840e0a8cd" x="100" y="60" width="90" height="20" vTextAlign="Middle">
+		<element kind="textField" uuid="7fe53d0f-dcef-446a-b324-9e2840e0a8cd" x="100" y="60" width="180" height="20" vTextAlign="Middle">
 			<expression><![CDATA[$P{InvoiceNo}]]></expression>
 		</element>
 		<element kind="textField" uuid="dbfa0062-7db4-43a4-b204-c526455c35f8" x="340" y="0" width="100" height="20">
@@ -70,7 +70,7 @@
 		<element kind="staticText" uuid="76cf8f1b-1593-4c43-be54-41fbbf558fc6" x="0" y="80" width="100" height="20" bold="true" vTextAlign="Middle">
 			<text><![CDATA[FAKTUR NO.:]]></text>
 		</element>
-		<element kind="textField" uuid="7ee3e246-f1ca-4bd7-b3a1-16e0f33eaa3e" x="100" y="80" width="90" height="20" vTextAlign="Middle">
+		<element kind="textField" uuid="7ee3e246-f1ca-4bd7-b3a1-16e0f33eaa3e" x="100" y="80" width="180" height="20" vTextAlign="Middle">
 			<expression><![CDATA[$P{FakturNo}]]></expression>
 		</element>
 	</title>
@@ -138,49 +138,49 @@
 			</element>
 		</band>
 	</detail>
-	<columnFooter height="106" splitType="Stretch">
-		<element kind="staticText" uuid="bbee980b-acb7-474f-a41b-0782acb663a1" x="373" y="6" width="77" height="20">
-			<text><![CDATA[Jumlah]]></text>
-		</element>
-		<element kind="textField" uuid="8a5323c6-1aab-4a42-b9db-527de901430a" x="473" y="6" width="77" height="20" hTextAlign="Right">
-			<expression><![CDATA[$P{subtotal01}]]></expression>
-		</element>
-		<element kind="staticText" uuid="4a46d351-080d-4b17-884f-a18a267b6ba7" x="373" y="26" width="77" height="20">
-			<text><![CDATA[PPN 11%]]></text>
-		</element>
-		<element kind="textField" uuid="4b3efca5-a8ea-4e94-b3ff-fd5df7fd5f11" x="473" y="26" width="77" height="20" hTextAlign="Right">
-			<expression><![CDATA[$P{ppnAmount}]]></expression>
-		</element>
-		<element kind="line" uuid="e87443ff-f6f6-4ccb-8ee4-5639ca347888" x="373" y="46" width="177" height="1">
-			<property name="com.jaspersoft.studio.unit.height" value="px"/>
-		</element>
-		<element kind="textField" uuid="73e4f68c-4990-4718-8253-41d682eec3c3" x="473" y="47" width="77" height="19" hTextAlign="Right">
-			<expression><![CDATA[$P{subtotal02}]]></expression>
-		</element>
-		<element kind="staticText" uuid="6f940963-0b72-4208-89a3-97f71220f8d8" x="373" y="46" width="77" height="20">
-			<text><![CDATA[TOTAL]]></text>
-		</element>
-		<element kind="staticText" uuid="cd86d642-5eae-43f4-abbb-7030113e63de" x="450" y="6" width="23" height="20">
-			<text><![CDATA[Rp]]></text>
-		</element>
-		<element kind="staticText" uuid="c4465f69-928b-4edc-a203-a193c4cd850e" x="450" y="26" width="23" height="20">
-			<text><![CDATA[Rp]]></text>
-		</element>
-		<element kind="staticText" uuid="ed333497-c912-4cec-89b6-3085766aac56" x="450" y="46" width="23" height="20">
-			<text><![CDATA[Rp]]></text>
-		</element>
-		<element kind="rectangle" uuid="7f9c568f-0006-49fd-9717-4f1bf2c250ff" x="10" y="17" width="240" height="83"/>
-		<element kind="staticText" uuid="224fdc8d-7895-4f89-8479-00d9e375ff21" x="20" y="20" width="219" height="67">
-			<text><![CDATA[Pembayaran Jasa Potong harap di transfer ke:
-BANK BCA, cabang P.Jayakarta
-a/n PT. WAJASENTOSA METALINDO
-a/c 083 3009793]]></text>
-		</element>
+	<columnFooter height="9" splitType="Stretch">
 		<element kind="line" uuid="7b6b7e0e-21d3-47a3-8da7-4d67b9193047" x="0" y="0" width="550" height="1">
 			<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 		</element>
 	</columnFooter>
-	<pageFooter height="54" splitType="Stretch"/>
-	<summary height="42" splitType="Stretch"/>
+	<lastPageFooter height="91">
+		<element kind="rectangle" uuid="7f9c568f-0006-49fd-9717-4f1bf2c250ff" x="0" y="1" width="240" height="83"/>
+		<element kind="staticText" uuid="224fdc8d-7895-4f89-8479-00d9e375ff21" x="10" y="4" width="219" height="67">
+			<text><![CDATA[Pembayaran Jasa Potong harap di transfer ke:
+BANK BCA, cabang P.Jayakarta
+a/n PT. WAJASENTOSA METALINDO
+a/c 083 3009793]]></text>
+		</element>
+		<element kind="staticText" uuid="bbee980b-acb7-474f-a41b-0782acb663a1" x="380" y="0" width="77" height="20">
+			<text><![CDATA[Jumlah]]></text>
+		</element>
+		<element kind="textField" uuid="8a5323c6-1aab-4a42-b9db-527de901430a" x="480" y="0" width="77" height="20" hTextAlign="Right">
+			<expression><![CDATA[$P{subtotal01}]]></expression>
+		</element>
+		<element kind="staticText" uuid="4a46d351-080d-4b17-884f-a18a267b6ba7" x="380" y="20" width="77" height="20">
+			<text><![CDATA[PPN 11%]]></text>
+		</element>
+		<element kind="textField" uuid="4b3efca5-a8ea-4e94-b3ff-fd5df7fd5f11" x="480" y="20" width="77" height="20" hTextAlign="Right">
+			<expression><![CDATA[$P{ppnAmount}]]></expression>
+		</element>
+		<element kind="line" uuid="e87443ff-f6f6-4ccb-8ee4-5639ca347888" x="380" y="40" width="177" height="1">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+		</element>
+		<element kind="textField" uuid="73e4f68c-4990-4718-8253-41d682eec3c3" x="480" y="41" width="77" height="19" hTextAlign="Right">
+			<expression><![CDATA[$P{subtotal02}]]></expression>
+		</element>
+		<element kind="staticText" uuid="6f940963-0b72-4208-89a3-97f71220f8d8" x="380" y="40" width="77" height="20">
+			<text><![CDATA[TOTAL]]></text>
+		</element>
+		<element kind="staticText" uuid="cd86d642-5eae-43f4-abbb-7030113e63de" x="457" y="0" width="23" height="20">
+			<text><![CDATA[Rp]]></text>
+		</element>
+		<element kind="staticText" uuid="c4465f69-928b-4edc-a203-a193c4cd850e" x="457" y="20" width="23" height="20">
+			<text><![CDATA[Rp]]></text>
+		</element>
+		<element kind="staticText" uuid="ed333497-c912-4cec-89b6-3085766aac56" x="457" y="40" width="23" height="20">
+			<text><![CDATA[Rp]]></text>
+		</element>
+	</lastPageFooter>
 </jasperReport>

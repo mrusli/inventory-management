@@ -1,0 +1,11 @@
+<?page title="tagihan" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window id="tagihanBahanNonPpnReportPrintWin" title="Invoice-Bahan" border="normal"
+	apply="${invoiceBahanNonPpnPrintControl}"
+	width="915px" height="1020px" closable="true" sizable="true"
+	action="show: slideDown;hide: slideUp">
+
+	<iframe id="iframe" width="100%" height="100%"></iframe>
+
+</window>
+</zk>

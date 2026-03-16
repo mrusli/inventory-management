@@ -29,37 +29,31 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.type.WhenNoDataTypeEnum;
 
 @Slf4j
-public class InvoiceBahanPrintController extends GFCBaseController {
+public class InvoiceBahanNonPpnPrintCotroller extends GFCBaseController {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -200450998636516392L;
-	
+	private static final long serialVersionUID = -1140014777131978707L;
+
 	private JasperReportsUtil jasperReportUtil;
 	
 	private Iframe iframe;
 	
 	private Ent_Invoice activeInvoice;
-	private double subtotal01, subtotal02;
-	private double ppnAmount;
-	private double totalAmount;
-	private double pphAmount;
-	
-	private static final Double PPN = 11.0;
-//	private static final Double PPH = 2.0;
+	private double subtotal01, subtotal02, ppnAmount, totalAmount;
 	
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
 		super.doAfterCompose(comp);
 		
 		activeInvoice = (Ent_Invoice) arg.get("activeInvoice");
-	}
-
-	public void onCreate$tagihanBahanReportPrintWin(Event event) throws Exception {
-		log.info("tagihanBahanReportPrintWin created");
+	}	
+	
+	public void onCreate$tagihanBahanNonPpnReportPrintWin(Event event) throws Exception {
+		log.info("tagihanBahanNonPpnReportPrintWin created");
 		
-		JasperReport jasperReport = getJasperReportUtil().loadJasperReport("reports/Tagihan-Bahan-KRG.jrxml");
+		JasperReport jasperReport = getJasperReportUtil().loadJasperReport("reports/Tagihan-Bahan-KRG-NonPpn.jrxml");
 		jasperReport.setWhenNoDataType(WhenNoDataTypeEnum.ALL_SECTIONS_NO_DETAIL);
 		
 		JRDataSource dataSource = new JRBeanCollectionDataSource(getInvoiceDataSource());
@@ -75,15 +69,13 @@ public class InvoiceBahanPrintController extends GFCBaseController {
 		String rtTimestamp = datetimeToStringDisplay(currDatetime, getShortDateTimeFormat(), getLocale());
 		
 		AMedia amedia = new AMedia(rtNoInvoice+"_"+rtTimestamp+".pdf", "pdf", "application/pdf", baos.toByteArray());
-		iframe.setContent(amedia);		
-		
+		iframe.setContent(amedia);	
 	}
-
+	
 	private Map<String, Object> getInvoiceParameters() throws Exception {
-		ppnAmount = subtotal01 * PPN / 100;
+		ppnAmount = 0;
 		subtotal02 = subtotal01 + ppnAmount;
-		pphAmount = 0;
-		totalAmount = 0;
+		totalAmount = 0; // not used
 		
 		Map<String,Object> parameters = new HashMap<String,Object>();
 		parameters.put("InvoiceNo", activeInvoice.getInvc_ser().getSerialComp()+"B");
@@ -96,12 +88,10 @@ public class InvoiceBahanPrintController extends GFCBaseController {
 		parameters.put("subtotal01", toDecimalFormat(new BigDecimal(subtotal01), getLocale(), getDecimalFormat()));
 		parameters.put("subtotal02", toDecimalFormat(new BigDecimal(subtotal02), getLocale(), getDecimalFormat()));
 		parameters.put("ppnAmount", toDecimalFormat(new BigDecimal(ppnAmount), getLocale(), getDecimalFormat()));
-		parameters.put("pphAmount", toDecimalFormat(new BigDecimal(pphAmount), getLocale(), getDecimalFormat()));
 		parameters.put("totalAmount", toDecimalFormat(new BigDecimal(totalAmount), getLocale(), getDecimalFormat()));
 
 		return parameters;
 	}
-
 	private List<Dto_InvoiceBahan> getInvoiceDataSource() throws Exception {
 		List<Dto_InvoiceBahan> invcList = new ArrayList<Dto_InvoiceBahan>();
 		subtotal01 = 0;
@@ -119,9 +109,9 @@ public class InvoiceBahanPrintController extends GFCBaseController {
 			invcList.add(bahan);
 		}
 		
-		return invcList;
+		return invcList;		
 	}
-
+	
 	public JasperReportsUtil getJasperReportUtil() {
 		return jasperReportUtil;
 	}
@@ -129,5 +119,4 @@ public class InvoiceBahanPrintController extends GFCBaseController {
 	public void setJasperReportUtil(JasperReportsUtil jasperReportUtil) {
 		this.jasperReportUtil = jasperReportUtil;
 	}
-
 }

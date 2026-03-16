@@ -72,4 +72,10 @@
 	<bean id="invoiceDao" class="com.pyramix.persistence.invoice.dao.hibernate.InvoiceHibernate">
 		<property name="sessionFactory" ref="sessionFactory"></property>
 	</bean>
+	
+	<!-- inventoryCustomer -->
+	
+	<bean id="inventoryCustomerDao" class="com.pyramix.persistence.inventorycustomer.dao.hibernate.InventoryCustomerHibernate">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
 </beans>

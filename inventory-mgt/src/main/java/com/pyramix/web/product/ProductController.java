@@ -29,11 +29,13 @@ import com.pyramix.domain.entity.Enm_TypePacking;
 import com.pyramix.domain.entity.Ent_Company;
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_Inventory;
+import com.pyramix.domain.entity.Ent_InventoryCustomer;
 import com.pyramix.domain.entity.Ent_InventoryProcess;
 import com.pyramix.domain.entity.Ent_InventoryProcessMaterial;
 import com.pyramix.domain.entity.Ent_InventoryProcessProduct;
 import com.pyramix.persistence.company.dao.CompanyDao;
 import com.pyramix.persistence.inventory.dao.InventoryDao;
+import com.pyramix.persistence.inventorycustomer.dao.InventoryCustomerDao;
 import com.pyramix.persistence.inventoryprocess.dao.InventoryProcessDao;
 import com.pyramix.web.common.GFCBaseController;
 
@@ -50,15 +52,18 @@ public class ProductController extends GFCBaseController {
 	private InventoryProcessDao inventoryProcessDao;
 	private CompanyDao companyDao;
 	private InventoryDao inventoryDao;
+	private InventoryCustomerDao inventoryCustomerDao;
 	
 	private Combobox customerProcessCombobox, processCombobox, processTypeCombobox,
 		statusReturnCombobox;
-	private Listbox materialListbox, productListbox, productReturnListbox;
+	private Listbox materialListbox, productListbox, productReturnListbox,
+		hasilProduksiListbox;
 	private Label materialLabel;
 	private Checkbox processCompletedCheckbox;
 	private Button saveProcButton;
 	
 	private ListModelList<Ent_InventoryProcessProduct> productModelList;
+	private ListModelList<Ent_InventoryCustomer> inventoryCustomerModelList;
 	private Ent_InventoryProcess selInvtProc = null;
 	private Ent_InventoryProcessMaterial selMaterial = null;
 	private Ent_Company defaultCompany = null;
@@ -755,11 +760,75 @@ public class ProductController extends GFCBaseController {
 	}
 	
 	private void onCheckProcessCompletedCheckbox(boolean checked) {
+		List<Ent_InventoryCustomer> invtCustList = new ArrayList<Ent_InventoryCustomer>();
 		// allow user to click save
 		saveProcButton.setVisible(checked);
+		if (checked) {
+			// transform to InventoryCustomer list
+			if (!productListbox.getItems().isEmpty()) {
+				for (Listitem listitem : productListbox.getItems()) {
+					Ent_InventoryProcessProduct product = listitem.getValue();
+					if (!product.isRecoil()) {
+						invtCustList.add(productToInventoryCustomer(product));
+					}
+				}
+			}
+		}
+		// set the listmodel
+		inventoryCustomerModelList = new ListModelList<Ent_InventoryCustomer>(invtCustList);
+		// populate hasilProduksiListbox
+		hasilProduksiListbox.setModel(inventoryCustomerModelList);
+		hasilProduksiListbox.setItemRenderer(getInventoryCustomerListitemRenderer());
+	}
+
+	private ListitemRenderer<Ent_InventoryCustomer> getInventoryCustomerListitemRenderer() {
 		
-		// allow user to click save if there's a recoil to return to inventory (penerimaan)
-		// saveReturnButton.setVisible(!productReturnListbox.getItems().isEmpty() && checked);			
+		return new ListitemRenderer<Ent_InventoryCustomer>() {
+			
+			@Override
+			public void render(Listitem item, Ent_InventoryCustomer invtCust, int index) throws Exception {
+				Listcell lc;
+				
+				// Marking
+				lc = new Listcell(invtCust.getMarking());
+				lc.setParent(item);
+				
+				// Spek
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(invtCust.getThickness()), getLocale(), "#0,00")+" x "+
+						toDecimalFormat(new BigDecimal(invtCust.getWidth()), getLocale(), "###.###")+" x " +
+						toDecimalFormat(new BigDecimal(invtCust.getLength()), getLocale(), "###.###"));						
+				lc.setParent(item);
+				
+				// Qty(Kg)
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(invtCust.getWeightQuantity()), getLocale(), "###.###")
+						);
+				lc.setParent(item);
+				
+				item.setValue(invtCust);
+			}
+		};
+	}
+
+	private Ent_InventoryCustomer productToInventoryCustomer(Ent_InventoryProcessProduct product) {
+		Ent_InventoryCustomer invtCustomer = new Ent_InventoryCustomer();
+		invtCustomer.setThickness(product.getThickness());
+		invtCustomer.setWidth(product.getWidth());
+		invtCustomer.setLength(product.getLength());
+		invtCustomer.setSheetQuantity(product.getSheetQuantity());
+		invtCustomer.setWeightQuantity(product.getWeightQuantity());
+		invtCustomer.setMarking(product.getMarking());
+		invtCustomer.setDescription(" ");
+		invtCustomer.setCustomer(product.getCustomer());
+		invtCustomer.setEntryDate(getLocalDate(getZoneId()));
+		invtCustomer.setInventoryCode(product.getInventoryCode());
+		invtCustomer.setInventoryStatus(Enm_StatusInventory.ready);
+		invtCustomer.setInventoryPacking(product.getInventoryPacking());
+		invtCustomer.setNote(product.getRemark());
+		invtCustomer.setInventoryProcess(selInvtProc);
+		
+		return invtCustomer;
 	}
 
 	public void onClick$saveProcButton(Event event) throws Exception {
@@ -775,7 +844,11 @@ public class ProductController extends GFCBaseController {
 				getInventoryDao().save(inventory);
 			}
 		}
-		
+		// get the customer inventory from the listbox and save
+		for (Listitem item : hasilProduksiListbox.getItems()) {
+			Ent_InventoryCustomer invtCustomer = item.getValue();
+			getInventoryCustomerDao().save(invtCustomer);
+		}
 		// reload
 		onSelectCustomerProcessCombobox();
 		// reset checkbox
@@ -816,5 +889,13 @@ public class ProductController extends GFCBaseController {
 
 	public void setInventoryDao(InventoryDao inventoryDao) {
 		this.inventoryDao = inventoryDao;
+	}
+
+	public InventoryCustomerDao getInventoryCustomerDao() {
+		return inventoryCustomerDao;
+	}
+
+	public void setInventoryCustomerDao(InventoryCustomerDao inventoryCustomerDao) {
+		this.inventoryCustomerDao = inventoryCustomerDao;
 	}
 }

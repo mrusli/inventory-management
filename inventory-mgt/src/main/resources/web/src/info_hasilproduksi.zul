@@ -1,0 +1,34 @@
+<div xmlns:n="native" id="infoHasilProduksiPanel" apply="${infoHasilProduksiController}">
+	<n:div sclass="mt-3">
+		<n:h3>Hasil Produksi</n:h3>	
+	</n:div>
+	<div sclass="row mt-3">
+		<n:div sclass="col-12">
+			<n:div sclass="mt-3">
+				Customer:
+				<combobox id="customerCombobox" width="220px" visible="true"></combobox>
+				Jenis-Coil:
+				<combobox id="jenisCoilCombobox" width="180px" visible="true"></combobox>
+				<button id="productAddButton" label="Tambah" visible="true" iconSclass="z-icon-plus" sclass="compButton" style="background-color: var(--bs-success)"></button>				
+			</n:div>
+			<listbox sclass="mt-3" id="productListbox" mold="paging" height="400px" pageSize="6">
+				<listhead>
+		 			<listheader label="Tgl.Produksi" width="120px"></listheader>
+		 			<listheader label="Jenis-Coil" width="115px"></listheader>
+		 			<listheader label="Customer" width="195px"></listheader>
+		 			<listheader label="Spek" width="260px"></listheader>
+		 			<listheader label="Packing" width="118px"></listheader>
+		 			<listheader label="Jmlh/Kg" width="118px"></listheader>
+					<listheader label="No.Coil" width="118px"></listheader>
+					<listheader width="70px"/>
+					<listheader width="70px"/>
+					<listheader/>
+				</listhead>
+			</listbox>												
+			<n:div sclass="mt-3">
+				<button id="saveButton" label="Simpan" visible="false" iconSclass="z-icon-check" sclass="compButton" style="background-color: var(--bs-primary)" autodisable="self"></button>							
+				<button id="cancelProcessButton" label="Batal" visible="false" iconSclass="z-icon-ban" sclass="compButton" style="background-color: var(--bs-danger)"></button>				
+			</n:div>
+		</n:div>
+	</div>	
+</div>
