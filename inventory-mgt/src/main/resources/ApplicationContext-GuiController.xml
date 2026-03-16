@@ -38,7 +38,9 @@
     </bean>
     
     <bean id="infoHasilProduksiController" class="com.pyramix.web.product.HasilProduksiController" scope="prototype" parent="basisController">
-    
+    	<property name="inventoryCustomerDao" ref="inventoryCustomerDao"></property>
+    	<property name="inventoryCodeDao" ref="inventoryCodeDao"></property>
+    	<property name="customerDao" ref="customerDao"></property>    	
     </bean>
     
     <bean id="infoProcessCoilController" class="com.pyramix.web.process.ProcessCoilController" scope="prototype" parent="basisController">
