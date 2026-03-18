@@ -2,7 +2,10 @@ package com.pyramix.domain.entity;
 
 import java.time.LocalDate;
 
+import org.hibernate.type.TrueFalseConverter;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -39,6 +42,10 @@ public class Ent_InventoryCustomer extends IdBasedObject {
 	
 	@Column(name = "dscrpt")
 	private String description;
+	
+	@Column(name = "re_coil")
+	@Convert(converter = TrueFalseConverter.class)
+	private boolean recoil = false;
 	
 	@ManyToOne
 	private Ent_Customer customer;

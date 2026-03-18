@@ -5,7 +5,6 @@ import java.util.List;
 import org.hibernate.Session;
 
 import com.pyramix.domain.entity.Ent_Customer;
-import com.pyramix.domain.entity.Ent_Inventory;
 import com.pyramix.domain.entity.Ent_InventoryCode;
 import com.pyramix.domain.entity.Ent_InventoryCustomer;
 import com.pyramix.persistence.common.dao.hibernate.DaoHibernate;

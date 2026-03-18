@@ -83,6 +83,7 @@ public class ProcessCoilController extends GFCBaseController {
 	private Ent_InventoryProcessMaterial selMaterial = null;
 	private Ent_Company defaultCompany = null;
 	private Enm_TypeProcess selProcessType = null;
+	private Ent_Customer custProc;
 	
 	private static final Long DEF_COMPANY_IDX = (long) 3;
 	
@@ -119,8 +120,9 @@ public class ProcessCoilController extends GFCBaseController {
 			resetDetailInventoryProcessInfo();
 			// customer never process any coils
 			// just displayed the customer name
-			Ent_Customer custProc = 
+			custProc = 
 					customerProcessCombobox.getSelectedItem().getValue();
+			
 			customerNameLabel.setValue(custProc.getCompanyType()+"."+
 					custProc.getCompanyLegalName());
 			// hide
@@ -147,6 +149,10 @@ public class ProcessCoilController extends GFCBaseController {
 	}
 
 	public void onSelect$customerProcessCombobox(Event event) throws Exception {
+		log.info("onSelectCustomerProcessCombobox");
+		custProc = 
+				customerProcessCombobox.getSelectedItem().getValue();
+		log.info("custProc {}", custProc.toString());
 		// load inventoryProcess list
 		loadInventoryProcessList();
 		// render inventoryProcess list
@@ -167,8 +173,6 @@ public class ProcessCoilController extends GFCBaseController {
 			resetDetailInventoryProcessInfo();
 			// customer never process any coils
 			// just displayed the customer name
-			Ent_Customer custProc = 
-					customerProcessCombobox.getSelectedItem().getValue();
 			customerNameLabel.setValue(custProc.getCompanyType()+"."+
 					custProc.getCompanyLegalName());
 			// hide
@@ -202,7 +206,7 @@ public class ProcessCoilController extends GFCBaseController {
 	
 	private void loadInventoryProcessList() throws Exception {
 		// get the selected customerProcessCombobox
-		Ent_Customer custProc = 
+		custProc = 
 				customerProcessCombobox.getSelectedItem().getValue();
 		
 		List<Ent_InventoryProcess> inventoryProcessList =
@@ -618,8 +622,8 @@ public class ProcessCoilController extends GFCBaseController {
 				Combobox combobox = (Combobox) event.getTarget();
 				Ent_InventoryCode invtCode = combobox.getSelectedItem().getValue();
 				// log.info(invtCode.toString());
-				Ent_Customer custProc = 
-						customerProcessCombobox.getSelectedItem().getValue();
+				// custProc = 
+				//		customerProcessCombobox.getSelectedItem().getValue();
 				// find inventory with invtCode and custProc
 				List<Ent_Inventory> inventoryList =
 						getInventoryDao().findInventoryByCustomer_InventoryCode(custProc, invtCode);
@@ -1216,6 +1220,8 @@ public class ProcessCoilController extends GFCBaseController {
 			// the company that process this material
 			product.setProcessedByCo(defaultCompany);
 			
+			product.setCustomer(custProc);
+			
 			productList.add(product);
 		}
 		
@@ -1252,7 +1258,7 @@ public class ProcessCoilController extends GFCBaseController {
 			resetDetailInventoryProcessInfo();
 			// customer never process any coils
 			// just displayed the customer name
-			Ent_Customer custProc = 
+			custProc = 
 					customerProcessCombobox.getSelectedItem().getValue();
 			customerNameLabel.setValue(custProc.getCompanyType()+"."+
 					custProc.getCompanyLegalName());			

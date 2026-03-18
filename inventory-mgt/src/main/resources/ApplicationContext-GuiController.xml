@@ -78,6 +78,7 @@
     	<property name="inventoryProcessDao" ref="inventoryProcessDao"></property>
     	<property name="serialNumberGenerator" ref="serialNumberGenerator"></property>
     	<property name="suratjalanDao" ref="suratjalanDao"></property>
+    	<property name="inventoryCustomerDao" ref="inventoryCustomerDao"></property>
     </bean>
     
     <bean id="suratjalanPrintControl" class="com.pyramix.web.suratjalan.SuratJalanPrintController" scope="prototype" parent="basisController">

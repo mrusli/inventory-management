@@ -1,5 +1,6 @@
 package com.pyramix.web.product;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,11 +11,11 @@ import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 
 import com.pyramix.domain.entity.Ent_Customer;
-import com.pyramix.domain.entity.Ent_Inventory;
 import com.pyramix.domain.entity.Ent_InventoryCode;
 import com.pyramix.domain.entity.Ent_InventoryCustomer;
 import com.pyramix.persistence.customer.dao.CustomerDao;
@@ -45,6 +46,8 @@ public class HasilProduksiController extends GFCBaseController {
 	private List<Ent_InventoryCode> inventoryCodeList = null;
 	private List<Ent_Customer> customerList = null;
 	private ListModelList<Ent_InventoryCustomer> inventoryCustomerModelList = null;
+	
+	private final String THICKNESS_FORMAT = "#0,00";
 	
 	public void onCreate$infoHasilProduksiPanel(Event event) throws Exception {
 		log.info("infoHasilProduksiPanel created");
@@ -147,7 +150,45 @@ public class HasilProduksiController extends GFCBaseController {
 			
 			@Override
 			public void render(Listitem item, Ent_InventoryCustomer invtCust, int index) throws Exception {
-			
+				Listcell lc;
+				
+				// Tgl.Produksi
+				lc = new Listcell(dateToStringDisplay(
+						invtCust.getEntryDate(), getShortDateFormat(), getLocale()));
+				lc.setParent(item);
+				
+				// Jenis-Coil
+				lc = new Listcell(invtCust.getInventoryCode().getProductCode());
+				lc.setStyle("white-space: nowrap;");
+				lc.setParent(item);
+				
+				// Customer
+				lc = new Listcell(invtCust.getCustomer().getCompanyType()+" "+
+				 		 invtCust.getCustomer().getCompanyLegalName());
+				lc.setStyle("white-space: nowrap;");
+				lc.setParent(item);
+				
+				// Spek
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(invtCust.getThickness()), getLocale(), THICKNESS_FORMAT)+" x "+
+						toDecimalFormat(new BigDecimal(invtCust.getWidth()), getLocale(), "###.###")+" x "+
+						toDecimalFormat(new BigDecimal(invtCust.getLength()), getLocale(), "###.###")								
+						);
+				lc.setParent(item);
+				
+				// Packing
+				lc = new Listcell(invtCust.getInventoryPacking().toString());
+				lc.setParent(item);
+				
+				// Jmlh/Kg
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(invtCust.getWeightQuantity()), getLocale(), "###.###")
+						);
+				lc.setParent(item);
+				
+				// No.Coil
+				lc = new Listcell(invtCust.getMarking());
+				lc.setParent(item);
 				
 			}
 		};

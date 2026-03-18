@@ -31,6 +31,7 @@ import com.pyramix.domain.entity.Enm_StatusProcess;
 import com.pyramix.domain.entity.Enm_TypeDocument;
 import com.pyramix.domain.entity.Ent_Company;
 import com.pyramix.domain.entity.Ent_Customer;
+import com.pyramix.domain.entity.Ent_InventoryCustomer;
 import com.pyramix.domain.entity.Ent_InventoryProcess;
 import com.pyramix.domain.entity.Ent_InventoryProcessMaterial;
 import com.pyramix.domain.entity.Ent_InventoryProcessProduct;
@@ -39,6 +40,7 @@ import com.pyramix.domain.entity.Ent_SuratJalan;
 import com.pyramix.domain.entity.Ent_SuratJalanProduct;
 import com.pyramix.persistence.company.dao.CompanyDao;
 import com.pyramix.persistence.customer.dao.CustomerDao;
+import com.pyramix.persistence.inventorycustomer.dao.InventoryCustomerDao;
 import com.pyramix.persistence.inventoryprocess.dao.InventoryProcessDao;
 import com.pyramix.persistence.suratjalan.dao.SuratJalanDao;
 import com.pyramix.web.common.GFCBaseController;
@@ -59,26 +61,33 @@ public class SuratJalanController extends GFCBaseController {
 	private InventoryProcessDao inventoryProcessDao;
 	private SerialNumberGenerator serialNumberGenerator;
 	private SuratJalanDao suratjalanDao;
+	private InventoryCustomerDao inventoryCustomerDao;
 	
 	private Combobox customerCombobox, processCombobox;
-	private Listbox suratJalanListbox, suratjalanProductListbox;
+	private Listbox suratJalanListbox, suratjalanProductListbox, customerInventoryListbox;
 	private Div processSelDiv;
 	private Button cancelAddButton, saveAddButton, editButton, printJasperReportButton;
 	private Label customerNameLabel, suratjalanDateLabel, suratjalanNumberLabel, nopolLabel,
 		refdocLabel;
 	private Textbox nopolTextbox, refdocTextbox;
+	private Div suratJalanDiv, hasilProduksiDiv;
 	
 	private Ent_SuratJalan currSuratJalan;
 	private ListModelList<Ent_SuratJalanProduct> suratjalanProductModelList;
 	private Ent_Company defaultCompany = null;
 	private List<Ent_SuratJalan> suratjalanList;
 	private ListModelList<Ent_SuratJalan> suratjalanModelList;
+	private List<Ent_InventoryCustomer> inventoryCustomerList;
+	private ListModelList<Ent_InventoryCustomer> inventoryCustomerModelList;
 	
-	private static final Long DEF_COMPANY_IDX = (long) 3;
+	private final Long DEF_COMPANY_IDX = (long) 3;
+	private final String THICKNESS_FORMAT = "#0,00";
 	
 	public void onCreate$infoSuratJalanPanel(Event event) throws Exception {
 		log.info("infoSuratJalanPanel created");
 
+		suratJalanDiv.setVisible(true);
+		
 		// set default company
 		defaultCompany = getCompanyDao().findCompanyById(DEF_COMPANY_IDX);
 		
@@ -93,6 +102,11 @@ public class SuratJalanController extends GFCBaseController {
 			loadSuratJalan();
 			// render
 			renderSuratJalan();
+			
+			// find customer inventory
+			loadCustomerInventory();
+			// render
+			renderCustomerInventory();
 		}
 	}
 
@@ -148,39 +162,125 @@ public class SuratJalanController extends GFCBaseController {
 		}
 	}
 
+	private void loadCustomerInventory() throws Exception {
+		Ent_Customer selCustomer = customerCombobox.getSelectedItem().getValue();
+		inventoryCustomerList =
+				getInventoryCustomerDao().findInventoryCustomerByCustomer(selCustomer);	
+	}
+
+	private void renderCustomerInventory() {
+		inventoryCustomerModelList =
+				new ListModelList<Ent_InventoryCustomer>(inventoryCustomerList);
+		customerInventoryListbox.setModel(inventoryCustomerModelList);
+		customerInventoryListbox.setItemRenderer(getInventoryCustomerListitemRenderer());
+	}	
+	
+	private ListitemRenderer<Ent_InventoryCustomer> getInventoryCustomerListitemRenderer() {
+		
+		return new ListitemRenderer<Ent_InventoryCustomer>() {
+			
+			@Override
+			public void render(Listitem item, Ent_InventoryCustomer invtCust, int index) throws Exception {
+				Listcell lc;
+				
+				// Tgl.Produksi
+				lc = new Listcell(dateToStringDisplay(
+						invtCust.getEntryDate(), getShortDateFormat(), getLocale()));
+				lc.setParent(item);
+				
+				// Jenis-Coil
+				lc = new Listcell(invtCust.getInventoryCode().getProductCode());
+				lc.setStyle("white-space: nowrap;");
+				lc.setParent(item);
+				
+				// Spek
+				lc = new Listcell(
+						toDecimalFormat(new BigDecimal(invtCust.getThickness()), getLocale(), THICKNESS_FORMAT)+" x "+
+						toDecimalFormat(new BigDecimal(invtCust.getWidth()), getLocale(), "###.###")+" x "+
+						toDecimalFormat(new BigDecimal(invtCust.getLength()), getLocale(), "###.###")								
+						);
+				lc.setParent(item);
+				
+				item.setValue(invtCust);
+				
+				item.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
+
+					@Override
+					public void onEvent(Event event) throws Exception {
+						log.info("add to SuratJalan list");
+						
+						suratjalanProductModelList.add(inventoryToSuratJalan(invtCust));
+						
+						suratjalanProductListbox.setModel(suratjalanProductModelList);
+						suratjalanProductListbox.setItemRenderer(getSuratJalanProductListitemRenderer());
+					}
+				});
+			}
+		};
+	}	
+
+	private Ent_SuratJalanProduct inventoryToSuratJalan(Ent_InventoryCustomer invtCust) {
+		Ent_SuratJalanProduct suratJalanProduct = new Ent_SuratJalanProduct();
+		suratJalanProduct.setInventoryCode(invtCust.getInventoryCode());
+		suratJalanProduct.setMarking(invtCust.getMarking());
+		suratJalanProduct.setSpek(null);
+		suratJalanProduct.setThickness(invtCust.getThickness());
+		suratJalanProduct.setWidth(invtCust.getWidth());
+		suratJalanProduct.setLength(invtCust.getLength());
+		suratJalanProduct.setPacking(invtCust.getInventoryPacking());
+		suratJalanProduct.setQuantityByKg(invtCust.getWeightQuantity());
+		suratJalanProduct.setQuantityBySht(invtCust.getSheetQuantity());
+		suratJalanProduct.setRecoil(invtCust.isRecoil());
+		// signal so that can be edited
+		suratJalanProduct.setEditInProgress(true);
+		
+		return suratJalanProduct;
+	}	
+	
 	public void onClick$suratJalanAddButton(Event event) throws Exception {
 		log.info("suratJalanAddButton click");
 
 		if (!customerCombobox.getItems().isEmpty()) {
+			suratJalanDiv.setVisible(false);
+			hasilProduksiDiv.setVisible(true);
+			
+			// find customer inventory
+			loadCustomerInventory();
+			// render
+			renderCustomerInventory();
+			
 			// grab the selected customer
 			Ent_Customer selCustomer = customerCombobox.getSelectedItem().getValue();
+			
+			currSuratJalan = createSuratJalan(selCustomer, new ArrayList<Ent_SuratJalanProduct>());
+			displaySuratJalan();	
 			// look for the process with process status Selesai
 			//					and suratJalan is null
-			List<Ent_InventoryProcess> processList =
-				getInventoryProcessDao().findInventoryByCustomerByStatusBySuratJalan(
-						selCustomer, Enm_StatusProcess.Selesai);
+			// List<Ent_InventoryProcess> processList =
+			//	getInventoryProcessDao().findInventoryByCustomerByStatusBySuratJalan(
+			//			selCustomer, Enm_StatusProcess.Selesai);
 			// populate the process in the combobox
-			loadProcessCombobox(processList);
+			// loadProcessCombobox(processList);
 			// select the 1st item in the process combobox
-			if (!processCombobox.getItems().isEmpty()) {
-				processCombobox.setSelectedIndex(0);
-				Ent_InventoryProcess invtProc =
-						processCombobox.getSelectedItem().getValue();
+			// if (!processCombobox.getItems().isEmpty()) {
+				// processCombobox.setSelectedIndex(0);
+				// Ent_InventoryProcess invtProc =
+				//		processCombobox.getSelectedItem().getValue();
 				// get all the materials and the products into product list
-				List<Ent_InventoryProcessProduct> productList = 
-						getInventoryProcessProducts(invtProc);
-				currSuratJalan = createSuratJalan(selCustomer, productList);
+				// List<Ent_InventoryProcessProduct> productList = 
+				//		getInventoryProcessProducts(invtProc);
+				// currSuratJalan = createSuratJalan(selCustomer, productList);
 				// add suratjalan to listbox
-				suratjalanModelList.add(0, currSuratJalan);
+				// suratjalanModelList.add(0, currSuratJalan);
 				
-				displaySuratJalan();				
-			}
+				// displaySuratJalan();				
+			// }
 		}
 		
 		// lower the listbox to 340px
-		suratJalanListbox.setHeight("340px");
+		// suratJalanListbox.setHeight("340px");
 		// make div visible true
-		processSelDiv.setVisible(true);
+		// processSelDiv.setVisible(true);
 		// hide the edit button
 		editButton.setVisible(false);
 		// allow user to cancel this add
@@ -211,56 +311,56 @@ public class SuratJalanController extends GFCBaseController {
 		renderSuratJalan();
 	}
 
-	private void loadProcessCombobox(List<Ent_InventoryProcess> processList) {
-		// clear processCombobox
-		processCombobox.getItems().clear();
-		Comboitem comboitem;
-		for(Ent_InventoryProcess process : processList) {
-			comboitem = new Comboitem();
-			comboitem.setLabel(process.getProcessNumber().getSerialComp());
-			comboitem.setValue(process);
-			comboitem.setParent(processCombobox);
-		}
-	}
+//	private void loadProcessCombobox(List<Ent_InventoryProcess> processList) {
+//		// clear processCombobox
+//		processCombobox.getItems().clear();
+//		Comboitem comboitem;
+//		for(Ent_InventoryProcess process : processList) {
+//			comboitem = new Comboitem();
+//			comboitem.setLabel(process.getProcessNumber().getSerialComp());
+//			comboitem.setValue(process);
+//			comboitem.setParent(processCombobox);
+//		}
+//	}
 	
-	private List<Ent_InventoryProcessProduct> getInventoryProcessProducts(Ent_InventoryProcess inventoryProcess) throws Exception {
-		// proxy
-		Ent_InventoryProcess invtProc =
-				getInventoryProcessDao()
-					.findInventoryProcessMaterialsByProxy(inventoryProcess.getId());
-		// get all the materials and the products into product list
-		Ent_InventoryProcessMaterial procMaterial;
-		List<Ent_InventoryProcessProduct> productList = 
-				new ArrayList<Ent_InventoryProcessProduct>();
-		for(Ent_InventoryProcessMaterial material : invtProc.getProcessMaterials()) {
-			// by proxy
-			procMaterial = getInventoryProcessDao()
-					.findInventoryProcessProductsByProxy(material.getId());
-			for(Ent_InventoryProcessProduct product : procMaterial.getProcessProducts()) {
-				productList.add(product);
-			}
-		}
-
-		// productList.forEach(p -> log.info(p.toString()));
-		
-		return productList;
-	}
+//	private List<Ent_InventoryProcessProduct> getInventoryProcessProducts(Ent_InventoryProcess inventoryProcess) throws Exception {
+//		// proxy
+//		Ent_InventoryProcess invtProc =
+//				getInventoryProcessDao()
+//					.findInventoryProcessMaterialsByProxy(inventoryProcess.getId());
+//		// get all the materials and the products into product list
+//		Ent_InventoryProcessMaterial procMaterial;
+//		List<Ent_InventoryProcessProduct> productList = 
+//				new ArrayList<Ent_InventoryProcessProduct>();
+//		for(Ent_InventoryProcessMaterial material : invtProc.getProcessMaterials()) {
+//			// by proxy
+//			procMaterial = getInventoryProcessDao()
+//					.findInventoryProcessProductsByProxy(material.getId());
+//			for(Ent_InventoryProcessProduct product : procMaterial.getProcessProducts()) {
+//				productList.add(product);
+//			}
+//		}
+//
+//		// productList.forEach(p -> log.info(p.toString()));
+//		
+//		return productList;
+//	}
 
 	public void onSelect$processCombobox(Event event) throws Exception {
-		Ent_InventoryProcess selInvtProcess = processCombobox.getSelectedItem().getValue();
-		log.info("select processCombobox: "+selInvtProcess.getProcessNumber().getSerialComp());
-		Ent_Customer selCustomer = customerCombobox.getSelectedItem().getValue();
+		// Ent_InventoryProcess selInvtProcess = processCombobox.getSelectedItem().getValue();
+		// log.info("select processCombobox: "+selInvtProcess.getProcessNumber().getSerialComp());
+		// Ent_Customer selCustomer = customerCombobox.getSelectedItem().getValue();
 		// Ent_InventoryProcess invtProc =
 		// 		processCombobox.getSelectedItem().getValue();
 		// get all the materials and the products into product list
-		List<Ent_InventoryProcessProduct> productList = 
-				getInventoryProcessProducts(selInvtProcess);
-		currSuratJalan = createSuratJalan(selCustomer, productList);
+		// List<Ent_InventoryProcessProduct> productList = 
+		//		getInventoryProcessProducts(selInvtProcess);
+		// currSuratJalan = createSuratJalan(selCustomer, productList);
 		// display suratjalan
-		displaySuratJalan();
+		// displaySuratJalan();
 	}
 	
-	private Ent_SuratJalan createSuratJalan(Ent_Customer customer, List<Ent_InventoryProcessProduct> productList) {
+	private Ent_SuratJalan createSuratJalan(Ent_Customer customer, List<Ent_SuratJalanProduct> suratJalanProductList) {
 		Ent_SuratJalan suratjalan = new Ent_SuratJalan();
 		suratjalan.setCustomer(customer);
 		suratjalan.setDeliveryDate(getLocalDate(getZoneId()));
@@ -270,12 +370,11 @@ public class SuratJalanController extends GFCBaseController {
 		suratjalan.setSuratjalanDate(getLocalDate(getZoneId()));
 		suratjalan.setSuratjalanSerial(getSuratJalanSerial(Enm_TypeDocument.SURATJALAN, getLocalDateTime(getZoneId())));
 		// productList to suratjalanProductList
-		suratjalan.setSuratjalanProducts(transformProductToSuratJalanProduct(productList));
+		suratjalan.setSuratjalanProducts(suratJalanProductList);
+				// transformProductToSuratJalanProduct(productList));
 		suratjalan.setSuratjalanStatus(Enm_StatusDocument.Normal);
 		suratjalan.setNoPolisi("");
 		suratjalan.setAddInProgress(true);
-		
-		
 		
 		return suratjalan;
 	}	
@@ -295,30 +394,30 @@ public class SuratJalanController extends GFCBaseController {
 		return serial;
 	}
 
-	private List<Ent_SuratJalanProduct> transformProductToSuratJalanProduct(List<Ent_InventoryProcessProduct> productList) {
-		List<Ent_SuratJalanProduct> suratjalanProductList = new ArrayList<Ent_SuratJalanProduct>();
-		Ent_SuratJalanProduct suratjalanProduct;
-		for(Ent_InventoryProcessProduct product : productList) {
-			suratjalanProduct = new Ent_SuratJalanProduct();
-			suratjalanProduct.setInventoryCode(product.getInventoryCode());
-			suratjalanProduct.setMarking(product.getMarking());
-			suratjalanProduct.setPacking(product.getInventoryPacking());
-			suratjalanProduct.setQuantityByKg(product.getWeightQuantity());
-			suratjalanProduct.setQuantityBySht(product.getSheetQuantity());
-			suratjalanProduct.setThickness(product.getThickness());
-			suratjalanProduct.setWidth(product.getWidth());
-			suratjalanProduct.setLength(product.getLength());
-			suratjalanProduct.setRecoil(product.isRecoil());
-			// allow user to edit
-			suratjalanProduct.setEditInProgress(true);
-			// add
-			suratjalanProductList.add(suratjalanProduct);
-		}
-		
-		// suratjalanProductList.forEach(s -> log.info(s.toString()));
-		
-		return suratjalanProductList;
-	}
+//	private List<Ent_SuratJalanProduct> transformProductToSuratJalanProduct(List<Ent_InventoryProcessProduct> productList) {
+//		List<Ent_SuratJalanProduct> suratjalanProductList = new ArrayList<Ent_SuratJalanProduct>();
+//		Ent_SuratJalanProduct suratjalanProduct;
+//		for(Ent_InventoryProcessProduct product : productList) {
+//			suratjalanProduct = new Ent_SuratJalanProduct();
+//			suratjalanProduct.setInventoryCode(product.getInventoryCode());
+//			suratjalanProduct.setMarking(product.getMarking());
+//			suratjalanProduct.setPacking(product.getInventoryPacking());
+//			suratjalanProduct.setQuantityByKg(product.getWeightQuantity());
+//			suratjalanProduct.setQuantityBySht(product.getSheetQuantity());
+//			suratjalanProduct.setThickness(product.getThickness());
+//			suratjalanProduct.setWidth(product.getWidth());
+//			suratjalanProduct.setLength(product.getLength());
+//			suratjalanProduct.setRecoil(product.isRecoil());
+//			// allow user to edit
+//			suratjalanProduct.setEditInProgress(true);
+//			// add
+//			suratjalanProductList.add(suratjalanProduct);
+//		}
+//		
+//		// suratjalanProductList.forEach(s -> log.info(s.toString()));
+//		
+//		return suratjalanProductList;
+//	}
 
 	private void displaySuratJalan() throws Exception {
 		customerNameLabel.setValue(currSuratJalan.getCustomer().getCompanyType()+"."+
@@ -473,12 +572,12 @@ public class SuratJalanController extends GFCBaseController {
 					product.setQuantityBySht(getQuantityBySht(activeItem));
 					
 					// getSuratjalanDao().update(currSuratJalan);
-					if (currSuratJalan.isEditInProgress()) {
+					// if (currSuratJalan.isEditInProgress()) {
 						// update
-						getSuratjalanDao().update(currSuratJalan);
-					}
+					//	getSuratjalanDao().update(currSuratJalan);
+					// }
 					// render the product list into the suratjalan listbox
-					renderSuratJalanProductList();						
+					// renderSuratJalanProductList();						
 					
 					// transform this button to edit
 					modifToEdit(button);
@@ -583,7 +682,7 @@ public class SuratJalanController extends GFCBaseController {
 		// make div visible false
 		processSelDiv.setVisible(false);
 		// increase listbox height to 400px
-		suratJalanListbox.setHeight("390px");
+		// suratJalanListbox.setHeight("390px");
 		// hide save button
 		saveAddButton.setVisible(false);
 		// hide cancel button
@@ -603,28 +702,31 @@ public class SuratJalanController extends GFCBaseController {
 	private Ent_SuratJalan getUpdatedSuratJalan() {
 		currSuratJalan.setNoPolisi(nopolTextbox.getValue());
 		currSuratJalan.setRefDocument(refdocTextbox.getValue());
+		// currSuratJalan.setSuratjalanProducts(getUpdatedSuratJalanProduct());
 		
-		Ent_InventoryProcess selInvtProcess;
-		
-		if (processCombobox.getSelectedItem()!=null) {
-			selInvtProcess = 
-					processCombobox.getSelectedItem().getValue();
-			// set the selected inventoryProcess to this suratJalan
-			currSuratJalan.setInventoryProcess(selInvtProcess);
-			// set this suratJalan to the selected inventoryProcess
-			selInvtProcess.setSuratjalan(currSuratJalan);
-		}
+//		Ent_InventoryProcess selInvtProcess;
+//		
+//		if (processCombobox.getSelectedItem()!=null) {
+//			selInvtProcess = 
+//					processCombobox.getSelectedItem().getValue();
+//			// set the selected inventoryProcess to this suratJalan
+//			currSuratJalan.setInventoryProcess(selInvtProcess);
+//			// set this suratJalan to the selected inventoryProcess
+//			selInvtProcess.setSuratjalan(currSuratJalan);
+//		}
 		
 		return currSuratJalan;
 	}
 
 	public void onClick$cancelAddButton(Event event) throws Exception {
 		log.info("cancelAddButton click");
+		suratJalanDiv.setVisible(true);
+		hasilProduksiDiv.setVisible(false);
 		
 		// make div visible false
 		processSelDiv.setVisible(false);
 		// increase listbox height to 400px
-		suratJalanListbox.setHeight("390px");
+		// suratJalanListbox.setHeight("440px");
 		// make edit button visible
 		editButton.setVisible(true);		
 		// hide this button
@@ -644,7 +746,7 @@ public class SuratJalanController extends GFCBaseController {
 		log.info("editButton click");
 		
 		// adjust the listbox height
-		suratJalanListbox.setHeight("400px");
+		// suratJalanListbox.setHeight("400px");
 		
 		currSuratJalan.setEditInProgress(true);
 		// show cancel button
@@ -720,6 +822,14 @@ public class SuratJalanController extends GFCBaseController {
 
 	public void setSuratjalanDao(SuratJalanDao suratjalanDao) {
 		this.suratjalanDao = suratjalanDao;
+	}
+
+	public InventoryCustomerDao getInventoryCustomerDao() {
+		return inventoryCustomerDao;
+	}
+
+	public void setInventoryCustomerDao(InventoryCustomerDao inventoryCustomerDao) {
+		this.inventoryCustomerDao = inventoryCustomerDao;
 	}
 	
 }
