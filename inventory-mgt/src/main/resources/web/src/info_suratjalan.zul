@@ -26,9 +26,6 @@
 					<listheader></listheader>
 				</listhead>
 			</listbox>												
-			<n:div sclass="mt-3">
-				<button id="editButton" label="Ubah" visible="true" iconSclass="z-icon-pen-to-square" sclass="compButton" style="background-color:var(--bs-warning)"></button>				
-			</n:div>
 		</div>		
 		<div id="hasilProduksiDiv" visible="false" sclass="col-4">
 			<listbox sclass="mt-4" id="customerInventoryListbox" height="440px">
@@ -81,6 +78,7 @@
 					</listhead>
 				</listbox>
 				<n:div sclass="mt-3">
+					<button id="editButton" label="Ubah" visible="true" iconSclass="z-icon-pen-to-square" sclass="compButton" style="background-color:var(--bs-warning)"></button>				
 					<button id="printJasperReportButton" label="Print" visible="true" iconSclass="z-icon-print" sclass="compButton"></button>
 					<button id="cancelAddButton" label="Batal" visible="false" iconSclass="z-icon-trash" sclass="compButton" style="background-color:var(--bs-warning)"></button>
 					<button id="saveAddButton" label="Simpan" visible="false" iconSclass="z-icon-floppy-disk" sclass="compButton" style="background-color:var(--bs-primary)"></button>				

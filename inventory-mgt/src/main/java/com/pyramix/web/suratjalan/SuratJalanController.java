@@ -27,14 +27,10 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 import com.pyramix.domain.entity.Enm_StatusDocument;
-import com.pyramix.domain.entity.Enm_StatusProcess;
 import com.pyramix.domain.entity.Enm_TypeDocument;
 import com.pyramix.domain.entity.Ent_Company;
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_InventoryCustomer;
-import com.pyramix.domain.entity.Ent_InventoryProcess;
-import com.pyramix.domain.entity.Ent_InventoryProcessMaterial;
-import com.pyramix.domain.entity.Ent_InventoryProcessProduct;
 import com.pyramix.domain.entity.Ent_Serial;
 import com.pyramix.domain.entity.Ent_SuratJalan;
 import com.pyramix.domain.entity.Ent_SuratJalanProduct;
@@ -463,17 +459,18 @@ public class SuratJalanController extends GFCBaseController {
 	
 	private void renderSuratJalanProductList() throws Exception {
 		boolean suratjalanEditInProgress;
-		
+//		
 		if (currSuratJalan.isAddInProgress()) {
-			// no need to proxy, because currSuratJalan is new (not from DB)
+//			// no need to proxy, because currSuratJalan is new (not from DB)
 		} else {
 			suratjalanEditInProgress = currSuratJalan.isEditInProgress();
 			currSuratJalan = getSuratjalanDao().getSuratJalanProductByProxy(currSuratJalan.getId());
 			currSuratJalan.setEditInProgress(suratjalanEditInProgress);
 			currSuratJalan.getSuratjalanProducts().forEach(c -> c.setEditInProgress(suratjalanEditInProgress));
 		}
+		// setup the modellist
 		suratjalanProductModelList = 
-				new ListModelList<Ent_SuratJalanProduct>(currSuratJalan.getSuratjalanProducts());
+					new ListModelList<Ent_SuratJalanProduct>(currSuratJalan.getSuratjalanProducts());
 		suratjalanProductListbox.setModel(suratjalanProductModelList);
 		suratjalanProductListbox.setItemRenderer(getSuratJalanProductListitemRenderer());
 	}
@@ -550,6 +547,7 @@ public class SuratJalanController extends GFCBaseController {
 					log.info("to editSuratJalanProduct click");
 					// set to save
 					product.setEditInProgress(false);
+					
 					// set columns to edit
 					setMarking(activeItem, product.getMarking());
 					setSpek(activeItem, product.getThickness(), product.getWidth(), 
@@ -561,31 +559,39 @@ public class SuratJalanController extends GFCBaseController {
 					modifToSave(button);
 				} else {
 					log.info("to saveSuratJalanProduct click");
+					// get the index
+					Ent_SuratJalanProduct suratJalanProd =
+							suratjalanProductModelList.getElementAt(activeItem.getIndex());
+					
 					// set to edit
-					product.setEditInProgress(true);
+					suratJalanProd.setEditInProgress(true);
 					//			
-					product.setMarking(getMarking(activeItem));
-					product.setThickness(getSpek(activeItem, 0));
-					product.setWidth(getSpek(activeItem,2));
-					product.setLength(getSpek(activeItem,4));
-					product.setQuantityByKg(getQuantityByKg(activeItem));
-					product.setQuantityBySht(getQuantityBySht(activeItem));
+					suratJalanProd.setMarking(getMarking(activeItem));
+					suratJalanProd.setThickness(getSpek(activeItem, 0));
+					suratJalanProd.setWidth(getSpek(activeItem,2));
+					suratJalanProd.setLength(getSpek(activeItem,4));
+					suratJalanProd.setQuantityByKg(getQuantityByKg(activeItem));
+					suratJalanProd.setQuantityBySht(getQuantityBySht(activeItem)); 
 					
 					// getSuratjalanDao().update(currSuratJalan);
 					// if (currSuratJalan.isEditInProgress()) {
-						// update
-					//	getSuratjalanDao().update(currSuratJalan);
+						// 	update
+						//	getSuratjalanDao().update(currSuratJalan);
 					// }
-					// render the product list into the suratjalan listbox
-					// renderSuratJalanProductList();						
+
+					rerenderSuratJalanProductList();						
 					
 					// transform this button to edit
-					modifToEdit(button);
-				
+					modifToEdit(button);				
 				}
 				
 			}
 		};
+	}
+
+	protected void rerenderSuratJalanProductList() {
+		suratjalanProductListbox.setModel(suratjalanProductModelList);
+		suratjalanProductListbox.setItemRenderer(getSuratJalanProductListitemRenderer());		
 	}
 
 	private String getMarking(Listitem item) {
@@ -689,11 +695,12 @@ public class SuratJalanController extends GFCBaseController {
 		cancelAddButton.setVisible(false);
 		// make edit button visible
 		editButton.setVisible(true);
+		// allow user to print
+		printJasperReportButton.setVisible(true);
+		
+		Ent_SuratJalan updatedSuratJalan = getUpdatedSuratJalan();
 		// save / update the currSuratJalan
-		currSuratJalan = getSuratjalanDao().update(getUpdatedSuratJalan());
-		// load surat jalan for the sel customer
-
-		// locate the currSuratJalan in the listbox
+		currSuratJalan = getSuratjalanDao().update(updatedSuratJalan);
 		
 		// display currSuratJalan
 		displaySuratJalan();
@@ -702,7 +709,7 @@ public class SuratJalanController extends GFCBaseController {
 	private Ent_SuratJalan getUpdatedSuratJalan() {
 		currSuratJalan.setNoPolisi(nopolTextbox.getValue());
 		currSuratJalan.setRefDocument(refdocTextbox.getValue());
-		// currSuratJalan.setSuratjalanProducts(getUpdatedSuratJalanProduct());
+		currSuratJalan.setSuratjalanProducts(getUpdatedSuratJalanProduct());
 		
 //		Ent_InventoryProcess selInvtProcess;
 //		
@@ -716,6 +723,17 @@ public class SuratJalanController extends GFCBaseController {
 //		}
 		
 		return currSuratJalan;
+	}
+
+	private List<Ent_SuratJalanProduct> getUpdatedSuratJalanProduct() {
+		List<Ent_SuratJalanProduct> prodList =
+				suratjalanProductModelList.getInnerList();
+		prodList.forEach(c -> log.info(c.toString()));
+		
+//		for (Listitem listitem : suratjalanProductListbox.getItems()) {
+//			
+//		}
+		return prodList;
 	}
 
 	public void onClick$cancelAddButton(Event event) throws Exception {
@@ -758,7 +776,14 @@ public class SuratJalanController extends GFCBaseController {
 		// hide the edit button
 		editButton.setVisible(false);
 		
-		displaySuratJalan();
+		// displaySuratJalan();
+		
+		// allow user to enter noPolisi
+		setSuratJalanNoPolisi();
+		// allow user to enter refDoc
+		setSuratJalanRefDoc();
+		// render the product list into the suratjalan listbox
+		renderSuratJalanProductList();
 	}
 	
 	public void onClick$printJasperReportButton(Event event) throws Exception {
