@@ -137,4 +137,27 @@ public class InventoryCustomerHibernate extends DaoHibernate implements Inventor
 		}
 	}
 
+	@Override
+	public List<Ent_InventoryCustomer> findInventoryCustomerByCustomerNonSuratJalan(Ent_Customer customer)
+			throws Exception {
+		Session session = super.getSessionFactory().openSession();
+		
+		CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
+		CriteriaQuery<Ent_InventoryCustomer> criteriaQuery = criteriaBuilder.createQuery(Ent_InventoryCustomer.class);
+		Root<Ent_InventoryCustomer> root = criteriaQuery.from(Ent_InventoryCustomer.class);
+		criteriaQuery.select(root).where(
+				criteriaBuilder.equal(root.get("customer"), customer),
+				criteriaBuilder.isNull(root.get("suratJalan")));
+		
+		try {
+			
+			return session.createQuery(criteriaQuery).getResultList();
+			
+		} catch (Exception e) {
+			throw e;
+		} finally {
+			session.close();
+		}
+	}
+
 }

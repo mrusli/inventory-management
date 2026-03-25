@@ -1,7 +1,7 @@
 package com.pyramix.domain.entity;
 
 public enum Enm_TypePacking {
-	coil(0), petian(1), lembaran(2);
+	coil(0), petian(1), lembaran(2), recoil(3);
 	
 	private int value;
 

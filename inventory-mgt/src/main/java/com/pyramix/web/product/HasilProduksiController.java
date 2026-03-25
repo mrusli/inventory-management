@@ -9,6 +9,7 @@ import java.util.Set;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
+import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
@@ -43,8 +44,8 @@ public class HasilProduksiController extends GFCBaseController {
 	private Combobox customerCombobox, jenisCoilCombobox;
 	private Listbox productListbox;
 	
-	private List<Ent_InventoryCode> inventoryCodeList = null;
-	private List<Ent_Customer> customerList = null;
+//	private List<Ent_InventoryCode> inventoryCodeList = null;
+//	private List<Ent_Customer> customerList = null;
 	private ListModelList<Ent_InventoryCustomer> inventoryCustomerModelList = null;
 	
 	private final String THICKNESS_FORMAT = "#0,00";
@@ -53,8 +54,8 @@ public class HasilProduksiController extends GFCBaseController {
 		log.info("infoHasilProduksiPanel created");
 		
 		// list
-		inventoryCodeList = getInventoryCodeDao().findAllInventoryCodesSorted();
-		customerList = getCustomerDao().findAllActiveCustomerSorted();
+//		inventoryCodeList = getInventoryCodeDao().findAllInventoryCodesSorted();
+//		customerList = getCustomerDao().findAllActiveCustomerSorted();
 		
 		// load customer selection combobox 
 		// (only customers in the inventoryCustomer list)
@@ -101,6 +102,24 @@ public class HasilProduksiController extends GFCBaseController {
 		
 		return new ArrayList<Ent_Customer>(customerSet);
 	}
+	
+	public void onSelect$customerCombobox(Event event) throws Exception {
+		Ent_Customer selCust = customerCombobox.getSelectedItem().getValue();
+		// log.info(selCust.toString());
+		
+		if (jenisCoilCombobox.getSelectedItem()!=null) {
+			// use inventoryCode also
+			Ent_InventoryCode selInvtCode = 
+					jenisCoilCombobox.getSelectedItem().getValue();
+			// load inventory
+			loadInventoryList(selCust, selInvtCode);
+		} else {
+			// load inventory
+			loadInventoryList(selCust, null);
+		}
+		// display
+		displayInventoryList();
+	}
 
 	private void loadJenisCoilCombobox() throws Exception {
 		List<Ent_InventoryCode> inventoryCodeList =
@@ -116,6 +135,24 @@ public class HasilProduksiController extends GFCBaseController {
 			comboitem.setValue(invtCode);
 			comboitem.setParent(jenisCoilCombobox);
 		}		
+	}
+	
+	public void onSelect$jenisCoilCombobox(Event event) throws Exception {
+		Ent_InventoryCode selInvtCode = jenisCoilCombobox.getSelectedItem().getValue();
+		// log.info(selInvtCode.toString());
+
+		if (customerCombobox.getSelectedItem()!=null) {
+			// use customer name also
+			Ent_Customer selCustomer =
+					customerCombobox.getSelectedItem().getValue();
+			// load inventory
+			loadInventoryList(selCustomer, selInvtCode);			
+		} else {
+			// load inventory
+			loadInventoryList(null, selInvtCode);
+		}
+		// display
+		displayInventoryList();
 	}
 
 	private void loadInventoryList(Ent_Customer customer, Ent_InventoryCode invtCode) throws Exception {
@@ -190,6 +227,16 @@ public class HasilProduksiController extends GFCBaseController {
 				lc = new Listcell(invtCust.getMarking());
 				lc.setParent(item);
 				
+				// No.SuratJalan
+				lc = new Listcell();
+				lc.setParent(item);
+				if (invtCust.getSuratJalan()!=null) {
+					lc.setLabel(invtCust.getSuratJalan().getSuratjalanSerial().getSerialComp());
+					lc.setStyle("text-decoration:underline;font-weight: bold;color:blue;");
+				} else {
+					lc.setLabel("");
+					lc.setStyle("");
+				}
 			}
 		};
 	}

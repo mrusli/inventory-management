@@ -2,11 +2,13 @@ package com.pyramix.domain.entity;
 
 import org.hibernate.type.TrueFalseConverter;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
@@ -52,6 +54,9 @@ public class Ent_SuratJalanProduct extends IdBasedObject {
 	@Column(name = "re_coil")
 	@Convert(converter = TrueFalseConverter.class)
 	private boolean recoil;
+	
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Ent_InventoryCustomer inventoryCustomer;
 	
 	@Transient
 	private boolean editInProgress = false;

@@ -161,7 +161,7 @@ public class SuratJalanController extends GFCBaseController {
 	private void loadCustomerInventory() throws Exception {
 		Ent_Customer selCustomer = customerCombobox.getSelectedItem().getValue();
 		inventoryCustomerList =
-				getInventoryCustomerDao().findInventoryCustomerByCustomer(selCustomer);	
+				getInventoryCustomerDao().findInventoryCustomerByCustomerNonSuratJalan(selCustomer);	
 	}
 
 	private void renderCustomerInventory() {
@@ -227,6 +227,8 @@ public class SuratJalanController extends GFCBaseController {
 		suratJalanProduct.setQuantityByKg(invtCust.getWeightQuantity());
 		suratJalanProduct.setQuantityBySht(invtCust.getSheetQuantity());
 		suratJalanProduct.setRecoil(invtCust.isRecoil());
+		// set ref to invtentoryCustomer
+		suratJalanProduct.setInventoryCustomer(invtCust);
 		// signal so that can be edited
 		suratJalanProduct.setEditInProgress(true);
 		
@@ -702,7 +704,23 @@ public class SuratJalanController extends GFCBaseController {
 		// save / update the currSuratJalan
 		currSuratJalan = getSuratjalanDao().update(updatedSuratJalan);
 		
-		// display currSuratJalan
+		// reset to suratJalan list
+		suratJalanDiv.setVisible(true);
+		hasilProduksiDiv.setVisible(false);		
+		// load
+		loadSuratJalan();
+		// render
+		renderSuratJalan();
+		// locate suratJalan
+		suratJalanListbox.renderAll();
+		for (Listitem item : suratJalanListbox.getItems()) {
+			Ent_SuratJalan suratJalan = item.getValue();
+			if (currSuratJalan.getId()==suratJalan.getId()) {
+				suratJalanListbox.setSelectedItem(item);
+				break;
+			}
+		}
+		// display detail currSuratJalan
 		displaySuratJalan();
 	}
 
@@ -728,11 +746,13 @@ public class SuratJalanController extends GFCBaseController {
 	private List<Ent_SuratJalanProduct> getUpdatedSuratJalanProduct() {
 		List<Ent_SuratJalanProduct> prodList =
 				suratjalanProductModelList.getInnerList();
-		prodList.forEach(c -> log.info(c.toString()));
+		prodList.forEach(p -> {
+//			log.info(p.toString());
+			if (p.getInventoryCustomer()!=null) {
+				p.getInventoryCustomer().setSuratJalan(currSuratJalan);
+			}
+		});
 		
-//		for (Listitem listitem : suratjalanProductListbox.getItems()) {
-//			
-//		}
 		return prodList;
 	}
 

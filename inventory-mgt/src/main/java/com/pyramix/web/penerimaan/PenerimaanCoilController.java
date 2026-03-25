@@ -158,11 +158,18 @@ public class PenerimaanCoilController extends GFCBaseController {
 	public void onSelect$customerCombobox(Event event) throws Exception {
 		Ent_Customer selCustomer =
 				customerCombobox.getSelectedItem().getValue();
-		log.info("Selected Customer : {}", selCustomer.getCompanyLegalName());
+		// log.info("Selected Customer : {}", selCustomer.getCompanyLegalName());
 		
-		// load inventory
-		loadInventoryList(selCustomer, null);
-		
+		if (jenisCoilCombobox.getSelectedItem()!=null) {
+			// use inventoryCode also
+			Ent_InventoryCode selInvtCode = 
+					jenisCoilCombobox.getSelectedItem().getValue();
+			// load inventory
+			loadInventoryList(selCustomer, selInvtCode);			
+		} else {
+			// load inventory
+			loadInventoryList(selCustomer, null);
+		}
 		// display
 		displayInventoryList();		
 	}
@@ -174,8 +181,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 					getInventoryDao().findAllInventory();			
 		} else if (customer!=null && invtCode==null) {
 			inventoryList =
-					getInventoryDao().findInventoryByCustomer(customer);
-			
+					getInventoryDao().findInventoryByCustomer(customer);			
 		} else if (customer==null && invtCode!=null) {
 			inventoryList =
 					getInventoryDao().findInventoryByInventoryCode(invtCode);

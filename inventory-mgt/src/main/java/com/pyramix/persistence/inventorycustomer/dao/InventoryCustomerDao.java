@@ -32,6 +32,9 @@ public interface InventoryCustomerDao {
 
 	public List<Ent_InventoryCustomer> findInventoryCustomerByCustomer_InventoryCode_NonStatus(Ent_Customer customer,
 			Ent_InventoryCode inventoryCode) throws Exception;
+
+	public List<Ent_InventoryCustomer> findInventoryCustomerByCustomerNonSuratJalan(Ent_Customer customer)
+		throws Exception;
 	
 	
 }

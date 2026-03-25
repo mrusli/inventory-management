@@ -42,25 +42,25 @@
 		<element kind="staticText" uuid="a1f1f204-9257-49a2-ba7e-a433fd85c211" x="0" y="60" width="100" height="20" bold="true" vTextAlign="Middle">
 			<text><![CDATA[INVOICE NO.:]]></text>
 		</element>
-		<element kind="staticText" uuid="5e98ec8e-d1f9-4330-a047-58db2d3656ce" x="280" y="0" width="60" height="20">
+		<element kind="staticText" uuid="5e98ec8e-d1f9-4330-a047-58db2d3656ce" x="260" y="0" width="60" height="20">
 			<text><![CDATA[Karawang, ]]></text>
 		</element>
-		<element kind="staticText" uuid="01376ef9-9784-4c2c-93ed-ba9c8c151bee" x="280" y="20" width="60" height="20">
+		<element kind="staticText" uuid="01376ef9-9784-4c2c-93ed-ba9c8c151bee" x="260" y="20" width="60" height="20">
 			<text><![CDATA[Kepada Yth.:]]></text>
 		</element>
 		<element kind="textField" uuid="7fe53d0f-dcef-446a-b324-9e2840e0a8cd" x="100" y="60" width="170" height="20" vTextAlign="Middle">
 			<expression><![CDATA[$P{InvoiceNo}]]></expression>
 		</element>
-		<element kind="textField" uuid="dbfa0062-7db4-43a4-b204-c526455c35f8" x="340" y="0" width="100" height="20">
+		<element kind="textField" uuid="dbfa0062-7db4-43a4-b204-c526455c35f8" x="320" y="0" width="100" height="20">
 			<expression><![CDATA[$P{InvoiceTgl}]]></expression>
 		</element>
-		<element kind="textField" uuid="4fc71c3e-a93f-405e-bcdc-06661f418dea" x="340" y="20" width="210" height="20">
+		<element kind="textField" uuid="4fc71c3e-a93f-405e-bcdc-06661f418dea" x="320" y="20" width="240" height="20">
 			<expression><![CDATA[$P{CustomerName}]]></expression>
 		</element>
-		<element kind="textField" uuid="e7acc3f6-b0f7-4315-ad74-884735c59633" x="340" y="40" width="210" height="20">
+		<element kind="textField" uuid="e7acc3f6-b0f7-4315-ad74-884735c59633" x="320" y="40" width="240" height="20">
 			<expression><![CDATA[$P{CustomerAddr1}]]></expression>
 		</element>
-		<element kind="textField" uuid="6ec0423b-b00b-419e-8ab8-2666f89842f6" x="340" y="60" width="210" height="20">
+		<element kind="textField" uuid="6ec0423b-b00b-419e-8ab8-2666f89842f6" x="320" y="60" width="240" height="20">
 			<expression><![CDATA[$P{CustomerAddr2}]]></expression>
 		</element>
 		<element kind="line" uuid="f0b3cc1b-e2a7-48f2-84de-01a13c829507" x="0" y="101" width="550" height="1">

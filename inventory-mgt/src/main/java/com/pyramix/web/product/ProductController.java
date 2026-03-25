@@ -519,7 +519,7 @@ public class ProductController extends GFCBaseController {
 		inventory.setReceiveDate(getLocalDate(getZoneId()));
 		inventory.setInventoryCode(processProduct.getInventoryCode());
 		inventory.setInventoryStatus(Enm_StatusInventory.ready);
-		inventory.setInventoryPacking(Enm_TypePacking.coil);
+		inventory.setInventoryPacking(Enm_TypePacking.recoil);
 		
 		return inventory;
 	}

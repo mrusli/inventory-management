@@ -31,7 +31,7 @@
 		<element kind="staticText" uuid="900d0fed-7983-4006-acb4-0a8778f872ed" x="0" y="20" width="190" height="20" fontSize="8.0">
 			<text><![CDATA[Jl. Permata Raya Kav. C-2B, Kawasan Industri KIIC]]></text>
 		</element>
-		<element kind="staticText" uuid="9659281f-fd8e-4841-b56d-c50e33411be9" x="0" y="30" width="190" height="20" fontSize="8.0">
+		<element kind="staticText" uuid="9659281f-fd8e-4841-b56d-c50e33411be9" x="0" y="30" width="220" height="20" fontSize="8.0">
 			<text><![CDATA[Jalan Tol Jakarta - Cikampek Km.47, Karawang Barat]]></text>
 		</element>
 		<element kind="staticText" uuid="299b6f58-a4fa-4cfd-9fe3-43fc6ba1c644" x="0" y="40" width="190" height="20" fontSize="8.0">
@@ -46,22 +46,22 @@
 		<element kind="textField" uuid="ce8551ee-39e4-42c2-a825-abf9d4153429" x="100" y="60" width="90" height="20" bold="true" vTextAlign="Middle">
 			<expression><![CDATA[$P{SuratJalanNo}]]></expression>
 		</element>
-		<element kind="staticText" uuid="5e98ec8e-d1f9-4330-a047-58db2d3656ce" x="280" y="0" width="60" height="20">
+		<element kind="staticText" uuid="5e98ec8e-d1f9-4330-a047-58db2d3656ce" x="260" y="0" width="60" height="20">
 			<text><![CDATA[Karawang, ]]></text>
 		</element>
-		<element kind="textField" uuid="f74b21d4-2538-4817-bfb1-26143a72e55f" x="340" y="0" width="140" height="20">
+		<element kind="textField" uuid="f74b21d4-2538-4817-bfb1-26143a72e55f" x="320" y="0" width="140" height="20">
 			<expression><![CDATA[$P{SuratJalanTgl}]]></expression>
 		</element>
-		<element kind="staticText" uuid="01376ef9-9784-4c2c-93ed-ba9c8c151bee" x="280" y="20" width="60" height="20">
+		<element kind="staticText" uuid="01376ef9-9784-4c2c-93ed-ba9c8c151bee" x="260" y="20" width="60" height="20">
 			<text><![CDATA[Kepada Yth.:]]></text>
 		</element>
-		<element kind="textField" uuid="d1e9a478-d1f3-44a3-aee3-7905eeef70b3" x="340" y="20" width="200" height="20">
+		<element kind="textField" uuid="d1e9a478-d1f3-44a3-aee3-7905eeef70b3" x="320" y="20" width="240" height="20">
 			<expression><![CDATA[$P{CustomerName}]]></expression>
 		</element>
-		<element kind="textField" uuid="7708be76-4ea8-4c83-9f14-f9ac8f75ceb6" x="340" y="40" width="200" height="20">
+		<element kind="textField" uuid="7708be76-4ea8-4c83-9f14-f9ac8f75ceb6" x="320" y="40" width="240" height="20">
 			<expression><![CDATA[$P{CustomerAddr01}]]></expression>
 		</element>
-		<element kind="textField" uuid="2da0c498-f01a-426b-931b-78ef21a207f4" x="340" y="60" width="200" height="20">
+		<element kind="textField" uuid="2da0c498-f01a-426b-931b-78ef21a207f4" x="320" y="60" width="240" height="20">
 			<expression><![CDATA[$P{CustomerAddr02}]]></expression>
 		</element>
 		<element kind="staticText" uuid="17675ae3-55db-402a-9c71-ee30158345ec" x="0" y="90" width="230" height="20" fontSize="10.0">
