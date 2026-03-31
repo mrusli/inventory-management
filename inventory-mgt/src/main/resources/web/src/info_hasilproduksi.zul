@@ -20,8 +20,6 @@
 		 			<listheader label="Packing" width="118px"></listheader>
 		 			<listheader label="Jmlh/Kg" width="118px"></listheader>
 					<listheader label="No.Coil" width="118px"></listheader>
-					<listheader width="70px"/>
-					<listheader width="70px"/>
 					<listheader/>
 				</listhead>
 			</listbox>												

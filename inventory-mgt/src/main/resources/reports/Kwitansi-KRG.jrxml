@@ -1,4 +1,4 @@
-<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
 <jasperReport name="Kwitansi-KRG" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="266efeeb-e10e-4396-9840-a05026e11a8d">
 	<parameter name="kwitansiNo" class="java.lang.String"/>
 	<parameter name="customerName" class="java.lang.String"/>
@@ -6,7 +6,6 @@
 	<parameter name="untukPembayaran" class="java.lang.String"/>
 	<parameter name="sejumlah" class="java.lang.String"/>
 	<parameter name="kwitansiTgl" class="java.lang.String"/>
-	<parameter name="fakturNo" class="java.lang.String"/>
 	<query language="sql"><![CDATA[]]></query>
 	<background splitType="Stretch"/>
 	<title height="79" splitType="Stretch">
@@ -16,7 +15,7 @@
 		<element kind="staticText" uuid="900d0fed-7983-4006-acb4-0a8778f872ed" x="0" y="20" width="190" height="20" fontSize="8.0">
 			<text><![CDATA[Jl. Permata Raya Kav. C-2B, Kawasan Industri KIIC]]></text>
 		</element>
-		<element kind="staticText" uuid="9659281f-fd8e-4841-b56d-c50e33411be9" x="0" y="30" width="190" height="20" fontSize="8.0">
+		<element kind="staticText" uuid="9659281f-fd8e-4841-b56d-c50e33411be9" x="0" y="30" width="210" height="20" fontSize="8.0">
 			<text><![CDATA[Jalan Tol Jakarta - Cikampek Km.47, Karawang Barat]]></text>
 		</element>
 		<element kind="staticText" uuid="299b6f58-a4fa-4cfd-9fe3-43fc6ba1c644" x="0" y="40" width="190" height="20" fontSize="8.0">
@@ -30,12 +29,6 @@
 		</element>
 		<element kind="textField" uuid="beae48db-65e8-4ea1-a67a-193ac1eed63e" x="380" y="10" width="140" height="20" vTextAlign="Middle">
 			<expression><![CDATA[$P{kwitansiNo}]]></expression>
-		</element>
-		<element kind="staticText" uuid="587978fe-0fa3-4340-b0c5-8fb9c479f6bb" x="280" y="30" width="100" height="20" fontSize="12.0" bold="true" vTextAlign="Middle">
-			<text><![CDATA[FAKTUR NO.:]]></text>
-		</element>
-		<element kind="textField" uuid="2692e586-5b5b-4d45-a8fb-815b7b09105b" x="380" y="30" width="140" height="20" vTextAlign="Middle">
-			<expression><![CDATA[$P{fakturNo}]]></expression>
 		</element>
 	</title>
 	<columnHeader height="254" splitType="Stretch">

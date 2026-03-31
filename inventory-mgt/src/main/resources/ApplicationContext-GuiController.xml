@@ -43,6 +43,10 @@
     	<property name="customerDao" ref="customerDao"></property>    	
     </bean>
     
+    <bean id="hasilProduksiSuratJalanWinControl" class="com.pyramix.web.product.HasilProduksiSuratJalanWinController" scope="prototype" parent="basisController">
+    	<property name="suratjalanDao" ref="suratjalanDao"></property>
+    </bean>
+    
     <bean id="infoProcessCoilController" class="com.pyramix.web.process.ProcessCoilController" scope="prototype" parent="basisController">
     	<property name="inventoryProcessDao" ref="inventoryProcessDao"></property>
     	<property name="customerDao" ref="customerDao"></property>

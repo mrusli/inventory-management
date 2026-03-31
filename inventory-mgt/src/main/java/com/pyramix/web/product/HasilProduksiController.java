@@ -2,11 +2,16 @@ package com.pyramix.web.product;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Label;
@@ -15,10 +20,12 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
+import org.zkoss.zul.Window;
 
 import com.pyramix.domain.entity.Ent_Customer;
 import com.pyramix.domain.entity.Ent_InventoryCode;
 import com.pyramix.domain.entity.Ent_InventoryCustomer;
+import com.pyramix.domain.entity.Ent_SuratJalan;
 import com.pyramix.persistence.customer.dao.CustomerDao;
 import com.pyramix.persistence.inventorycode.dao.InventoryCodeDao;
 import com.pyramix.persistence.inventorycustomer.dao.InventoryCustomerDao;
@@ -233,6 +240,20 @@ public class HasilProduksiController extends GFCBaseController {
 				if (invtCust.getSuratJalan()!=null) {
 					lc.setLabel(invtCust.getSuratJalan().getSuratjalanSerial().getSerialComp());
 					lc.setStyle("text-decoration:underline;font-weight: bold;color:blue;");
+					lc.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
+
+						@Override
+						public void onEvent(Event event) throws Exception {
+							log.info("HasilProduksiSuratJalan click");
+							
+							Map<String, Ent_SuratJalan> arg = 
+									Collections.singletonMap("hasilproduksi_suratjalan_data",
+										invtCust.getSuratJalan());
+
+							Window window = (Window) Executions.createComponents("~./src/win/win_hasilproduksi_suratjalan.zul", null, arg);
+							window.doModal();
+						}
+					});
 				} else {
 					lc.setLabel("");
 					lc.setStyle("");

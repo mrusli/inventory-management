@@ -1,0 +1,54 @@
+<?page title="Surat Jalan" contentType="text/html;charset=UTF-8"?>
+<zk>
+<window xmlns:n="native" width="850px" height="620px" border="normal"
+	id="hasilProduksiSuratJalanWin" apply="${hasilProduksiSuratJalanWinControl}">
+	<n:div sclass="mt-3">
+		<n:h3>Surat Jalan</n:h3>	
+	</n:div>
+	<n:div sclass="mt-3">
+		<label id="customerNameLabel" value="PT.Kinmasaru Ranggun Mandiri" sclass="h5 text-primary"></label>
+			<n:div>
+				<grid style="border:none;">
+					<rows>
+						<row>
+							<cell width="15%">Tgl.SuratJalan:</cell>
+							<cell width="20%" sclass="text-primary">
+								<label id="suratjalanDateLabel" value="10/07/2025"></label>
+								<datebox id="suratjalanDatebox" visible="false" width="150px"></datebox>
+							</cell>
+							<cell width="15%">No.SuratJalan:</cell>
+							<cell sclass="text-primary">
+								<label id="suratjalanNumberLabel" value="517338"></label>
+							</cell>
+						</row>
+						<row>
+							<cell>No.Pol:</cell>
+							<cell sclass="text-primary">
+								<label id="nopolLabel" value="B8264VDB"></label>
+								<textbox id="nopolTextbox" width="80px" visible="false"></textbox>
+							</cell>
+							<cell>No PO/DO:</cell>
+							<cell sclass="text-primary">
+								<label id="refdocLabel" value="240"></label>
+								<textbox id="refdocTextbox" width="80px" visible="false"></textbox>
+							</cell>
+						</row>
+					</rows>
+				</grid>
+				<listbox id="suratjalanProductListbox" height="340px">
+					<listhead>
+						<listheader label="Marking" width="120px"/>
+						<listheader label="Jenis-Coil" width="120px"/>
+						<listheader label="Spek" width="260px"/>
+						<listheader label="Qty(Kg)" width="120px"/>
+						<listheader label="Qty(Lbr)" width="120px"/>
+						<listheader/>
+					</listhead>
+				</listbox>
+			</n:div>
+	</n:div>	
+	<n:div sclass="mt-3">
+		<button id="closeButton" label="Tutup" visible="true" iconSclass="z-icon-xmark" sclass="compButton" style="background-color: var(--bs-primary)"></button>							
+	</n:div>		
+</window>
+</zk>
