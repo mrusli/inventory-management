@@ -33,6 +33,7 @@ import org.zkoss.zul.Window;
 
 import com.pyramix.domain.entity.Enm_StatusProcess;
 import com.pyramix.domain.entity.Enm_TypeDocument;
+import com.pyramix.domain.entity.Enm_TypePacking;
 import com.pyramix.domain.entity.Enm_TypeProcess;
 import com.pyramix.domain.entity.Ent_Company;
 import com.pyramix.domain.entity.Ent_Customer;
@@ -916,7 +917,11 @@ public class ProcessCoilController extends GFCBaseController {
 	private Ent_InventoryProcessProduct addProductInLastPos() {
 		Ent_InventoryProcessProduct processProduct =
 				new Ent_InventoryProcessProduct();
-		
+		if (selProcessType.equals(Enm_TypeProcess.Slitting)) {
+			processProduct.setInventoryPacking(Enm_TypePacking.coil);
+		} else {
+			processProduct.setInventoryPacking(Enm_TypePacking.petian);
+		}
 		int posToAdd =
 				productModelList.size();
 		productModelList.add(posToAdd, processProduct);
