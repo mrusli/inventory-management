@@ -675,7 +675,8 @@ public class InvoiceController extends GFCBaseController {
 			invoiceProduct.setSpek(
 					toDecimalFormat(new BigDecimal(suratjalanProduct.getThickness()), getLocale(), "#0,00")+" x "+
 					toDecimalFormat(new BigDecimal(suratjalanProduct.getWidth()), getLocale(), "###.###")+" x "+
-					toDecimalFormat(new BigDecimal(suratjalanProduct.getLength()), getLocale(), "###.###"));
+						(suratjalanProduct.getLength() == 0 ? "Coil" : 
+							toDecimalFormat(new BigDecimal(suratjalanProduct.getLength()), getLocale(), "###.###")));
 			invoiceProduct.setThickness(suratjalanProduct.getThickness());
 			invoiceProduct.setWidth(suratjalanProduct.getWidth());
 			invoiceProduct.setLength(suratjalanProduct.getLength());
@@ -728,7 +729,8 @@ public class InvoiceController extends GFCBaseController {
 				lc = new Listcell(
 						toDecimalFormat(new BigDecimal(product.getThickness()), getLocale(), "#0,00")+" x "+
 						toDecimalFormat(new BigDecimal(product.getWidth()), getLocale(), "###.###")+" x "+
-						toDecimalFormat(new BigDecimal(product.getLength()), getLocale(), "###.###"));
+						(product.getLength() == 0 ? "Coil" : 
+							toDecimalFormat(new BigDecimal(product.getLength()), getLocale(), "###.###")));
 				lc.setParent(item);
 				
 				// Pcs

@@ -115,7 +115,8 @@ public class InvoicePrintController extends GFCBaseController {
 			dto_invc.setSize(
 					toDecimalFormat(new BigDecimal(prod.getThickness()), getLocale(), "#0,00")+"x"+
 					toDecimalFormat(new BigDecimal(prod.getWidth()), getLocale(), "######")+"x"+
-					toDecimalFormat(new BigDecimal(prod.getLength()), getLocale(), "######"));
+						(prod.getLength()==0 ? "Coil" :
+							toDecimalFormat(new BigDecimal(prod.getLength()), getLocale(), "######")));
 					// prod.getThickness()+"x"+prod.getWidth()+"x"+prod.getLength());
 			dto_invc.setQty(
 					toDecimalFormat(new BigDecimal(prod.getQuantity_by_sht()), getLocale(),"######"));

@@ -223,7 +223,8 @@ public class ProductController extends GFCBaseController {
 				lc = new Listcell(
 						toDecimalFormat(new BigDecimal(material.getThickness()), getLocale(), "#0,00")+" x "+
 						toDecimalFormat(new BigDecimal(material.getWidth()), getLocale(), "###.###")+" x "+
-						toDecimalFormat(new BigDecimal(material.getLength()), getLocale(), "###.###"));
+							(material.getLength()==0 ? "Coil" :
+								toDecimalFormat(new BigDecimal(material.getLength()), getLocale(), "###.###")));
 				lc.setParent(item);
 				
 				// Qty(Kg)
@@ -306,7 +307,8 @@ public class ProductController extends GFCBaseController {
 				lc = new Listcell(
 						toDecimalFormat(new BigDecimal(product.getThickness()), getLocale(), "#0,00")+" x "+
 						toDecimalFormat(new BigDecimal(product.getWidth()), getLocale(), "###.###")+" x " +
-						toDecimalFormat(new BigDecimal(product.getLength()), getLocale(), "###.###"));
+							(product.getLength() == 0 ? "Coil" :
+								toDecimalFormat(new BigDecimal(product.getLength()), getLocale(), "###.###")));
 				lc.setParent(item);
 				
 				// re-coil
@@ -553,7 +555,8 @@ public class ProductController extends GFCBaseController {
 				lc = new Listcell(
 						toDecimalFormat(new BigDecimal(inventory.getThickness()), getLocale(), "#0,00")+" x "+
 						toDecimalFormat(new BigDecimal(inventory.getWidth()), getLocale(), "###.###")+" x " +
-						toDecimalFormat(new BigDecimal(inventory.getLength()), getLocale(), "###.###"));
+							(inventory.getLength() == 0 ? "Coil" :
+								toDecimalFormat(new BigDecimal(inventory.getLength()), getLocale(), "###.###")));
 				lc.setParent(item);
 				
 				// Qty(Kg)
@@ -797,7 +800,8 @@ public class ProductController extends GFCBaseController {
 				lc = new Listcell(
 						toDecimalFormat(new BigDecimal(invtCust.getThickness()), getLocale(), "#0,00")+" x "+
 						toDecimalFormat(new BigDecimal(invtCust.getWidth()), getLocale(), "###.###")+" x " +
-						toDecimalFormat(new BigDecimal(invtCust.getLength()), getLocale(), "###.###"));						
+							(invtCust.getLength() == 0 ? "Coil" : 
+								toDecimalFormat(new BigDecimal(invtCust.getLength()), getLocale(), "###.###")));						
 				lc.setParent(item);
 				
 				// Qty(Kg)

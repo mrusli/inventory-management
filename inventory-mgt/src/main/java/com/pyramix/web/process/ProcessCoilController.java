@@ -482,7 +482,8 @@ public class ProcessCoilController extends GFCBaseController {
 				lc = new Listcell(material.getThickness()==null? " " :
 						toDecimalFormat(new BigDecimal(material.getThickness()), getLocale(), "#0,00")+" x "+
 						toDecimalFormat(new BigDecimal(material.getWidth()), getLocale(), "#.###")+" x "+
-						toDecimalFormat(new BigDecimal(material.getLength()), getLocale(), "#.###"));
+							(material.getLength()==0 ? "Coil" :
+								toDecimalFormat(new BigDecimal(material.getLength()), getLocale(), "#.###")));
 				lc.setParent(item);
 
 				// Qty(Kg)
@@ -705,7 +706,8 @@ public class ProcessCoilController extends GFCBaseController {
 			comboitem.setLabel(invt.getMarking()+" - "+
 						toDecimalFormat(new BigDecimal(invt.getThickness()), getLocale(), "#0,00") +" x "+
 						toDecimalFormat(new BigDecimal(invt.getWidth()), getLocale(), "##.###")+" x "+
-						toDecimalFormat(new BigDecimal(invt.getLength()), getLocale(), "##.###")+" - "+
+							(invt.getLength()==0 ? "Coil" :
+								toDecimalFormat(new BigDecimal(invt.getLength()), getLocale(), "##.###"))+" - "+
 						toDecimalFormat(new BigDecimal(invt.getWeightQuantity()), getLocale(), getDecimalFormat())+" Kg."
 					);
 			comboitem.setValue(invt);
@@ -738,7 +740,8 @@ public class ProcessCoilController extends GFCBaseController {
 				lc = new Listcell(
 						toDecimalFormat(new BigDecimal(prod.getThickness()), getLocale(), "#0,00")+" x "+
 						toDecimalFormat(new BigDecimal(prod.getWidth()), getLocale(), "#.###")+" x "+
-						toDecimalFormat(new BigDecimal(prod.getLength()), getLocale(), "#.###"));
+							(prod.getLength()==0 ? "Coil" :
+									toDecimalFormat(new BigDecimal(prod.getLength()), getLocale(), "#.###")));
 				lc.setParent(item);
 				
 				// qty(Kg)

@@ -227,6 +227,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 						log.info("allow to edit...");
 						Listcell lc = (Listcell) event.getTarget();
 						lc.setLabel("");
+						lc.removeEventListener(Events.ON_DOUBLE_CLICK, this);
 						
 						// get all active customers
 						List<Ent_Customer> customerList = getCustomerDao().findAllActiveCustomerSorted();
@@ -273,14 +274,15 @@ public class PenerimaanCoilController extends GFCBaseController {
 				lc = new Listcell(
 						toDecimalFormat(new BigDecimal(inventory.getThickness()), getLocale(), THICKNESS_FORMAT)+" x "+
 						toDecimalFormat(new BigDecimal(inventory.getWidth()), getLocale(), "###.###")+" x "+
-						toDecimalFormat(new BigDecimal(inventory.getLength()), getLocale(), "###.###")								
-						);
+							(inventory.getLength() == 0 ? "Coil" :
+								toDecimalFormat(new BigDecimal(inventory.getLength()), getLocale(), "###.###")));
 				lc.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
 
 					@Override
 					public void onEvent(Event event) throws Exception {
 						Listcell lc = (Listcell) event.getTarget();
 						lc.setLabel("");
+						lc.removeEventListener(Events.ON_DOUBLE_CLICK, this);
 						// thickness
 						Doublebox doublebox = new Doublebox();
 						doublebox.setLocale(getLocale());
@@ -337,7 +339,8 @@ public class PenerimaanCoilController extends GFCBaseController {
 								lc.setLabel(
 										toDecimalFormat(new BigDecimal(inventory.getThickness()), getLocale(), THICKNESS_FORMAT)+" x "+
 												toDecimalFormat(new BigDecimal(inventory.getWidth()), getLocale(), "###.###")+" x "+
-												toDecimalFormat(new BigDecimal(inventory.getLength()), getLocale(), "###.###"));
+													(inventory.getLength() == 0 ? "Coil" : 
+														toDecimalFormat(new BigDecimal(inventory.getLength()), getLocale(), "###.###")));
 							}
 						});
 					}
@@ -358,6 +361,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 					public void onEvent(Event event) throws Exception {
 						Listcell lc = (Listcell) event.getTarget();
 						lc.setLabel("");
+						lc.removeEventListener(Events.ON_DOUBLE_CLICK, this);
 						
 						Doublebox doublebox = new Doublebox();
 						doublebox.setLocale(getLocale());
@@ -397,6 +401,7 @@ public class PenerimaanCoilController extends GFCBaseController {
 					public void onEvent(Event event) throws Exception {
 						Listcell lc = (Listcell) event.getTarget();
 						lc.setLabel(" ");
+						lc.removeEventListener(Events.ON_DOUBLE_CLICK, this);
 						
 						Textbox textbox = new Textbox();
 						textbox.setWidth("90px");

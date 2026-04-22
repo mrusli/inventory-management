@@ -24,6 +24,7 @@ import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Vbox;
 import org.zkoss.zul.Window;
 
 import com.pyramix.domain.entity.Enm_StatusDocument;
@@ -179,30 +180,54 @@ public class SuratJalanController extends GFCBaseController {
 			public void render(Listitem item, Ent_InventoryCustomer invtCust, int index) throws Exception {
 				Listcell lc;
 				
+				Label label;
+				Vbox vbox;
+				
 				// Tgl.Produksi
 				lc = new Listcell(dateToStringDisplay(
 						invtCust.getEntryDate(), getShortDateFormat(), getLocale()));
+				lc.setStyle("vertical-align:top;");
 				lc.setParent(item);
 				
 				// Jenis-Coil
 				lc = new Listcell(invtCust.getInventoryCode().getProductCode());
-				lc.setStyle("white-space: nowrap;");
+				lc.setStyle("vertical-align:top; white-space: nowrap;");
 				lc.setParent(item);
 				
 				// Spek
-				lc = new Listcell(
-						toDecimalFormat(new BigDecimal(invtCust.getThickness()), getLocale(), THICKNESS_FORMAT)+" x "+
-						toDecimalFormat(new BigDecimal(invtCust.getWidth()), getLocale(), "###.###")+" x "+
-						toDecimalFormat(new BigDecimal(invtCust.getLength()), getLocale(), "###.###")								
-						);
-				lc.setParent(item);
+				String spek = toDecimalFormat(new BigDecimal(invtCust.getThickness()), getLocale(), THICKNESS_FORMAT)+" x "+
+									toDecimalFormat(new BigDecimal(invtCust.getWidth()), getLocale(), "###.###")+" x "+
+									(invtCust.getLength() == 0 ? "Coil" :
+										toDecimalFormat(new BigDecimal(invtCust.getLength()), getLocale(), "###.###"));								
+				String marking ="Coil.No: " + invtCust.getMarking();
+				String weightQty = "Berat: " + toDecimalFormat(new BigDecimal(invtCust.getWeightQuantity()), getLocale(), "###.###");
 				
+				lc = new Listcell();
+				lc.setStyle("vertical-align:top;");
+				lc.setParent(item);
+				vbox = new Vbox();
+				vbox.setParent(lc);
+				// spek
+				label = new Label();
+				label.setValue(spek);
+				label.setParent(vbox);
+				// no.coil / marking
+				label = new Label();
+				label.setValue(marking);
+				label.setParent(vbox);
+				// weightQty
+				label = new Label();
+				label.setValue(weightQty);
+				label.setParent(vbox);
+
 				item.setValue(invtCust);
 				
 				item.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
 
 					@Override
 					public void onEvent(Event event) throws Exception {
+						currSuratJalan.setInventoryProcess(invtCust.getInventoryProcess());
+						
 						log.info("add to SuratJalan list");
 						
 						suratjalanProductModelList.add(inventoryToSuratJalan(invtCust));
@@ -493,11 +518,13 @@ public class SuratJalanController extends GFCBaseController {
 				lc = new Listcell(product.getInventoryCode().getProductCode());
 				lc.setParent(item);
 				
-				// spek
-				lc = new Listcell(
-						toDecimalFormat(new BigDecimal(product.getThickness()), getLocale(), "#0,00")+" x "+
+				String spek = toDecimalFormat(new BigDecimal(product.getThickness()), getLocale(), THICKNESS_FORMAT)+" x "+
 						toDecimalFormat(new BigDecimal(product.getWidth()), getLocale(), "###.###")+" x "+
-						toDecimalFormat(new BigDecimal(product.getLength()), getLocale(), "###.###"));
+						(product.getLength() == 0 ? "Coil" :
+							toDecimalFormat(new BigDecimal(product.getLength()), getLocale(), "###.###"));								
+
+				// spek
+				lc = new Listcell(spek);
 				lc.setParent(item);
 				
 				// qty(kg)
@@ -728,7 +755,7 @@ public class SuratJalanController extends GFCBaseController {
 		currSuratJalan.setNoPolisi(nopolTextbox.getValue());
 		currSuratJalan.setRefDocument(refdocTextbox.getValue());
 		currSuratJalan.setSuratjalanProducts(getUpdatedSuratJalanProduct());
-		
+
 //		Ent_InventoryProcess selInvtProcess;
 //		
 //		if (processCombobox.getSelectedItem()!=null) {

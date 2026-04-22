@@ -216,8 +216,8 @@ public class HasilProduksiController extends GFCBaseController {
 				lc = new Listcell(
 						toDecimalFormat(new BigDecimal(invtCust.getThickness()), getLocale(), THICKNESS_FORMAT)+" x "+
 						toDecimalFormat(new BigDecimal(invtCust.getWidth()), getLocale(), "###.###")+" x "+
-						toDecimalFormat(new BigDecimal(invtCust.getLength()), getLocale(), "###.###")								
-						);
+							(invtCust.getLength()==0 ? "Coil" :
+								toDecimalFormat(new BigDecimal(invtCust.getLength()), getLocale(), "###.###")));
 				lc.setParent(item);
 				
 				// Packing

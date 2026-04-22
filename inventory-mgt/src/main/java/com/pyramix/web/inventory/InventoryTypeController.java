@@ -16,6 +16,7 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
+import org.zkoss.zul.Paging;
 import org.zkoss.zul.Textbox;
 
 import com.pyramix.domain.entity.Ent_InventoryCode;
@@ -144,7 +145,16 @@ public class InventoryTypeController extends GFCBaseController {
 				} else {
 					// allow to edit
 					log.info("allow user to edit inventoryType");
-					
+					int activeIdx = activeItem.getIndex();
+					// disable other rows to edit
+					Button rowEditBtn = null;
+					for(Listitem listitem : inventoryTypeListbox.getItems()) {
+						rowEditBtn =
+								(Button) listitem.getChildren().get(3).getFirstChild();
+						rowEditBtn.setDisabled(activeIdx!=listitem.getIndex());
+						// disable the onSelect
+						listitem.setSelectable(false);
+					}
 					setupTipeTextbox(activeItem, inventoryType.getProductType());
 					setupBeratJnsDoublebox(activeItem, inventoryType.getDensity());
 					setupKeteranganTextbox(activeItem, inventoryType.getProductDescription());					
@@ -438,21 +448,42 @@ public class InventoryTypeController extends GFCBaseController {
 					activeInvtCode.setEditInProgress(false);
 					// change to edit icon, so that this can be edited again
 					modifToEdit(button);
+					// enable paging
+					disablePaging(inventoryCodeListbox, false);
 				} else {
 					// allow to edit
 					log.info("allow to edit");
 
 					setupKodeTextbox(activeItem, activeInvtCode.getProductCode());
 					setupKodeKeteranganTextbox(activeItem, activeInvtCode.getCodeDescription());
-					
 					// set to true, because we need to save / update this object
 					activeInvtCode.setEditInProgress(true);
+					// disable other rows
+					int activeIdx = activeItem.getIndex();
+					Button activeEdtBtn = null;
+					int pageSize = inventoryCodeListbox.getPageSize();
+					for (Listitem listitem : inventoryCodeListbox.getItems()) {
+						if (listitem.getIndex()<pageSize) {
+							activeEdtBtn = (Button) listitem.getChildren().get(2).getFirstChild();
+							activeEdtBtn.setDisabled(activeIdx!=listitem.getIndex());
+						}
+					}
+					// disable paging
+					disablePaging(inventoryCodeListbox, true);
 					// change to save icon, so that object can be saved
 					modifToSave(button);					
 				}
 				
 			}
+
 		};
+	}
+
+	private void disablePaging(Listbox listbox, boolean disable) {
+		Paging paging = listbox.getPagingChild();
+		if (paging != null) {
+			paging.setDisabled(disable);
+		}
 	}
 
 	private void locateInventoryCodeData(Ent_InventoryCode ent_InventoryCode) {

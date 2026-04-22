@@ -22,6 +22,7 @@ import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
+import org.zkoss.zul.Paging;
 
 import com.pyramix.domain.entity.Ent_InventoryCode;
 import com.pyramix.domain.entity.Ent_InventoryTable;
@@ -259,17 +260,24 @@ public class InventoryTableController extends GFCBaseController {
 					
 					setSpek(activeItem, invtTable.getThickness(), invtTable.getWidth(), 
 							invtTable.getLength(), invtTable.getInventoryCode());
-					setQtyKg(activeItem, invtTable.getWeightQuantity());
-					
+					setQtyKg(activeItem, invtTable.getWeightQuantity());					
 					// set to true, becuase we need to save / update
 					invtTable.setEditInProgress(true);
+					// disable other rows
+					int activeIdx = activeItem.getIndex();
+					Button activeEdtBtn = null;
+					for (Listitem listitem : inventoryTableListbox.getItems()) {
+						activeEdtBtn = (Button) listitem.getChildren().get(3).getFirstChild();
+						activeEdtBtn.setDisabled(activeIdx!=listitem.getIndex());
+					}
+					
 					// change to save icon
 					modifToSave(button);
 				}
 			}
 		};
 	}
-
+	
 	protected void locateInventoryTableData(Ent_InventoryTable activeInvtTable) {
 		inventoryTableListbox.renderAll();
 		for(Listitem item : inventoryTableListbox.getItems()) {
